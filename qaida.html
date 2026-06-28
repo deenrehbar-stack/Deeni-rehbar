@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="mainTitle">نورانی قاعدہ - ویڈیوز</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f0f7f0; 
+            margin: 0; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .header { 
+            background-color: #1b4332; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            width: 100%;
+            position: fixed;
+            top: 0;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-btn { 
+            position: absolute; 
+            color: white; 
+            text-decoration: none; 
+            font-size: 24px; 
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 85%;
+            max-width: 400px;
+        }
+
+        .icon { font-size: 70px; margin-bottom: 15px; }
+
+        .btn-play {
+            background-color: #c5a059;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: bold;
+            display: block;
+            margin-top: 25px;
+            font-size: 18px;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3);
+        }
+
+        .btn-play:active { transform: scale(0.95); opacity: 0.9; }
+        
+        h2 { margin: 10px 0; font-size: 24px; }
+        p { line-height: 1.5; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="javascript:history.back()" class="back-btn" id="backBtn">←</a>
+    <span id="headerText">Noorani Qaida Videos</span>
+</div>
+
+<div class="container">
+    <div class="icon">📗</div>
+    <h2 id="cardTitle" style="color: #1b4332;">مکمل نورانی قاعدہ</h2>
+    <p id="cardDesc" style="color: #666;">Tamam sabaq ki videos dekhne ke liye niche button par click karein.</p>
+    
+    <a href="#" 
+       target="_system" 
+       id="playBtn"
+       class="btn-play">
+       ▶️ PLAY PLAYLIST
+    </a>
+</div>
+
+<script>
+    const langData = {
+        ur: {
+            header: "نورانی قاعدہ ویڈیوز",
+            title: "مکمل نورانی قاعدہ",
+            desc: "تمام اسباق کی ویڈیوز دیکھنے کے لیے نیچے والے بٹن پر کلک کریں۔",
+            btn: "▶️ پلے لسٹ دیکھیں",
+            link: "https://youtube.com/playlist?list=PLUfVcRuI-kUNtpwxQhWTX3pxCTV8PJdiP&si=waRF8DhsnRQZVzw7",
+            dir: "rtl"
+        },
+        hi: {
+            header: "नूरानी कायदा वीडियो",
+            title: "मुकम्मल नूरानी कायदा",
+            desc: "सभी सबक की वीडियो देखने के लिए नीचे दिए गए बटन पर क्लिक करें।",
+            btn: "▶️ प्लेलिस्ट देखें",
+            link: "https://youtube.com/playlist?list=PLUfVcRuI-kUNtpwxQhWTX3pxCTV8PJdiP&si=waRF8DhsnRQZVzw7",
+            dir: "ltr"
+        },
+        ar: {
+            header: "فيديوهات القاعدة النورانية",
+            title: "القاعدة النورانية الكاملة",
+            desc: "اضغط على الزر أدناه لمشاهدة جميع فيديوهات الدروس.",
+            btn: "▶️ تشغيل القائمة",
+            link: "https://youtube.com/playlist?list=PLUfVcRuI-kUNtpwxQhWTX3pxCTV8PJdiP&si=waRF8DhsnRQZVzw7",
+            dir: "rtl"
+        },
+        en: {
+            header: "Noorani Qaida Videos",
+            title: "Complete Noorani Qaida",
+            desc: "Click the button below to watch all lesson videos.",
+            btn: "▶️ PLAY PLAYLIST",
+            link: "https://youtube.com/playlist?list=PLd81zL_QT2SDPAa8YPy4MjsFmGon2T_8Q&si=8r53GjjvyO8IsDGj",
+            dir: "ltr"
+        }
+    };
+
+    function applyLanguage() {
+        const selectedLang = localStorage.getItem('pref_lang') || 'ur';
+        const data = langData[selectedLang] || langData['ur'];
+
+        // Text aur Link change karna
+        document.getElementById('headerText').innerText = data.header;
+        document.getElementById('cardTitle').innerText = data.title;
+        document.getElementById('cardDesc').innerText = data.desc;
+        document.getElementById('playBtn').innerText = data.btn;
+        document.getElementById('playBtn').href = data.link; // Yahan playlist link change ho rahi hai
+
+        document.body.dir = data.dir;
+        
+        const backBtn = document.getElementById('backBtn');
+        if (data.dir === 'rtl') {
+            backBtn.style.right = '20px';
+            backBtn.style.left = 'auto';
+            backBtn.innerText = '→'; 
+        } else {
+            backBtn.style.left = '20px';
+            backBtn.style.right = 'auto';
+            backBtn.innerText = '←'; 
+        }
+    }
+
+    window.onload = applyLanguage;
+</script>
+
+</body>
+</html>

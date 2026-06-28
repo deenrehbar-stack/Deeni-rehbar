@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Sunnats - Deeni Rehbar</title>
+    <style>
+        :root {
+            --p-green: #1b5e20;
+            --light-green: #e8f5e9;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --accent-gold: #c6a700;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f7f4;
+            color: var(--text-dark);
+            margin: 0; padding: 0;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--p-green);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header h1 { margin: 0; font-size: 24px; }
+        .back-btn { position: absolute; left: 20px; top: 40px; color: white; text-decoration: none; font-size: 20px; }
+
+        .container {
+            max-width: 600px;
+            margin: -20px auto 40px;
+            padding: 0 15px;
+        }
+
+        .section-header {
+            background: var(--accent-gold);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 30px 0 15px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .sunnat-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--p-green);
+            position: relative;
+        }
+
+        .sunnat-card h3 { 
+            color: var(--p-green); 
+            margin: 0 0 8px 0; 
+            font-size: 17px; 
+            padding-right: 35px;
+        }
+
+        .sunnat-card p { font-size: 15px; color: #555; margin: 0; }
+
+        .arabic-text {
+            display: block;
+            direction: rtl;
+            font-size: 24px;
+            text-align: center;
+            margin: 15px 0;
+            color: #000;
+            font-weight: bold;
+        }
+
+   
+        
+    </style>
+</head>
+<body>
+
+
+
+    <div class="header">
+        <a href="index.html" class="back-btn">←</a>
+        <h1 id="pageTitle">100 मुकम्मल सुन्नतें</h1>
+        <p id="pageSub">100 Complete Sunnats Guide</p>
+    </div>
+
+    <div class="container" id="dynamic-content">
+        </div>
+
+<script>
+    const sunnatData = {
+        hi: {
+            title: "100 मुकम्मल सुन्नतें",
+            sub: "100 Complete Sunnats Guide",
+            
+            sections: [
+                {
+                    name: "1. सुबह उठने की सुन्नतें (1-10)",
+                    items: [
+                        { num: 1, title: "चेहरा मलना:", detail: "हाथों से चेहरे को मलना ताकि नींद का खुमार खत्म हो।" },
+                        { num: 2, title: "सोकर उठने की दुआ:", detail: "तमाम तारीफें अल्लाह के लिए हैं जिसने हमें सुलाने के बाद जिंदा किया।", arabic: "اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُوْرُ" },
+                        { num: 3, title: "मिसवाक करना:", detail: "सोकर उठते ही सबसे पहले मिसवाक करना सुन्नत है।" },
+                        { num: 4, title: "नाक साफ करना:", detail: "वुज़ू से पहले 3 बार नाक में पानी डालकर झाड़ना।" },
+                        { num: 5, title: "हाथ धोना:", detail: "सोकर उठने के बाद बर्तन में हाथ डालने से पहले हाथों को 3 बार धोना।" },
+                        { num: 6, title: "आसमान की तरफ देखना:", detail: "आसमान की तरफ देखकर सूरह आल-ए-इमरान की आखिरी 10 आयतें पढ़ना।"
+               ,
+               arabic: "إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ لَآيَاتٍ لِّأُولِي الْأَلْبَابِ ﴿١٩٠﴾ الَّذِينَ يَذْكُرُونَ اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِهِمْ وَيَتَفَكَّرُونَ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ رَبَّنَا مَا خَلَقْتَ هَـٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ ﴿١٩١﴾ رَبَّنَا إِنَّكَ مَن تُدْخِلِ النَّارَ فَقَد_أَخْزَيْتَهُ ۖ وَمَا لِلظَّالِمِينَ مِنْ أَنصَارٍ ﴿١٩٢﴾ رَبَّنَا إِنَّنَا سَمِعْنَا مُنَادِيًا يُنَادِي لِلْإِيمَانِ أَنْ آمِنُوا بِرَبِّكُمْ فَآمَنَّا ۚ رَبَّنَا فَاغْفِرْ لَنَا ذُنُوبَنَا وَكَفِّرْ عَنَّا سَيِّئَاتِنَا وَتَوَفَّنَا مَعَ الْأَبْرَارِ ﴿١٩٣﴾ رَبَّنَا وَآتِنَا مَا وَعَدتَّنَا عَلَىٰ رُسُلِكَ وَلَا تُخْزِنَا يَوْمَ الْقِيَامَةِ ۗ إِنَّكَ لَا تُخْلِفُ الْمِيعَادَ ﴿١٩٤﴾ فَاسْتَجَابَ لَهُمْ رَبُّهُمْ أَنِّي لَا أُضِيعُ عَمَلَ عَامِلٍ مِّنكُم مِّن ذَكَرٍ أَوْ أُنثَىٰ ۖ بَعْضُكُم مِّن بَعْضٍ ۖ فَالَّذِينَ هَاجَرُوا وَأُخْرِجُوا مِن دِيَارِهِمْ وَأُوذُوا فِي سَبِيلِي وَقَاتَلُوا وَقُتِلُوا لَأُكَفِّرَنَّ عَنْهُمْ سَيِّئَاتِهِمْ وَلأُدْخِلَنَّهُمْ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ ثَوَابًا مِّنْ عِندِ اللَّهِ ۗ وَاللَّهُ عِندَهُ حُسْنُ الثَّوَابِ ﴿١٩٥﴾ لَا يَغُرَّنَّكَ تَقَلُّبُ الَّذِينَ كَفَرُوا فِي الْبِلَادِ ﴿١٩٦﴾ مَتَاعٌ قَلِيلٌ ثُمَّ مَأْوَاهُمْ جَهَنَّمُ ۚ وَبِئْسَ الْمِهَادُ ﴿١٩٧﴾ لَـٰكِنِ الَّذِينَ اتَّقَوْا رَبَّهُمْ لَهُمْ جَنَّاتٌ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ خَالِدِينَ فِيهَا نُزُلًا مِّنْ عِندِ اللَّهِ ۗ وَمَا عِندَ اللَّهِ خَيْرٌ لِّلأَبْرَارِ ﴿١٩٨﴾ وَإِنَّ مِنْ أَهْلِ الْكِتَابِ لَمَن يُؤْمِنُ بِاللَّهِ وَمَا أُنزِلَ إِلَيْكُمْ وَمَا أُنزِلَ إِلَيْهِمْ خَاشِعِينَ لِلَّهِ لَا يَشْتَرُونَ بِآيَاتِ اللَّهِ ثَمَنًا قَلِيلًا ۗ أُولَـٰئِكَ لَهُمْ أَجْرُهُمْ عِندَ رَبِّهِمْ ۗ إِنَّ اللَّهَ سَرِيعُ الْحِسَابِ ﴿١٩٩﴾ يَا أَيُّهَا الَّذِينَ آمَنُوا اصْبِرُوا وَصَابِرُوا وَرَابِطُوا وَاتَّقُوا اللَّهَ لَعَلَّكُمْ تُفْلِحُونَ ﴿٢٠٠﴾"},
+
+                          
+                        
+// Point 7: Toilet ki dua
+{ num: 7, title: "टॉयलेट की दुआ:", detail: "टॉयलेट में दाखिल होने की दुआ।", arabic: "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ" },
+
+
+                        { num: 8, title: "बायां पैर:", detail: "टॉयलेट के अंदर दाखिल होते वक्त पहले बायां पैर अंदर रखना।" },
+                        { num: 9, title: "दायां पैर:", detail: "टॉयलेट से बाहर निकलते वक्त दाया पैर बाहर रखना।" },
+                        { num: 10, title: "निकलने की दुआ:", detail: "टॉयलेट से बाहर निकलते वक्त ये दुआ पढ़ें।", arabic: "غُفْرَانَكَ اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَذْهَبَ عَنِّي الْأَذٰى وَعَافَانِيْ" }
+                    ]
+                },
+                              {
+                    // NAYA SECTION: Sirf Paakizgi aur Safai (Ghusl ke bina)
+                    name: "2. पाकीज़गी और सफ़ाई के आदाब (11-20)",
+                    items: [
+                        { num: 11, title: "मिसवाक करना:", detail: "मुंह को अच्छी तरह साफ करना ताकि मुंह की बदबू दूर हो।" },
+                        { num: 12, title: "दाएं हाथ से सफाई न करना:", detail: "गंदगी साफ करने या नाक साफ करने के लिए हमेशा बाएं हाथ का इस्तेमाल करना।" },
+                        { num: 13, title: "नाखून तराशना:", detail: "हफ्ते में कम से कम एक बार (खासकर जुमा को) नाखून काटना।" },
+                        { num: 14, title: "बालों की सफाई:", detail: "सर और दाढ़ी के बालों को धोकर साफ रखना।" },
+                        { num: 15, title: "कपड़ों की पाकीज़गी:", detail: "उठने के बाद यह देखना कि लिबास पर कोई गंदगी तो नहीं लगी।" },
+                        { num: 16, title: "बिस्तर साफ रखना:", detail: "सोकर उठने के बाद अपने सोने की जगह को साफ-सुथरा करना।" },
+                        { num: 17, title: "खुशबू का एहतमाम:", detail: "सफाई के बाद बदन या कपड़ों पर कोई पाकीज़ा खुशबू लगाना।" },
+                        { num: 18, title: "पानी की बचत:", detail: "हाथ-मुंह या कोई भी चीज धोते वक्त पानी फुजूल न बहाना।" },
+                        { num: 19, title: "पाकी की नियत:", detail: "हर तरह की सफाई करते वक्त दिल में पाकी हासिल करने की नियत रखना।" },
+                        { num: 20, title: "सफाई पर शुक्र:", detail: "पाकीज़गी हासिल होने पर अल्लाह का शुक्र अदा करना क्योंकि पाकी आधा ईमान है।" }
+                    ]
+                },
+
+                {
+                    name: "3. लिबास और आइना (21-30)",
+                    items: [
+                        { num: 21, title: "दाईं तरफ:", detail: "कपड़ा पहनते वक्त पहले दायां बाजू डालना।" },
+                        { num: 22, title: "बिस्मिल्लाह:", detail: "कपड़ा पहनते वक्त बिस्मिल्लाह पढ़ना।" },
+                        { num: 23, title: "नया लिबास की दुआ:", detail: "नए कपड़े पहनते वक्त ये दुआ पढ़ें।", arabic: "اَللّٰهُمَّ لَكَ الْحَمْدُ أَنْتَ كَسَوْتَنِيْهِ" },
+                        { num: 24, title: " कपड़े उतारते वक्त बायां:", detail: " कपड़े उतारते वक्त पहले बाएं बाजू को निकालना।" },
+                        { num: 25, title: "जूते पहनना:", detail: "पहले दाएं पैर का जूता पहनना।" },
+                        { num: 26, title: "जूते उतारना:", detail: "पहले बायां जूता उतारना।" },
+                        { num: 27, title: "सर ढांपना:", detail: "बाहर निकलते वक्त टोपी पहनना।" },
+                        { num: 28, title: "आइना देखने की दुआ:", detail: "चेहरा देखकर दुआ पढ़ना।", arabic: "اَللّٰهُمَّ أَنْتَ حَسَّنْتَ خَلْقِيْ فَحَسِّنْ خُلُقِيْ" },
+                        { num: 29, title: "अत्तर (खुशबू):", detail: "खुशबू लगाना सुन्नत है।" },
+                        { num: 30, title: "कंघी:", detail: "बालों को संवारना।" }
+                    ]
+                },
+                {
+                    name: "4. मस्जिद और अज़ान (31-40)",
+                    items: [
+                
+                        { 
+                            num: 31, 
+                            title: "अज़ान का जवाब:", 
+                            detail: `जब मुअज़्ज़िन कहे: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ (अल्लाहु अकबर, अल्लाहु अकबर) तो आप भी कहें: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ
+जब मुअज़्ज़िन कहे: أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ (अशहदु अल-ला इलाहा इल्लल्लाह) तो आप भी कहें: أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ
+
+जब मुअज़्ज़िन कहे: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ (अशहदु अन्ना मुहम्मदर रसूलुल्लाह) तो आप भी कहें: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ
+जब मुअज़्ज़िन कहे: حَيَّ عَلَى الصَّلَاةِ (हय्या अलस्सलाह) तो आप कहें: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ (ला हौला व ला कुव्वता इल्ला बिल्लाह)
+जब मुअज़्ज़िन कहे: حَيَّ عَلَى الْفَلَاحِ (हय्या अलल्फलाह) तो आप कहें: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ (ला हौला व ला कुव्वता इल्ला बिल्लाह)
+जब मुअज़्ज़िन कहे: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ (अल्लाहु अकबर, अल्लाहु अकबर) तो आप भी कहें: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ
+जब मुअज़्ज़िन कहे: لَا إِلٰهَ إِلَّا اللَّهُ (ला इलाहा इल्लल्लाह) तो आप भी कहें: لَا إِلٰهَ إِلَّا اللَّهُ` 
+                        },
+
+                        { num: 32, title: "दुरूद शरीफ:", detail: "अज़ान के बाद नबी ﷺ पर दुरूद पढ़ना।",
+              arabic:" صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ      "},
+                        { 
+                            num: 33, 
+                            title: "अज़ान के बाद की दुआ:", 
+                            detail: `अज़ान खत्म होने पर दुरूद शरीफ पढ़ने के बाद मकाम-ए-महमूद की यह मुकम्मल मसनून दुआ मांगना सुन्नत है।
+
+हिंदी तर्जुमा: ऐ अल्लाह! इस मुकम्मल पुकार और कायम होने वाली नमाज़ के रब! हज़रत मुहम्मद ﷺ को वसीला (जन्नत का एक खास मकाम) और बुज़ुर्गी अता फ़रमा, और उन्हें उस मकाम-ए-महमूद (तारीफ के मकाम) पर पहुंचा जिसका तूने उनसे वादा किया है। बेशक तू वादा खिलाफी नहीं करता।`, 
+                            arabic: "اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ، إِنَّكَ لَا تُخْلِفُ الْمِيعَادَ" 
+                        },
+
+                        { num: 34, title: "पैदल मस्जिद जाना:", detail: "छोटे कदम लेकर पैदल मस्जिद जाना।" },
+                        { num: 35, title: " मस्जिद में दाखिल होने की दुआ:", detail: "मस्जिद में दाखिल होने पर ये दुआ पढ़ें।", arabic: "اَللّٰهُمَّ افْتَحْ لِيْ أَبْوابَ رَحْمَتِكَ" },
+                        { num: 36, title: "दायां पैर:", detail: "मस्जिद में पहले दायां पैर रखना।" },
+                        { num: 37, title: "तहिय्यतुल मस्जिद:", detail: "2 रकात नफ़िल पढ़ना।" },
+                        { num: 38, title: "मस्जिद     से निकलना:", detail: "पहले बायां पैर बाहर रखना।" },
+                        { num: 39, title: "मस्जिद से निकलने की दुआ:", detail: "मस्जिद से बाहर निकलने की दुआ।", arabic: "اَللّٰهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ" },
+                        { num: 40, title: "ज़िक्र:", detail: "मस्जिद में खामोशी से बैठें और ज़िक्र करना।" }
+                    ]
+                },
+                {
+                    name: "5. नमाज़ के आदाब (41-50)",
+                    items: [
+                        { num: 41, title: "सुतरा:", detail: "सामने कोई चीज़ या दीवार रखना।" },
+                        { num: 42, title: "सफ दुरुस्त करना:", detail: "कंधे से कंधा मिलाकर खड़ा होना।" },
+                        { num: 43, title: "सना पढ़ना:", detail: "शुरू में सुब्हानक अल्लाहुम्मा पढ़ना।" },
+                        { num: 44, title: "आमीन:", detail:  "नमाज़ में सूरह फ़ातिहा के खत्म होने पर आमीन कहना।"
+ },
+                        { num: 45, title: "रुकू की तस्बीह:", detail: "सुब्हाना रब्बियल अज़ीम पढ़ना।" },
+                        { num: 46, title: "कौमा:", detail: "रुकू से सीधा खड़ा होना।" },
+                        { num: 47, title: "सजदा:", detail: "सुब्हाना रब्बियल आला पढ़ना।" },
+                        { num: 48, title: "जलसा:", detail: "सजदों के बीच बैठना।" },
+                        { num: 49, title: "तशहुद:", detail: "अत्तहियात पढ़ना और इशारा करना।" },
+                        { num: 50, title: "सलाम:", detail: "दाएं और बाएं ओर सलाम फेरना।" }
+                    ]
+                },
+             {
+    name: "6. खाना और पीना (51-60)",
+    items: [
+        { num: 51, title: "दस्तरख्वान:", detail: "दस्तरख्वान बिछा कर और नीचे बैठकर खाना।" },
+        { num: 52, title: "हाथ धोना:", detail: "खाने से पहले हाथ धोना।" },
+        { num: 53, title: "बिस्मिल्लाह:", detail: "शुरू में बिस्मिल्लाह पढ़ना।" },
+        { num: 54, title: "पहले की दुआ:", detail: "खाने से पहले की दुआ पढ़ना। (बिसमिल्लाही व आला बरकतिल्लाह)" ,arabic: "بِسْمِ اللهِ وَعَلٰى بَرَکَةِ اللهِ" },
+        { num: 55, title: "दायां हाथ:", detail: "दाएं हाथ से खाना।" },
+        { num: 56, title: "सामने से खाना:", detail: "प्लेट में अपने सामने से खाना।" },
+        { num: 57, title: "तीन उंगलियां:", detail: "तीन उंगलियों से खाना।" },
+        { num: 58, title: "उंगलियां चाटना:", detail: "खाने के बाद उंगलियां साफ़ करना।" },
+{ num: 59, title: "बाद की दुआ:", detail: "खाने के बाद की दुआ पढ़ना।", arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ" }
+,
+        { num: 60, title: "बैठकर पीना:", detail: "पानी बैठकर 3 सांसों में पीना।" }
+    ]
+},
+
+                {
+                    name: "7. घर और मुलाक़ात (61-70)",
+                    items: [
+                        { num: 61, title: "सलाम :", detail: "अस्सलामु अलैकुम कहना।" },
+                        { num: 62, title: "मुसाफहा:", detail: "हाथ मिलाना।" },
+                        { num: 63, title: "मुस्कुराहट:", detail: "नर्मी से मिलना।" },
+                        { num: 64, title: " घर  में दाखिल होने की दुआ:", detail:"घर में दाखिल होते वक्त यह दुआ पढ़ें।", arabic:"بِسْـمِ اللهِ وَلَجْنَا، وَبِسْـمِ اللهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَكَّلْنَا" },
+                        { num: 65, title: "घर वालों को सलाम:", detail: "सबको सलाम करना।" },
+                      {
+  num: 66,
+  title: "घर से बाहर निकलने की दुआ:",
+  detail: "घर से बाहर निकलते वक्त ये दुआ पढ़ें",
+  arabic: "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ"
+},
+
+{
+  "num": 67,
+  "title": "इजाज़त लेना:",
+  "detail": "किसी के घर में दाखिल होने से पहले इजाज़त लेनी चाहिए।"
+}
+ ,
+{
+  "num": 68,
+  "title": "बड़ों की इज़्ज़त:",
+  "detail": "हमेशा अपने से बड़ों का अदब और एहतराम करना चाहिए।"
+}
+,
+{ "num": 69, "title": "मेहमान नवाज़ी:", "detail": "घर आए मेहमान की अच्छे से खिदमत और खातिरदारी करनी चाहिए।" },
+{ "num": 70, "title": "पड़ोसी का हक:", "detail": "हमेशा अपने पड़ोसियों का ख्याल रखना चाहिए और उन्हें कोई तकलीफ नहीं पहुंचानी चाहिए।" }
+]
+},
+
+              {
+                    name: "8. गुफ्तगू और अख्लाक (71-80)",
+                    items: [
+                        { num: 71, "title": "सच बोलना:", "detail": "हर हाल में हमेशा सच बोलना चाहिए और झूठ से बचना चाहिए।" },
+                        { "num": 72, "title": "नरमी:", "detail": "दूसरों से हमेशा नरमी और धीमी आवाज़ में बात करनी चाहिए।" },
+                        { "num": 73, "title": "गीबत से बचना:", "detail": "कभी भी किसी की पीठ पीछे उसकी बुराई या गीबत नहीं करनी चाहिए।" },
+                        { "num": 74, "title": "चुगली न करना:", "detail": "बातों को इधर-उधर करके आपस में झगड़ा या चुगली नहीं करनी चाहिए।" },
+                        { "num": 75, "title": "गुस्सा काबू:", "detail": "गुस्सा आने पर खुद को काबू में रखना चाहिए और खामोश हो जाना चाहिए।" },
+                        { "num": 76, "title": "वादा पूरा करना:", "detail": "ज़ुबान का पक्का होना चाहिए और जो वादा करें उसे पूरा करना चाहिए।" },
+                        { "num": 77, "title": "छींक का जवाब:", "detail": "छींकने वाले के अलहम्दुलिल्लाह कहने पर जवाब में यर्हमुकल्लाह कहना चाहिए।" },
+                        { "num": 78, "title": "जम्हाई रोकना:", "detail": "जम्हाई (उबासी) को रोकने की कोशिश करनी चाहिए और मुंह पर हाथ रखना चाहिए।" },
+                        { "num": 79, "title": "अस्तगफार:", "detail": "अपने गुनाहों की माफ़ी के लिए उठते-बैठते अस्तगफ़ार (तौबा) करते रहना चाहिए।" },
+                        { "num": 80, "title": "खैर की बात:", "detail": "हमेशा ज़ुबान से अच्छी बात कहनी चाहिए वरना खामोश रहना चाहिए।" }
+                    ]
+                },
+
+{
+                    name: "9. कारोबार (81-90)",
+                    items: [
+                        { "num": 81, "title": "ईमानदारी:", "detail": "कारोबार और लेन-देन में हमेशा ईमानदारी बरतनी चाहिए और किसी को धोखा नहीं देना चाहिए।" },
+                        { "num": 82, "title": "जल्दी निकलना:", "detail": "रोजी-रोटी और काम के लिए सुबह जल्दी निकलना चाहिए, क्योंकि इसमें बरकत होती है।" },
+                        { "num": 83, "title": "हलाल रिज़्क:", "detail": "हमेशा मेहनत के साथ सिर्फ हलाल और पाक कमाई तलाश करने की कोशिश करनी चाहिए।" },
+                        { "num": 84, "title": "कसम न खाना:", "detail": "व्यापार या सौदा करते वक्त माल बेचने के लिए झूठी या बार-बार कसम खाने से बचना चाहिए।" },
+                        { "num": 85, "title": "मज़दूरी देना:", "detail": "मज़दूर का पसीना सूखने से पहले उसकी मज़दूरी और पैसे समय पर अदा कर देने चाहिए।" },
+                        { "num": 86, "title": "कर्ज़ में नरमी:", "detail": "अगर कोई उधार न चुका पा रहा हो, तो उसे मोहलत देकर कर्ज़ की अदायगी में आसानी करनी चाहिए।" },
+                        { "num": 87, "title": "हिसाब लिखना:", "detail": "भविष्य के किसी भी विवाद से बचने के लिए अपने हर छोटे-बड़े लेन-देन का साफ रिकॉर्ड लिखना चाहिए।" },
+                        { "num": 88, "title": "अमानत:", "detail": "अगर कोई आपके पास अपनी कोई चीज़ या राज़ रखे, तो उस अमानत में कभी खयानत नहीं करनी चाहिए।" },
+                        { "num": 89, "title": "सदका:", "detail": "अपनी कमाई में से बरकत के लिए अल्लाह की राह में सदका निकालना चाहिए और गरीबों की मदद करनी चाहिए।" },
+                        { "num": 90, "title": "मश्वरा:", "detail": "कोई भी नया काम या बड़ा फैसला करने से पहले समझदार लोगों से सलाह-मश्वरा ज़रूर करना चाहिए।" }
+                    ]
+                },
+
+{
+                    name: "10. रात को सोने के आदाब (91-100)",
+                    items: [
+                        { "num": 91, "title": "वज़ू करना:", "detail": "रात को बिस्तर पर जाने से पहले वज़ू करके पाकी की हालत में सोना चाहिए।" },
+                        { "num": 92, "title": "बिस्तर झाड़ना:", "detail": "सोने से पहले अपने बिस्तर को अच्छी तरह से तीन बार झाड़ लेना चाहिए।" },
+                        { "num": 93, "title": "दाईं करवट:", "detail": "सोते समय पहले दाईं (सीधी) करवट पर लेटना सुन्नत तरीका है।" },
+                        { "num": 94, "title": "गाल के नीचे हाथ:", "detail": "दाईं करवट लेटकर अपना दायां हाथ गाल के नीचे रखना चाहिए।" },
+                        { "num": 95, "title": "तस्बीह-ए-फ़ातिमी:", "detail": "सोने से पहले 33 बार सुब्हानअल्लाह, 33 बार अलहम्दुलिल्लाह और 34 बार अल्लाहु अकबर पढ़ना चाहिए।" },
+                        { "num": 96, "title": "तीन क़ुल पढ़ना:", "detail": "सूरह इखलास, सूरह फलक और सूरह नास पढ़कर अपने हाथों पर दम करके पूरे जिस्म पर फेरना चाहिए।" },
+                        { "num": 97, "title": "आयतल कुर्सी:", "detail": "रात भर शैतान और मुसीबतों से हिफ़ाज़त के लिए सोने से पहले आयतल कुर्सी पढ़नी चाहिए।" },
+                        { "num": 98, "title": "सोने की दुआ:", "detail": "बिस्तर पर लेटकर सोने की सुन्नत दुआ पढ़नी चाहिए।", "arabic": "اَللّٰهُمَّ بِاسْمِكَ أَمُوْتُ وَأَحْيَا" },
+                        { "num": 99, "title": "जल्दी सोना:", "detail": "ईशा की नमाज़ के बाद बिना वजह देर तक जागने से बचना चाहिए और जल्दी सोना चाहिए।" },
+                        { "num": 100, "title": "मुहासबा:", "detail": "सोने से पहले दिन भर के कामों का जायजा लेकर और अपने गुनाहों की तौबा करके सोना चाहिए।" }
+                    ]
+                }
+            ]
+        },
+
+        
+    en: {
+        title: "100 Complete Sunnats",
+        sub: "100 Complete Sunnats Guide",
+        
+        sections: [
+            {
+                name: "1. Sunnats of Waking Up in the Morning (1-10)",
+                items: [
+                    { num: 1, title: "Rubbing the Face:", detail: "Rubbing the face with hands so that the laziness of sleep goes away." },
+                    { num: 2, title: "Dua after Waking Up:", detail: "All praise is due to Allah who gave us life after giving us death and to Him is the resurrection.", arabic: "اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُوْرُ" },
+                    { num: 3, title: "Using Miswak:", detail: "It is Sunnah to perform Miswak first thing after waking up from sleep." },
+                    { num: 4, title: "Cleaning the Nose:", detail: "Putting water into the nose and blowing it out 3 times before Wudu." },
+                    { num: 5, title: "Washing Hands:", detail: "Washing the hands 3 times after waking up from sleep before putting them into any utensil." },
+                    { num: 6, title: "Looking towards the Sky:", detail: "Looking towards the sky and reciting the last 10 verses of Surah Al-Imran.", 
+                    arabic: "إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ آيَاتٍ لِّأُولِي الْأَلْبَابِ ﴿١٩٠﴾ الَّذِينَ يَذْكُرُونَ اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِهِمْ وَيَتَفَكَّرُونَ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ رَبَّنَا مَا خَلَقْتَ هَـٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ ﴿١٩١﴾ رَبَّنَا إِنَّكَ مَن تُدْخِلِ النَّارَ فَقَدْ أَخْزَيْتَهُ ۖ وَمَا لِلظَّالِمِينَ مِنْ أَنصَارٍ ﴿١٩٢﴾ رَبَّنَا إِنَّنَا سَمِعْنَا مُنَادِيًا يُنَادِي لِلْإِيمَانِ أَنْ آمِنُوا بِرَبِّكُمْ فَآمَنَّا ۚ رَبَّنَا فَاغْفِرْ لَنَا ذُنُوبَنَا وَكَفِّرْ عَنَّا سَيِّئَاتِنَا وَتَوَفَّنَا مَعَ الْأَبْرَارِ ﴿١٩٣﴾ رَبَّنَا وَآتِنَا مَا وَعَدتَّنَا عَلَىٰ رُسُلِكَ وَلَا تُخْزِنَا يَوْمَ الْقِيَامَةِ ۗ إِنَّكَ لَا تُخْلِفُ الْمِيعَادَ ﴿١٩٤﴾ فَاسْتَجَابَ لَهُمْ رَبُّهُمْ أَنِّي لَا أُضِيعُ عَمَلَ عَامِلٍ مِّنكُم مِّن ذَكَرٍ أَوْ أُنثَىٰ ۖ بَعْضُكُم مِّن بَعْضٍ ۖ فَالَّذِينَ هَاجَرُوا وَأُخْرِجُوا مِن دِيَارِهِمْ وَأُوذُوا فِي سَبِيلِي وَقَاتَلُوا وَقُتِلُوا لَأُكَفِّرَنَّ عَنْهُمْ سَيِّئَاتِهِمْ وَلأُدْخِلَنَّهُمْ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ ثَوَابًا مِّنْ عِندِ اللَّهِ ۗ وَاللَّهُ عِندَهُ حُسْنُ الثَّوَابِ ﴿١٩٥﴾ لَا يَغُرَّنَّكَ تَقَلُّبُ الَّذِينَ كَفَرُوا فِي الْبِلَادِ ﴿١٩٦﴾ مَتَاعٌ قَلِيلٌ ثُمَّ مَأْوَاهُمْ جَهَنَّمُ ۚ وَبِئْسَ الْمِهَادُ ﴿١٩٧﴾ لَـٰكِنِ الَّذِينَ اتَّقَوْا رَبَّهُمْ لَهُمْ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ خَالِدِينَ فِيهَا نُزُلًا مِّنْ عِندِ اللَّهِ ۗ وَمَا عِندَ اللَّهِ خَيْرٌ لِّلأَبْرَارِ ﴿١٩٨﴾ وَإِنَّ مِنْ أَهْلِ الْكِتَابِ لَمَن يُؤْمِنُ بِاللَّهِ وَمَا أُنزِلَ إِلَيْكُمْ وَمَا أُنزِلَ إِلَيْهِمْ خَاشِعِينَ لِلَّهِ لَا يَشْتَرُونَ بِآيَاتِ اللَّهِ ثَمَنًا قَلِيلًا ۗ أُولَـٰئِكَ لَهُمْ أَجْرُهُمْ عِندَ رَبِّهِمْ ۗ إِنَّ اللَّهَ سَرِيعُ الْحِسَابِ ﴿١٩٩﴾ يَا أَيُّهَا الَّذِينَ آمَنُوا اصْبِرُوا وَصَابِرُوا وَرَابِطُوا وَاتَّقُوا اللَّهَ لَعَلَّكُمْ تُفْلِحُونَ ﴿٢٠٠﴾"
+},
+                    { num: 7, title: "Dua for Toilet:", detail: "Dua for entering the toilet.", arabic: "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ" },
+                    { num: 8, title: "Left Foot:", detail: "Stepping inside the toilet with the left foot first when entering." },
+                    { num: 9, title: "Right Foot:", detail: "Stepping outside with the right foot first when exiting the toilet." },
+                    { num: 10, title: "Dua for Leaving:", detail: "Reciting this dua while exiting the toilet.", 
+                    arabic: "غُفْرَانَكَ اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَذْهَبَ عَنِّي الْأَذٰى وَعَافَانِيْ" }
+]
+
+            },
+            {
+                name: "2. Etiquettes of Purity and Cleanliness (11-20)",
+                items: [
+                    { num: 11, title: "Using Miswak:", detail: "Cleaning the mouth thoroughly so that bad breath is removed." },
+                    { num: 12, title: "Not Cleaning with Right Hand:", detail: "Always using the left hand for cleaning impurities or blowing the nose." },
+                    { num: 13, title: "Clipping Nails:", detail: "Cutting nails at least once a week (especially on Friday)." },
+                    { num: 14, title: "Hair Cleanliness:", detail: "Washing and keeping the hair of the head and beard clean." },
+                    { num: 15, title: "Purity of Clothes:", detail: "Checking after waking up whether there is any impurity on the clothes." },
+                    { num: 16, title: "Keeping the Bed Clean:", detail: "Cleaning and tidying up one's sleeping area after waking up." },
+                    { num: 17, title: "Arrangement of Fragrance:", detail: "Applying a pure fragrance (Ittar) on the body or clothes after cleaning." },
+                    { num: 18, title: "Saving Water:", detail: "Not wasting water while washing hands, face, or anything else." },
+                    { num: 19, title: "Intention of Purity:", detail: "Keeping the intention of attaining purity in the heart while doing any kind of cleaning." },
+                    { num: 20, title: "Gratitude for Cleanliness:", detail: "Thanking Allah upon attaining purity because cleanliness is half of faith." }
+                ]
+            },
+            {
+                name: "3. Clothing and Mirror (21-30)",
+                items: [
+                    { num: 21, title: "Right Side:", detail: "Putting the right sleeve on first when wearing clothes." },
+                    { num: 22, title: "Bismillah:", detail: "Reciting Bismillah while wearing clothes." },
+                    { num: 23, title: "Dua for New Clothes:", detail: "Reciting this dua when wearing new clothes.", arabic: "اَللّٰهُمَّ لَكَ الْحَمْدُ أَنْتَ كَسَوْتَنِيْهِ" },
+                    { num: 24, title: "Left Side while Removing Clothes:", detail: "Taking out the left sleeve first when removing clothes." },
+                    { num: 25, title: "Wearing Shoes:", detail: "Wearing the shoe on the right foot first." },
+                    { num: 26, title: "Removing Shoes:", detail: "Removing the left shoe first." },
+                    { num: 27, title: "Covering the Head:", detail: "Wearing a cap (topi) when going out." },
+                    { num: 28, title: "Dua for Looking in the Mirror:", detail: "Reciting the dua after looking at the face.", arabic: "اَللّٰهُمَّ أَنْتَ حَسَّنْتَ خَلْقِيْ فَحَسِّنْ خُلُقِيْ" },
+                    { num: 29, title: "Ittar (Fragrance):", detail: "Applying fragrance is a Sunnah." },
+                    { num: 30, title: "Combing:", detail: "Grooming and combing the hair." }
+                ]
+            },
+            {
+                name: "4. Masjid and Azan (31-40)",
+                items: [
+                    { 
+                        num: 31, 
+                        title: "Replying to Azan:", 
+                        detail: "When the Muezzin says: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ (Allahu Akbar, Allahu Akbar), you also say: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ\nWhen the Muezzin says: أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ (Ashhadu al-la ilaha illallah), you also  the Muezzin says: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ (Ashhadu anna Muhammadar Rasoolullah), you also say: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ\nWhen the Muezzin says: حَيَّ عَلَى الصَّلَاةِ (Hayya 'alas-salah), you say: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ (La hawla wa la quwwata illa billah)\nWhen the Muezzin says: حَيَّ عَلَى الْفَلَاحِ (Hayya 'alal-falah), you say: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ (La hawla wa la quwwata illa billah)\nWhen the Muezzin says: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ (Allahu Akbar, Allahu Akbar), you also say: اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ\nWhen the Muezzin says: لَا إِلٰهَ إِلَّا اللَّهُ (La ilaha illallah), you also say: لَا إِلٰهَ إِلَّا اللَّهُ" 
+                    },
+                    { num: 32, title: "Durood Shareef:", detail: "Reciting Durood upon the Prophet ﷺ after the Azan.", arabic: " صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ      " },
+                    { 
+                        num: 33, 
+                        title: "Dua After Azan:", 
+                        detail: "It is Sunnah to supplicate this complete Masnoon dua of Maqam-e-Mahmood after reciting Durood Shareef when the Azan ends.\n\nEnglish Translation: O Allah! Lord of this perfect call and established prayer! Grant Muhammad ﷺ the Wasilah (a special place in Paradise) and distinction, and raise him to that Maqam-e-Mahmood (the praised station) which You have promised him. Verily, You do not break promises.", 
+                        arabic: "اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ، إِنَّكَ لَا تُخْلِفُ الْمِيعَادَ"
+},
+                    { num: 34, title: "Walking to the Masjid:", detail: "Going to the Masjid on foot taking short steps." },
+                    { num: 35, title: "Dua for Entering the Masjid:", detail: "Reciting this dua upon entering the Masjid.", 
+                    arabic: "اَللّٰهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ"
+},
+                    { num: 36, title: "Right Foot:", detail: "Stepping the right foot first into the Masjid." },
+                    { num: 37, title: "Tahiyyatul Masjid:", detail: "Praying 2 Rakat Nafl prayer." },
+                    { num: 38, title: "Leaving the Masjid:", detail: "Stepping the left foot out first." },
+                    { num: 39, title: "Dua for Leaving the Masjid:", detail: "Dua for exiting out of the Masjid.", arabic: "اَللّٰهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ" },
+                    { num: 40, title: "Dhikr:", detail: "Sitting silently in the Masjid and engaging in Dhikr." }
+                ]
+            },
+            {
+                name: "5. Etiquettes of Namaz (41-50)",
+                items: [
+                    { num: 41, title: "Sutrah:", detail: "Placing an object or standing in front of a wall." },
+                    { num: 42, title: "Straightening the Saf:", detail: "Standing shoulder to shoulder in a straight line." },
+                    { num: 43, title: "Reciting Sana:", detail: "Reciting Subhanaka Allahumma at the beginning." },
+                    { num: 44, title: "Ameen:", detail: "Saying Ameen at the end of Surah Al-Fatiha in Namaz." },
+                    { num: 45, title: "Tasbeeh of Ruku:", detail: "Reciting Subhana Rabbiyal Azeem." },
+                    { num: 46, title: "Qauma:", detail: "Standing up straight from Ruku." },
+                    { num: 47, title: "Sajdah:", detail: "Reciting Subhana Rabbiyal A'la." },
+                    { num: 48, title: "Jalsah:", detail: "Sitting between the two Sajdahs." },
+                    { num: 49, title: "Tashahhud:", detail: "Reciting Attahiyyat and raising the index finger for testimony." },
+                    { num: 50, title: "Salam:", detail: "Turning the face to the right and left for Salam." }
+                ]
+            },
+            {
+                name: "6. Eating and Drinking (51-60)",
+                items: [
+                    { num: 51, title: "Dastarkhwan:", detail: "Spreading a Dastarkhwan (eating mat) and sitting on the floor to eat." },
+                    { num: 52, title: "Washing Hands:", detail: "Washing hands before eating." },
+                    { num: 53, title: "Bismillah:", detail: "Reciting Bismillah at the beginning." },
+                    { num: 54, title: "Dua Before Eating:", detail: "Reciting the dua before eating. (Bismillahi wa 'ala barakatillah - بِسْمِ اللهِ وَعَلٰى بَرَکَةِ اللهِ)" },
+                    { num: 55, title: "Right Hand:", detail: "Eating with the right hand." },
+                    { num: 56, title: "Eating from the Front:", detail: "Eating from the portion directly in front of you in the plate." },
+                    { num: 57, title: "Three Fingers:", detail: "Eating with three fingers." },
+                    { num: 58, title: "Licking Fingers:", detail: "Cleaning and licking the fingers after eating." },
+                    { num: 59, title: "Dua After Eating:", detail: "Reciting the dua after eating.", 
+                   arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ"
+ },
+                    { num: 60, title: "Drinking while Sitting:", detail: "Drinking water while sitting in 3 breaths." }
+                ]
+            },
+            {
+                name: "7. Home and Meeting (61-70)",
+                items: [
+                    { num: 61, title: "Salam:", detail: "Saying Assalamu Alaikum." },
+                    { num: 62, title: "Musafahah:", detail: "Shaking hands." },
+                    { num: 63, title: "Smile:", detail: "Meeting others with politeness and a smile." },
+                    { num: 64, title: "Dua for Entering the House:", detail: "Recite this dua when entering the house.", arabic: "بِسْـمِ اللهِ وَلَجْنَا، وَبِسْـمِ اللهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَكَّلْنَا" },
+                    { num: 65, title: "Salam to Family Members:", detail: "Saying Salam to everyone at home." },
+                    { num: 66, title: "Dua for Leaving the House:", detail: "Recite this dua when leaving the house.", arabic: "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ" },
+                    { num: 67, title: "Seeking Permission:", detail: "Permission should be taken before entering anyone's house." },
+                    { num: 68, title: "Respect for Elders:", detail: "One should always respect and honor those who are older than themselves." },
+                    { num: 69, title: "Hospitality:", detail: "Guests who come to the house should be served and hosted well." },
+                    { num: 70, title: "Right of the Neighbor:", detail: "One should always take care of their neighbors and should not cause them any trouble." }
+                ]
+            },
+            {
+                name: "8. Conversation and Manners (71-80)",
+                items: [
+                    { num: 71, title: "Speaking the Truth:", detail: "One should always speak the truth in every situation and avoid lies." },
+                    { num: 72, title: "Gentleness:", detail: "One should always speak to others gently and in a low voice." },
+                    { num: 73, title: "Avoiding Backbiting:", detail: "One should never backbite or speak ill of anyone behind their back." },
+                    { num: 74, title: "Not Talebearing:", detail: "One should not carry tales around to cause fights or gossips between people." },
+                    { num: 75, title: "Controlling Anger:", detail: "One should keep themselves under control when angry and remain silent." },
+                    { num: 76, title: "Fulfilling Promises:", detail: "One should be true to their word and fulfill whatever promise they make." },
+                    { num: 77, title: "Replying to Sneeze:", detail: "Upon the sneezer saying Alhamdulillah, one should reply with Yarhamukallah." },
+                    { num: 78, title: "Restraining Yawning:", detail: "One should try to restrain yawning and place a hand over the mouth." },
+                    { num: 79, title: "Istighfar:", detail: "One should keep seeking Istighfar (repentance) for their sins while sitting and standing." },
+                    { num: 80, title: "Good Speech:", detail: "One should always speak good words from the tongue or otherwise remain silent." }
+                ]
+            },
+            {
+                name: "9. Business and Trade (81-90)",
+                items: [
+                    { num: 81, title: "Honesty:", detail: "One should always practice honesty in business and dealings, and never deceive anyone." },
+                    { num: 82, title: "Leaving Early:", detail: "One should leave early in the morning for livelihood and work, as there is blessing in it." },
+                    { num: 83, title: "Halal Livelihood:", detail: "One should always strive with hard work to seek only Halal and pure earnings." },
+                    { num: 84, title: "Not Swearing Oaths:", detail: "One should avoid swearing false or repeated oaths to sell goods while trading." },
+                    { num: 85, title: "Paying Wages:", detail: "The wages and money of a laborer should be paid on time before his sweat dries." },
+                    { num: 86, title: "Gentleness in Debt:", detail: "If someone is unable to repay a loan, they should be given respite to ease the repayment." },
+                    { num: 87, title: "Writing Accounts:", detail: "To avoid any future disputes, a clear record of every small and big transaction should be written." },
+                    { num: 88, title: "Trust (Amanat):", detail: "If someone keeps any item or secret with you as a trust, one should never breach that trust." },
+                    { num: 89, title: "Sadaqah:", detail: "Sadaqah should be given out of one's earnings in the way of Allah for blessings, and the poor should be helped." },
+                    { num: 90, title: "Consultation (Mashwarah):", detail: "Wise people must be consulted before starting any new work or making a big decision." }
+                ]
+            },
+            {
+                name: "10. Etiquettes of Sleeping at Night (91-100)",
+                items: [
+                    { num: 91, title: "Performing Wudu:", detail: "One should perform Wudu and sleep in a state of purity before going to bed at night." },
+                    { num: 92, title: "Dusting the Bed:", detail: "The bed should be thoroughly dusted three times before sleeping." },
+                    { num: 93, title: "Right Side:", detail: "Lying down on the right side first when sleeping is a Sunnah method." },
+                    { num: 94, title: "Hand under the Cheek:", detail: "One should place their right hand under the cheek while lying on the right side." },
+                    { num: 95, title: "Tasbeeh-e-Fatimi:", detail: "One should recite SubhanAllah 33 times, Alhamdulillah 33 times, and Allahu Akbar 34 times before sleeping." },
+                    { num: 96, title: "Reciting Three Quls:", detail: "One should recite Surah Al-Ikhlas, Surah Al-Falaq, and Surah An-Nas, blow onto the hands, and rub them over the whole body." },
+                    { num: 97, title: "Ayat-ul-Kursi:", detail: "Ayat-ul-Kursi should be recited before sleeping for protection against Satan and afflictions throughout the night." },
+                    { num: 98, title: "Dua for Sleeping:", detail: "The Sunnah dua for sleeping should be recited while lying on the bed.", arabic: "اَللّٰهُمَّ بِاسْمِكَ أَمُوْتُ وَأَحْيَا" },
+                    { num: 99, title: "Sleeping Early:", detail: "One should avoid staying awake late without a valid reason after Isha prayer and should sleep early." },
+                    { num: 100, title: "Self-Accountability (Muhasabah):", detail: "One should review the day's deeds and sleep after repenting for their sins before sleeping." }
+                ]
+            }
+        ]
+    },
+ur: {
+            title: "100 مکمل سنتیں",
+            sub: "100 Complete Sunnats Guide",
+            
+            sections: [
+                {
+                    name: "1. صبح اٹھنے کی سنتیں (1-10)",
+                    items: [
+                        { num: 1, title: "چہرہ ملنا:", detail: "ہاتھوں سے چہرے کو ملنا تاکہ نیند کا خمار ختم ہو۔" },
+                        { num: 2, title: "سوکر اٹھنے کی دعا:", detail: "تمام تعریفیں اللہ کے لیے ہیں جس نے ہمیں مرنے (سونے) کے بعد زندہ کیا۔", arabic: "اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُوْرُ" },
+                        { num: 3, title: "مسواک کرنا:", detail: "سوکر اٹھتے ہی سب سے پہلے مسواک کرنا سنت ہے۔" },
+                        { num: 4, title: "ناک صاف کرنا:", detail: "وضو سے پہلے 3 بار ناک میں پانی ڈال کر جھاڑنا۔" },
+                        { num: 5, title: "ہاتھ دھونا:", detail: "برتن میں ہاتھ ڈالنے سے پہلے ہاتھوں کو 3 بار دھونا۔" },
+                        { num: 6, title: "آسمان کی طرف دیکھنا:", detail: "آسمان کی طرف دیکھ کر سورہ آل عمران کی آخری 10 آیات پڑھنا۔", arabic: "إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ لَآيَاتٍ لِّأُولِي الْأَلْبَابِ ﴿١٩٠﴾ الَّذِينَ يَذْكُرُونَ اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِهِمْ وَيَتَفَکَّرُونَ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ رَبَّنَا مَا خَلَقْتَ هَـٰذَا بَاطِلًا سُبْحَانَکَ فَقِنَا عَذَابَ النَّارِ ﴿١٩١﴾ رَبَّنَا إِنَّکَ مَن تُدْخِلِ النَّارَ فَقَدْ أَخْزَيْتَهُ ۖ وَمَا لِلظَّالِمِينَ مِنْ أَنصَارٍ ﴿١٩٢﴾ رَبَّنَا إِنَّنَا سَمِعْنَا مُنَادِيًا يُنَادِي لِلْإِيمَانِ أَنْ آمِنُوا بِرَبِّکُمْ فَآمَنَّا ۚ رَبَّنَا فَاغْفِرْ لَنَا ذُنُوبَنَا وَکَفِّرْ عَنَّا سَيِّئَاتِنَا وَتَوَفَّنَا مَعَ الْأَبْرَارِ ﴿١٩٣﴾ رَبَّنَا وَآتِنَا مَا وَعَدتَّنَا عَلَىٰ رُسُلِکَ وَلَا تُخْزِنَا يَوْمَ الْقِيَامَةِ ۗ إِنَّکَ لَا تُخْلِفُ الْمِيعَادَ ﴿١٩٤﴾ فَاسْتَجَابَ لَهُمْ رَبُّهُمْ أَنِّي لَا أُضِيعُ عَمَلَ عَامِلٍ مِّنکُم مِّن ذَکَرٍ أَوْ أُنثَىٰ ۖ بَعْضُکُم مِّن بَعْضٍ ۖ فَالَّذِينَ هَاجَرُوا وَأُخْرِجُوا مِن دِيَارِهِمْ وَأُوذُوا فِي سَبِيلِي وَقَاتَلُوا وَقُتِلُوا لَأُکَفِّرَنَّ عَنْهُمْ سَيِّئَاتِهِمْ وَلأُدْخِلَنَّهُمْ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ ثَوَابًا مِّنْ عِندِ اللَّهِ ۗ وَاللَّهُ عِندَهُ حُسْنُ الثَّوَابِ ﴿١٩٥﴾ لَا يَغُرَّنَّکَ تَقَلُّبُ الَّذِينَ کَفَرُوا فِي الْبِلَادِ ﴿١٩٦﴾ مَتَاعٌ قَلِيلٌ ثُمَّ مَأْوَاهُمْ جَهَنَّمُ ۚ وَبِئْسَ الْمِهَادُ ﴿١٩٧﴾ لَـٰکِنِ الَّذِينَ اتَّقَوْا رَبَّهُمْ لَهُمْ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ خَالِدِينَ فِيهَا نُزُلًا مِّنْ عِندِ اللَّهِ ۗ وَمَا عِندَ اللَّهِ خَيْرٌ لِّلأَبْرَارِ ﴿١٩٨﴾ وَإِنَّ مِنْ أَهْلِ الْکِتَابِ لَمَن يُؤْمِنُ بِاللَّهِ وَمَا أُنزِلَ إِلَيْکُمْ وَمَا أُنزِلَ إِلَيْهِمْ خَاشِعِينَ لِلَّهِ لَا يَشْتَرُونَ بِآيَاتِ اللَّهِ ثَمَنًا قَلِيلًا ۗ أُولَـٰئِکَ لَهُمْ أَجْرُهُمْ عِندَ رَبِّهِم_ ۗ إِنَّ اللَّهَ سَرِيعُ الْحِسَابِ ﴿١٩٩﴾ يَا أَيُّهَا الَّذِينَ آمَنُوا اصْبِرُوا وَصَابِرُوا وَرَابِطُوا وَاتَّقُوا اللَّهَ لَعَلَّکُمْ تُفْلِحُونَ ﴿٢٠٠﴾" },
+                        { num: 7, title: "ٹائلٹ کی دعا:", detail: "ٹائلٹ میں داخل ہونے کی دعا۔", arabic: "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِکَ مِنَ الْخُبُثِ وَالْخَبَائِثِ" },
+                        { num: 8, title: "باواں پیر:", detail: "ٹائلٹ کے اندر داخل ہوتے وقت پہلے باواں پیر اندر رکھنا۔" },
+                        { num: 9, title: "دایاں پیر:", detail: "ٹائلٹ سے باہر نکلتے وقت دایاں پیر باہر رکھنا۔" },
+                        { num: 10, title: "نکلنے کی دعا:", detail: "ٹائلٹ سے باہر نکلتے وقت یہ دعا پڑھیں۔", arabic: "غُفْرَانَکَ اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَذْهَبَ عَنِّي الْأَذٰى وَعَافَانِيْ" }
+                    ]
+                },
+                {
+                    name: "2. پاکیزگی اور صفائی کے آداب (11-20)",
+                    items: [
+                        { num: 11, title: "مسواک کرنا:", detail: "منہ کو اچھی طرح صاف کرنا تاکہ منہ کی بدبو دور ہو۔" },
+                        { num: 12, title: "دائیں ہاتھ سے صفائی نہ کرنا:", detail: "گندگی صاف کرنے یا ناک صاف کرنے کے لیے ہمیشہ بائیں ہاتھ کا استعمال کرنا۔" },
+                        { num: 13, title: "ناخن تراشنا:", detail: "ہفتے میں کم سے کم ایک بار (خاص کر جمعہ کو) ناخن کاٹنا۔" },
+                        { num: 14, title: "بالوں کی صفائی:", detail: "سر اور داڑھی کے بالوں کو دھو کر صاف رکھنا۔" },
+                        { num: 15, title: "کپڑوں کی پاکیزگی:", detail: "اٹھنے کے بعد یہ دیکھنا کہ لباس پر کوئی گندگی تو نہیں لگی۔" },
+                        { num: 16, title: "بستر صاف رکھنا:", detail: "سوکر اٹھنے کے بعد اپنے سونے کی جگہ کو صاف ستھرا کرنا۔" },
+                        { num: 17, title: "خوشبو کا اہتمام:", detail: "صفائی کے بعد بدن یا کپڑوں پر کوئی پاکیزہ خوشبو لگانا۔" },
+                        { num: 18, title: "پانی کی بچت:", detail: "ہاتھ منہ یا کوئی بھی چیز دھوتے وقت پانی فضول نہ بہانا۔" },
+                        { num: 19, title: "پاکی کی نیت:", detail: "ہر طرح کی صفائی کرتے وقت دل میں پاکی حاصل کرنے کی نیت رکھنا۔" },
+                        { num: 20, title: "صفائی پر شکر:", detail: "پاکیزگی حاصل ہونے پر اللہ کا شکر ادا کرنا کیونکہ پاکی آدھا ایمان ہے۔" }
+                    ]
+                },
+                {
+                    name: "3. لباس اور آئینہ (21-30)",
+                    items: [
+                        { num: 21, title: "دائیں طرف:", detail: "کپڑا پہنتے وقت پہلے دایاں بازو ڈالنا۔" },
+                        { num: 22, title: "بسم اللہ:", detail: "کپڑا پہنتے وقت بسم اللہ پڑھنا۔" },
+                        { num: 23, title: "نیا لباس کی دعا:", detail: "نئے کپڑے پہنتے وقت یہ دعا پڑھیں۔", arabic: "اَللّٰهُمَّ لَکَ الْحَمْدُ أَنْتَ کَسَوْتَنِيْهِ" },
+                        { num: 24, title: "کپڑے اتارتے وقت باواں:", detail: "کپڑے اتارتے وقت پہلے بائیں بازو کو نکالنا۔" },
+                        { num: 25, title: "جوتے پہننا:", detail: "پہلے دائیں پیر کا جوتا پہننا۔" },
+                        { num: 26, title: "جوتے اتارنا:", detail: "پہلے باواں جوتا اتارنا۔" },
+                        { num: 27, title: "سر ڈھانپنا:", detail: "باہر نکلتے وقت ٹوپی پہننا۔" },
+                        { num: 28, title: "آئینہ دیکھنے کی دعا:", detail: "چہرہ دیکھ کر دعا پڑھنا۔", arabic: "اَللّٰهُمَّ أَنْتَ حَسَّنْتَ خَلْقِيْ فَحَسِّنْ خُلُقِيْ" },
+                        { num: 29, title: "عطر (خوشبو):", detail: "خوشبو لگانا سنت ہے۔" },
+                        { num: 30, title: "کنگی:", detail: "بالوں کو سنوارنا۔" }
+                    ]
+                },
+                {
+                    name: "4. مسجد اور اذان (31-40)",
+                    items: [
+                        { 
+                            num: 31, 
+                            title: "اذان کا جواب:", 
+                            detail: "جب مؤذن کہے: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ (اللہ اکبر، اللہ اکبر) تو آپ بھی کہیں: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ\nجب مؤذن کہے: أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللّٰهُ (اشہد ان لا الہ الا اللہ) تو آپ بھی کہیں: أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللّٰهُ\n\nجب مؤذن کہے: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ (اشہد ان محمد رسول اللہ) تو آپ بھی کہیں: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ\nجب مؤذن کہے: حَيَّ عَلَى الصَّلَاةِ (حی علی الصلاۃ) تو آپ کہیں: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ (لا حول ولا قوۃ الا باللہ)\nجب مؤذن کہے: حَيَّ عَلَى الْفَلَاحِ (حی علی الفلاح) تو آپ کہیں: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ (لا حول ولا قوۃ الا باللہ)\nجب مؤذن کہے: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ (اللہ اکبر، اللہ اکبر) تو آپ بھی کہیں: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ\nجب مؤذن کہے: لَا إِلٰهَ إِلَّا اللَّهُ (لا الہ الا اللہ) تو آپ بھی کہیں: لَا إِلٰهَ إِلَّا اللَّهُ" 
+                        },
+                        { num: 32, title: "درود شریف:", detail: "اذان کے بعد نبی ﷺ پر درود پڑھنا۔", arabic: "صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ" },
+                        { 
+                            num: 33, 
+                            title: "اذان کے بعد کی دعا:", 
+                            detail: "اذان ختم ہونے پر درود شریف پڑھنے کے بعد مقام محمود کی یہ مکمل مسنون دعا مانگنا سنت ہے۔\n\nہندی ترجمہ: اے اللہ! اس مکمل پکار اور قائم ہونے والی نماز کے رب! حضرت محمد ﷺ کو وسیلہ (جنت کا ایک خاص مقام) اور بزرگی عطا فرما، اور انہیں اس مقام محمود (تعریف کے مقام) پر پہنچا جس کا تو نے ان سے وعدہ کیا ہے۔ بیشک تو وعدہ خلافی نہیں کرتا۔", 
+                            arabic: "اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّۃِ، وَالصَّلَاۃِ الْقَائِمَۃِ، آتِ مُحَمَّدًا الْوَسِيلَۃَ وَالْفَضِيلَۃَ، وَابْعَثْهُ مَقَامًا مَّحْمُودًا الَّذِي وَعَدتَّهُ، إِنَّکَ لَا تُخْلِفُ الْمِيعَادَ" 
+                        },
+                        { num: 34, title: "پیدل مسجد جانا:", detail: "چھوٹے قدم لے کر پیدل مسجد جانا۔" },
+                        { num: 35, title: " مسجد میں داخل ہونے کی دعا:", detail: "مسجد میں داخل ہونے پر یہ دعا پڑھیں۔", arabic: "اَللّٰهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِکَ" },
+                        { num: 36, title: "داہنا پیر:", detail: "مسجد میں پہلے داہنا پیر رکھنا۔" },
+                        { num: 37, title: "تحیتہ المسجد:", detail: "2 رکعت نفل پڑھنا۔" },
+                        { num: 38, title: "مسجد سے نکلنا:", detail: "پہلے باواں پیر باہر رکھنا۔" },
+                        { num: 39, title: "مسجد سے نکلنے کی دعا:", detail: "مسجد سے باہر نکلنے کی دعا۔", arabic: "اَللّٰهُمَّ إِنِّي أَسْأَلُکَ مِنْ فَضْلِکَ" },
+                        { num: 40, title: "ذکر:", detail: "مسجد میں خاموشی سے بیٹھیں اور ذکر کرنا۔" }
+                    ]
+                },
+                {
+                    name: "5. نماز کے آداب (41-50)",
+                    items: [
+                        { num: 41, title: "سترا:", detail: "سامنے کوئی چیز یا دیوار رکھنا۔" },
+                        { num: 42, title: "صف درست کرنا:", detail: "کندھے سے کندھا ملا کر کھڑا ہونا۔" },
+                        { num: 43, title: "ثنا پڑھنا:", detail: "شروع میں سبحانک اللہم پڑھنا۔" },
+                        { num: 44, title: "آمین:", detail: "نماز میں سورہ فاتحہ کے ختم ہونے پر آمین کہنا۔" },
+                        { num: 45, title: "رکوع کی تسبیح:", detail: "سبحان ربی العظیم پڑھنا۔" },
+                        { num: 46, title: "قومہ:", detail: "رکوع سے سیدھا کھڑا ہونا۔" },
+                        { num: 47, title: "سجدہ:", detail: "سبحان ربی الاعلیٰ پڑھنا۔" },
+                        { num: 48, title: "جلسہ:", detail: "سجدوں کے بیچ بیٹھنا۔" },
+                        { num: 49, title: "تشہد:", detail: "التحیات پڑھنا اور اشارہ کرنا۔" },
+                        { num: 50, title: "سلام:", detail: "دائیں اور بائیں اور سلام پھیرنا۔" }
+                    ]
+                },
+                {
+                    name: "6. کھانا اور پینا (51-60)",
+                    items: [
+                        { num: 51, title: "دسترخوان:", detail: "دسترخوان بچھا کر اور نیچے بیٹھ کر کھانا۔" },
+                        { num: 52, title: "ہاتھ دھونا:", detail: "کھانے سے پہلے ہاتھ دھونا۔" },
+                        { num: 53, title: "بسم اللہ:", detail: "شروع میں بسم اللہ پڑھنا۔" },
+                        { num: 54, title: "پہلے کی دعا:", detail: "کھانے سے پہلے کی دعا پڑھنا۔ (بسم اللہ و علیٰ برکت اللہ)", arabic: "بِسْمِ اللهِ وَعَلٰى بَرَکَۃِ اللهِ" },
+                        { num: 55, title: "دایاں ہاتھ:", detail: "دائیں ہاتھ سے کھانا۔" },
+                        { num: 56, title: "سامنے سے کھانا:", detail: "پلیٹ میں اپنے سامنے سے کھانا۔" },
+                        { num: 57, title: "تین انگلیاں:", detail: "تین انگلیوں سے کھانا۔" },
+                        { num: 58, title: "انگلیاں چاٹنا:", detail: "کھانے کے بعد انگلیاں صاف کرنا۔" },
+                        { num: 59, title: "بعد کی دعا:", detail: "کھانے کے بعد کی دعا پڑھنا۔", arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ" },
+                        { num: 60, title: "بیٹھ کر پینا:", detail: "پانی بیٹھ کر 3 سانسوں میں پینا۔" }
+                    ]
+                },
+                {
+                    name: "7. گھر اور ملاقات (61-70)",
+                    items: [
+                        { num: 61, title: "سلام:", detail: "السلام علیکم کہنا۔" },
+                        { num: 62, title: "مسافہا:", detail: "ہاتھ ملانا۔" },
+                        { num: 63, title: "مسکراہٹ:", detail: "نرمی سے ملنا۔" },
+                        { num: 64, title: " گھر میں داخل ہونے کی دعا:", detail: "گھر میں داخل ہوتے وقت یہ دعا پڑھیں۔", arabic: "بِسْـمِ اللهِ وَلَجْنَا، وَبِسْـمِ اللهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَکَّلْنَا" },
+                        { num: 65, title: "گھر والوں کو سلام:", detail: "سبکو سلام کرنا۔" },
+                        { num: 66, title: "گھر سے باہر نکلنے کی دعا:", detail: "گھر سے باہر نکلتے وقت یہ دعا پڑھیں", arabic: "بِسْمِ اللَّهِ، تَوَکَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ" },
+                        { num: 67, title: "اجازت لینا:", detail: "کسی کے گھر میں داخل ہونے سے پہلے اجازت لینی چاہیے۔" },
+                        { num: 68, title: "بڑوں کی عزت:", detail: "ہمیشہ اپنے سے بڑوں کا ادب اور احترام کرنا چاہیے۔" },
+                        { num: 69, title: "مہمان نوازی:", detail: "گھر آئے مہمان کی اچھے سے خدمت اور خاطر داری کرنی چاہیے۔" },
+                        { num: 70, title: "پڑوسی کا حق:", detail: "ہمیشہ اپنے پڑوسیوں کا خیال رکھنا چاہیے اور انہیں کوئی تکلیف نہیں پہنچانی چاہیے۔" }
+                    ]
+                },
+                {
+                    name: "8. گفتگو اور اخلاق (71-80)",
+                    items: [
+                        { num: 71, title: "سچ بولنا:", detail: "ہر حال میں ہمیشہ سچ بولنا چاہیے اور جھوٹ سے بچنا چاہیے۔" },
+                        { num: 72, title: "نرمی:", detail: "دوسروں سے ہمیشہ نرمی اور دھیمی آواز میں بات کرنی چاہیے۔" },
+
+                     { num: 73, title: "غیبت سے بچنا:", detail: "کبھی بھی کسی کی پیٹھ پیچھے اس کی برائی یا غیبت نہیں کرنی چاہیے۔" },
+                        { num: 74, title: "چغلی نہ کرنا:", detail: "باٹوں کو ادھر ادھر کر کے آپس میں جھگڑا یا چغلی نہیں کرنی چاہیے۔" },
+                        { num: 75, title: "غصہ قابو:", detail: "غصہ آنے پر خود کو قابو میں رکھنا چاہیے اور خاموش ہو جانا چاہیے۔" },
+                        { num: 76, title: "وادا پورا کرنا:", detail: "زبان کا پکا ہونا چاہیے اور جو وعدہ کریں اسے پورا کرنا چاہیے۔" },
+                        { num: 77, title: "چھینک کا جواب:", detail: "چھینکنے والے کے الحمد للہ کہنے پر جواب میں یرحمک اللہ کہنا چاہیے۔" },
+                        { num: 78, title: "جماہی روکنا:", detail: "جماہی (اباسی) کو روکنے کی کوشش کرنی چاہیے اور منہ پر ہاتھ رکھنا چاہیے۔" },
+                        { num: 79, title: "استغفار:", detail: "اپنے گناہوں کی معافی کے لیے اٹھتے بیٹھتے استغفار (توبہ) کرتے رہنا چاہیے۔" },
+                        { num: 80, title: "خیر کی بات:", detail: "ہمیشہ زبان سے اچھی بات کہنی چاہیے ورنہ خاموش رہنا چاہیے۔" }
+                    ]
+                },
+                {
+                    name: "9. کاروبار (81-90)",
+                    items: [
+                        { num: 81, title: "ایمانداری:", detail: "کاروبار اور لین دین میں ہمیشہ ایمانداری برتنی چاہیے اور کسی کو دھوکا نہیں دینا چاہیے۔" },
+                        { num: 82, title: "جلدی نکلنا:", detail: "روزی روٹی اور کام کے لیے صبح جلدی نکلنا چاہیے، کیونکہ اس میں برکت ہوتی ہے۔" },
+                        { num: 83, title: "حلال رزق:", detail: "ہمیشہ محنت کے ساتھ صرف حلال اور پاک کمائی تلاش کرنے کی کوشش کرنی چاہیے۔" },
+                        { num: 84, title: "قسم نہ کھانا:", detail: "ویاپار یا سودا کرتے وقت مال بیچنے کے لیے جھوٹی یا بار بار قسم کھانے سے بچنا چاہیے۔" },
+                        { num: 85, title: "مزدوری دینا:", detail: "مزدور کا پسینہ سوکھنے سے پہلے اس کی مزدوری اور پیسے سمے پر ادا کر دینے چاہئیں۔" },
+                        { num: 86, title: "قرض میں نرمی:", detail: "اگر کوئی ادھار نہ چکا پا رہا ہو، تو اسے مہلت دے کر قرض کی ادائیگی میں آسانی کرنی چاہیے۔" },
+                        { num: 87, title: "حساب لکھنا:", detail: "بھوشیہ کے کسی بھی وواد سے بچنے کے لیے اپنے ہر چھوٹے بڑے لین دین کا صاف ریکارڈ لکھنا چاہیے۔" },
+                        { num: 88, title: "امانت:", detail: "اگر کوئی آپ کے پاس اپنی کوئی چیز یا راز رکھے، تو اس امانت میں کبھی خیانت نہیں کرنی چاہیے۔" },
+                        { num: 89, title: "صدقہ:", detail: "اپنی کمائی میں سے برکت کے لیے اللہ کی راہ میں صدقہ نکالنا چاہیے اور غریبوں کی مدد کرنی چاہیے۔" },
+                        { num: 90, title: "مشورہ:", detail: "کوئی بھی نیا کام یا بڑا فیصلہ کرنے سے پہلے سمجھدار لوگوں سے صلاح مشورہ ضرور کرنا چاہیے۔" }
+                    ]
+                },
+                {
+                    name: "10. رات کو سونے کے آداب (91-100)",
+                    items: [
+                        { num: 91, title: "وضو کرنا:", detail: "رات کو بستر پر جانے سے پہلے وضو کر کے پاکی کی حالت میں سونا چاہیے۔" },
+                        { num: 92, title: "بستر جھاڑنا:", detail: "سونے سے پہلے اپنے بستر کو اچھی طرح سے تین بار جھاڑ لینا چاہیے۔" },
+                        { num: 93, title: "دائیں کروٹ:", detail: "سوتے سمے پہلے دائیں (سیدھی) کروٹ پر لیٹنا سنت طریقہ ہے۔" },
+                        { num: 94, title: "گال کے نیچے ہاتھ:", detail: "دائیں کروٹ لیٹ کر اپنا دایاں ہاتھ گال کے نیچے رکھنا چاہیے۔" },
+                        { num: 95, title: "تسبیح فاطمی:", detail: "سونے سے پہلے 33 بار سبحان اللہ، 33 بار الحمد للہ اور 34 بار اللہ اکبر پڑھنا چاہیے۔" },
+                        { num: 96, title: "تین قل پڑھنا:", detail: "سورہ اخلاص، سورہ فلق اور سورہ ناس پڑھ کر اپنے ہاتھوں پر دم کر کے پورے جسم پر پھیرنا چاہیے۔" },
+                        { num: 97, title: "آیت الکرسی:", detail: "رات بھر شیطان اور مصیبتوں سے حفاظت کے لیے سونے سے پہلے آیت الکرسی پڑھنی چاہیے۔" },
+                        { num: 98, title: "سونے کی دعا:", detail: "بستر پر لیٹ کر سونے کی سنت دعا پڑھنی چاہیے۔", arabic: "اَللّٰهُمَّ بِاسْمِکَ أَمُوْتُ وَأَحْيَا" },
+                        { num: 99, title: "جلدی سونا:", detail: "عشاء کی نماز کے بعد بنا وجہ دیر تک جاگنے سے بچنا چاہیے اور جلدی سونا چاہیے۔" },
+                        { num: 100, title: "محاسبہ:", detail: "سونے سے پہلے دن بھر کے کاموں کا جائزہ لے کر اور اپنے گناہوں کی توبہ کر کے سونا چاہیے۔" }
+                    ]
+                }
+            ]
+        },
+        ar: {
+            title: "100 سنن كاملة",
+            sub: "100 Complete Sunnats Guide",
+            
+            sections: [
+                {
+                    name: "1. سنن الاستيقاظ من النوم (1-10)",
+                    items: [
+                        { num: 1, title: "مسح الوجه:", detail: "مسح الوجه باليدين عند الاستيقاظ لإزالة أثر النوم." },
+                        { num: 2, title: "دعاء الاستيقاظ:", detail: "الحمد لله الذي أحيانا بعد ما أماتنا وإليه النشور.", arabic: "اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُوْرُ" },
+                        { num: 3, title: "السواك:", detail: "استخدام السواك فور الاستيقاظ من النوم سنة مؤكدة." },
+                        { num: 4, title: "الاستنثار:", detail: "غسل الأنف واستنثاره ثلاث مرات بالماء قبل الوضوء." },
+                        { num: 5, title: "غسل اليدين:", detail: "غسل اليدين ثلاث مرات قبل إدخالهما في الإناء." },
+                        { num: 6, title: "النظر إلى السماء:", detail: "النظر إلى السماء وقراءة الآيات العشر الأواخر من سورة آل عمران.", 
+                  Arabic: "إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ لَآيَاتٍ لِّأُولِي الْأَلْبَابِ ﴿١٩٠﴾ الَّذِينَ يَذْکُرُونَ اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِهِمْ وَيَتَفَکَّرُونَ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ رَبَّنَا مَا خَلَقْتَ هَـٰذَا بَاطِلًا سُبْحَانَکَ فَقِنَا عَذَابَ النَّارِ ﴿١٩١﴾ رَبَّنَا إِنَّکَ مَن تُدْخِلِ النَّارَ فَقَدْ أَخْزَيْتَهُ ۖ وَمَا لِلظَّالِمِينَ مِنْ أَنصَارٍ ﴿١٩٢﴾ رَبَّنَا إِنَّنَا سَمِعْنَا مُنَادِيًا يُنَادِي لِلْإِيمَانِ أَنْ آمِنُوا بِرَبِّکُمْ فَآمَنَّا ۚ رَبَّنَا فَاغْفِرْ لَنَا ذُنُوبَنَا وَکَفِّرْ عَنَّا سَيِّئَاتِنَا وَتَوَفَّنَا مَعَ الْأَبْرَارِ ﴿١٩٣﴾ رَبَّنَا وَآتِنَا مَا وَعَدتَّنَا عَلَىٰ رُسُلِکَ وَلَا تُخْزِنَا يَوْمَ الْقِيَامَةِ ۗ إِنَّکَ لَا تُخْلِفُ الْمِيعَادَ ﴿١٩٤﴾ فَاسْتَجَابَ لَهُمْ رَبُّهُمْ أَنِّي لَا أُضِيعُ عَمَلَ عَامِلٍ مِّنکُم مِّن ذَکَرٍ أَوْ أُنثَىٰ ۖ بَعْضُکُم مِّن بَعْضٍ ۖ فَالَّذِينَ هَاجَرُوا وَأُخْرِجُوا مِن دِيَارِهِمْ وَأُوذُوا فِي سَبِيلِي وَقَاتَلُوا وَقُتِلُوا لَأُکَفِّرَنَّ عَنْهُمْ سَيِّئَاتِهِمْ وَلأُدْخِلَنَّهُمْ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ ثَوَابًا مِّنْ عِندِ اللَّهِ ۗ وَاللَّهُ عِندَهُ حُسْنُ الثَّوابِ ﴿١٩٥﴾ لَا يَغُرَّنَّکَ تَقَلُّبُ الَّذِينَ کَفَرُوا فِي الْبِلَادِ ﴿١٩٦﴾ مَتَاعٌ قَلِيلٌ ثُمَّ مَأْوَاهُمْ جَهَنَّمُ ۚ وَبِئْسَ الْمِهَادُ ﴿١٩٧﴾ لَـٰکِنِ الَّذِينَ اتَّقَوْا رَبَّهُمْ لَهُمْ جَنَّاتٍ تَجْرِي مِن تَحْتِهَا الْأَنْهَارُ خَالِدِينَ فِيهَا نُزُلًا مِّنْ عِندِ اللَّهِ ۗ وَمَا عِندَ اللَّهِ خَيْرٌ لِّلأَبْرَارِ ﴿١٩٨﴾ وَإِنَّ مِنْ أَهْلِ الْکِتَابِ لَمَن يُؤْمِنُ بِاللَّهِ وَمَا أُنزِلَ إِلَيْکُمْ وَمَا أُنزِلَ إِلَيْهِمْ خَاشِعِينَ لِلَّهِ لَا يَشْتَرُونَ بِآيَاتِ اللَّهِ ثَمَنًا قَلِيلًا ۗ أُولَـٰئِکَ لَهُمْ أَجْرُهُمْ عِندَ رَبِّهِمْ ۗ إِنَّ اللَّهَ سَرِيعُ الْحِسَابِ ﴿١٩٩﴾ يَا أَيُّهَا الَّذِينَ آمَنُوا اصْبِرُوا وَصَابِرُوا وَرَابِطُوا وَاتَّقُوا اللَّهَ لَعَلَّکُمْ تُفْلِحُونَ ﴿٢٠٠﴾"
+                        },      
+                        { num: 7, title: "دعاء دخول الخلاء:", detail: "الدعاء المأثور عند دخول الحمام أو الخلاء للاستعاذة من الشرور.", arabic: "اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِکَ مِنَ الْخُبُثِ وَالْخَبَائِثِ" },
+                        { num: 8, title: "الرجل اليسرى:", detail: "تقديم الرجل اليسرى أولاً عند الدخول إلى الخلاء." },
+                        { num: 9, title: "الرجل اليمنى:", detail: "تقديم الرجل اليمنى أولاً عند الخروج من الخلاء." },
+                        { num: 10, title: "دعاء الخروج:", detail: "الدعاء بعد الخروج من الخلاء حمدًا لله على العافية.", arabic: "غُفْرَانَکَ اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَذْهَبَ عَنِّي الْأَذٰى وَعَافَانِيْ" }
+                    ]
+                },
+                {
+                    name: "2. آداب الطهارة والنظافة (11-20)",
+                    items: [
+                        { num: 11, title: "تنظيف الفم:", detail: "تنظيف الفم جيدًا بالسواك أو المضمضة لإزالة الرائحة الكريهة." },
+                        { num: 12, title: "عدم التنظف باليمين:", detail: "استخدام اليد اليسرى دائمًا لتنظيف النجاسة أو الاستنثار." },
+                        { num: 13, title: "تقليم الأظافر:", detail: "قص الأظافر مرة واحدة في الأسبوع على الأقل (خاصة يوم الجمعة)." },
+                        { num: 14, title: "نظافة الشعر:", detail: "غسل وترجيل شعر الرأس واللحية للمحافظة على نظافتهما." },
+                        { num: 15, title: "طهارة الثياب:", detail: "التأكد من نظافة الملابس وعدم وجود أي نجاسة عليها بعد الاستيقاظ." },
+                        { num: 16, title: "ترتيب الفراش:", detail: "تنظيف وترتيب مكان النوم بعد القيام منه." },
+                        { num: 17, title: "التطيب بالرائحة:", detail: "وضع عطر طيب وطاهر على البدن أو الثياب بعد التنظف." },
+                        { num: 18, title: "الاقتصاد في الماء:", detail: "عدم الإسراف في سكب الماء عند غسل اليدين أو الوجه أو أي شيء آخر." },
+                        { num: 19, title: "نية الطهارة:", detail: "استحضار نية التطهر في القلب عند القيام بأي عمل من أعمال النظافة." },
+                        { num: 20, title: "الحمد على النظافة:", detail: "شكر الله تعالى على نعمة الطهارة لأن الطهارة شطر الإيمان." }
+                    ]
+                },
+                {
+                    name: "3. اللباس والمرآة (21-30)",
+                    items: [
+                        { num: 21, title: "الجانب الأيمن:", detail: "البدء بالكم الأيمن أو الشق الأيمن عند ارتداء الثياب." },
+                        { num: 22, title: "التسمية:", detail: "قول بسم الله عند البدء في لبس الثوب." },
+                        { num: 23, title: "دعاء الثوب الجديد:", detail: "الدعاء عند لبس الثياب الجديدة شكرًا لله.", arabic: "اَللّٰهُمَّ لَکَ الْحَمْدُ أَنْتَ کَسَوْتَنِيْهِ" },
+                        { num: 24, title: "خلع الملابس باليمين:", detail: "البدء بنزع الكم الأيسر أولاً عند خلع الملابس." },
+                        { num: 25, title: "انتعال الحذاء:", detail: "البدء بالرجل اليمنى عند لبس الحذاء." },
+                        { num: 26, title: "خلع الحذاء:", detail: "البدء بالرجل اليسرى عند خلع الحذاء." },
+                        { num: 27, title: "تغطية الرأس:", detail: "لبس القلنسوة أو غطاء الرأس عند الخروج." },
+                        { num: 28, title: "دعاء النظر في المرآة:", detail: "قراءة الدعاء المأثور عند رؤية الوجه في المرآة.", arabic: "اَللّٰهُمَّ أَنْتَ حَسَّنْتَ خَلْقِيْ فَحَسِّنْ خُلُقِيْ" },
+                        { num: 29, title: "العطر والطيب:", detail: "استعمال الطيب والروائح الزكية من السنة." },
+                        { num: 30, title: "ترجيل الشعر:", detail: "تمشيط الشعر وتنسيقه." }
+                    ]
+                },
+                {
+                    name: "4. المسجد والأذان (31-40)",
+                    items: [
+                        { 
+                            num: 31, 
+                            title: "إجابة الأذان:", 
+                            detail: "إذا قال المؤذن: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ، فقل: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ\nإذا قال: أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللّٰهُ، فقل: أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللّٰهُ\n\nإذا قال: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ، فقل: أَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ\nإذا قال: حَيَّ عَلَى الصَّلَاةِ، فقل: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ\nإذا قال: حَيَّ عَلَى الْفَلَاحِ، فقل: لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ\nإذا قال: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ، فقل: اللَّهُ أَکْبَرُ، اللَّهُ أَکْبَرُ\nإذا قال: لَا إِلٰهَ إِلَّا اللَّهُ، فقل: لَا إِلٰهَ إِلَّا اللَّهُ" 
+                        },
+                        { num: 32, title: "الصلاة على النبي:", detail: "الصلاة على النبي ﷺ بعد الفراغ من الأذان.", arabic: "صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ" },
+                        { 
+                            num: 33, 
+                            title: "دعاء ما بعد الأذان:", 
+                            detail: "يسن قراءة هذا الدعاء المأثور لطلب الوسيلة والمقام المحمود للنبي ﷺ بعد الأذان والصلاة عليه.\n\nالترجمة المضمونية: اللهم رب هذه الدعوة التامة والصلاة القائمة آت نبينا محمدًا الوسيلة والفضيلة وابعثه مقامًا محمودًا الذي وعدته إنك لا تخلف الميعاد.", 
+                            arabic: "اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَّحْمُودًا الَّذِي وَعَدتَّهُ، إِنَّکَ لَا تُخْلِفُ الْمِيعَادَ" 
+                        },
+                        { num: 34, title: "المشي إلى المسجد:", detail: "المشي بسكينة وتقريب الخطى أثناء الذهاب إلى المسجد." },
+                        { num: 35, title: "دعاء دخول المسجد:", detail: "قراءة دعاء الرحمة عند دخول باب المسجد.", arabic: "اَللّٰهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِکَ" },
+                        { num: 36, title: "القدم اليمنى:", detail: "تقديم الرجل اليمنى أولاً عند دخول المسجد." },
+                        { num: 37, title: "تحية المسجد:", detail: "صلاة ركعتين نافلة قبل الجلوس." },
+                        { num: 38, title: "الخروج من المسجد:", detail: "تقديم الرجل اليسرى أولاً عند الخروج." },
+                        { num: 39, title: "دعاء الخروج من المسجد:", detail: "قراءة دعاء طلب الفضل عند الخروج من المسجد.", arabic: "اَللّٰهُمَّ إِنِّي أَسْأَلُکَ مِنْ فَضْلِکَ" },
+                        { num: 40, title: "الذكر:", detail: "الجلوس بسكينة واشتغال النفس بذكر الله تعالى." }
+                    ]
+                },
+                {
+                    name: "5. آداب الصلاة (41-50)",
+                    items: [
+                        { num: 41, title: "السترة:", detail: "وضع شيء أو اتخاذ جدار كسترة أمام المصلي." },
+                        { num: 42, title: "تسوية الصفوف:", detail: "إقامة الصفوف ومحاذاة المناكب والأقدام." },
+                        { num: 43, title: "دعاء الاستفتاح:", detail: "قراءة الثناء (سبحانك اللهم وبحمدك) في بداية الصلاة." },
+                        { num: 44, title: "التأمين:", detail: "قول (آمين) بعد الفراغ من قراءة سورة الفاتحة." },
+                        { num: 45, title: "تسبيح الركوع:", detail: "قول (سبحان ربي العظيم) أثناء الركوع." },
+                        { num: 46, title: "القومه:", detail: "الاعتدال قائمًا بعد الركوع والطمأنينة فيه." },
+                        { num: 47, title: "السجود:", detail: "قول (سبحان ربي الأعلى) أثناء السجود." },
+                        { num: 48, title: "الجلسة:", detail: "الجلوس المطمئن بين السجدتين." },
+                        { num: 49, title: "التشهد:", detail: "قراءة التحيات والإشارة بالإصبع عند التوحيد." },
+                        { num: 50, title: "التسليم:", detail: "التسليم عن اليمين وعن اليسار لإنهاء الصلاة." }
+                    ]
+                },
+                {
+                    name: "6. الطعام والشراب (51-60)",
+                    items: [
+                        { num: 51, title: "السفرة:", detail: "بسط السفرة وتناول الطعام جالسًا على الأرض." },
+                        { num: 52, title: "غسل اليدين:", detail: "غسل اليدين جيدًا قبل البدء في الأكل." },
+                        { num: 53, title: "التسمية:", detail: "قول بسم الله في أول الطعام." },
+                        { num: 54, title: "دعاء قبل الأكل:", detail: "قول الدعاء المأثور (بسم الله وعلى بركة الله) عند البدء.", arabic: "بِسْمِ اللهِ وَعَلٰى بَرَکَةِ اللهِ" },
+                        { num: 55, title: "اليد اليمنى:", detail: "الأكل باستخدام اليد اليمنى دائمًا." },
+                        { num: 56, title: "الأكل مما يليك:", detail: "تناول الطعام من جانب الطبق الذي أمامك مباشرة." },
+                        { num: 57, title: "ثلاث أصابع:", detail: "الأكل بثلاث أصابع من اليد إن أمكن." },
+                        { num: 58, title: "لعق الأصابع:", detail: "تنظيف الأصابع ولعقها بعد الفراغ من تناول الطعام." },
+                        { num: 59, title: "دعاء بعد الأكل:", detail: "حمد الله وقراءة دعاء الفراغ من الطعام.", arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ" },
+                        { num: 60, title: "الشرب جالسًا:", detail: "شرب الماء جالسًا وعلى ثلاثة أنفاس." }
+                    ]
+                },
+                {
+                    name: "7. البيت واللقاء (61-70)",
+                    items: [
+                        { num: 61, title: "السلام:", detail: "إلقاء تحية الإسلام وقول السلام عليكم." },
+                        { num: 62, title: "المصافحة:", detail: "المصافحة باليدين عند اللقاء." },
+                        { num: 63, title: "التبسم:", detail: "التبسم في وجه الأخ وملاقاته بلين." },
+                        { num: 64, title: "دعاء دخول البيت:", detail: "قراءة ذكر الدخول عند الولوج إلى المنزل.", arabic: "بِسْـمِ اللهِ وَلَجْنَا، وَبِسْـمِ اللهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَکَّلْنَا" },
+                        { num: 65, title: "السلام على أهل البيت:", detail: "إلقاء السلام على جميع من في البيت عند الدخول." },
+                        { num: 66, title: "دعاء الخروج من البيت:", detail: "قراءة دعاء التوكل عند الخروج من المنزل.", arabic: "بِسْمِ اللَّهِ، تَوَکَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ" },
+                        { num: 67, title: "الاستئذان:", detail: "طلب الإذن والاستئذان ثلاثًا قبل دخول بيوت الآخرين." },
+                        { num: 68, title: "توقير الكبير:", detail: "احترام وتوقير كبار السن دائمًا والالتزام بآداب التعامل معهم." },
+                        { num: 69, title: "إكرام الضيف:", detail: "حسن استقبال الضيف وإكرامه وتقديم الخدمة الطيبة له." },
+                        { num: 70, title: "حق الجار:", detail: "مراعاة حقوق الجيران دائمًا وتجنب إيذائهم بأي شكل من الأشكال." }
+                    ]
+                },
+                {
+                    name: "8. الحديث والأخلاق (71-80)",
+                    items: [
+                        { num: 71, title: "الصدق:", detail: "التزام الصدق دائمًا في كل الأحوال واجتناب الكذب تمامًا." },
+                        { num: 72, title: "اللين:", detail: "التحدث مع الآخرين بلين وبصوت منخفض وهادئ." },
+                        { num: 73, title: "اجتناب الغيبة:", detail: "عدم ذكر الآخرين بسوء في غيبتهم واجتناب الغيبة تمامًا." },
+                        { num: 74, title: "عدم النميمة:", detail: "اجتناب نقل الكلام بين الناس بقصد الإفساد وإشعال الفتن." },
+                        { num: 75, title: "كظم الغيظ:", detail: "السيطرة على النفس عند الغضب والالتزام بالسكوت." },
+                        { num: 76, title: "الوفاء بالوعد:", detail: "الالتزام بالكلمة والوفاء بالعهود والوعود التي تقطعها." },
+                        { num: 77, title: "تشميت العاطس:", detail: "قول (يرحمك الله) للعاطس إذا حمد الله وقال (الحمد لله)." },
+                        { num: 78, title: "رَد التثاؤب:", detail: "محاولة كتم التثاؤب قدر الإمكان ووضع اليد على الفم." },
+                        { num: 79, title: "الاستغفار:", detail: "مداومة الاستغفار والتوبة إلى الله في كل وقت وأثناء الجلوس." },
+                        { num: 80, title: "قول الخير:", detail: "الحديث بالخير دائمًا والالتزام بالصمت إذا لم يكن هناك خير." }
+                    ]
+                },
+                {
+                    name: "9. المعاملات والتجارة (81-90)",
+                    items: [
+                        { num: 81, title: "الأمانة:", detail: "الالتزام بالأمانة والصدق في البيع والشراء وتجنب الغش تمامًا." },
+                        { num: 82, title: "التبكير في العمل:", detail: "الخروج مبكرًا لطلب الرزق والعمل لما فيه من بركة." },
+                        { num: 83, title: "الرزق الحلال:", detail: "السعي الجاد والاجتهاد في كسب المال الحلال الطيب فقط." },
+                        { num: 84, title: "عدم الحلف:", detail: "تجنب الحلف والأيمان الكاذبة أو المتكررة لترويج السلع في التجارة." },
+                        { num: 85, title: "إعطاء الأجير:", detail: "إعطاء العامل أو الأجير أجره المستحق في الوقت المحدد قبل أن يجف عرقه." },
+                        { num: 86, title: "التيسير على المعسر:", detail: "إمهال المدين والتيسير عليه إذا كان غير قادر على سداد الدين." },
+                        { num: 87, title: "كتابة الحساب:", detail: "توثيق وكتابة المعاملات المالية والديون تجنبًا لأي خلاف في المستقبل." },
+                        { num: 88, title: "حفظ الأمانة:", detail: "رد الأمانات إلى أهلها وعدم الخيانة إذا استؤمنت على شيء أو سر." },
+                        { num: 89, title: "الصدقة:", detail: "إخراج الصدقات من الكسب طلبًا للبركة ومساعدة الفقراء والمحتاجين." },
+                        { num: 90, title: "الشورى:", detail: "استشارة أهل الحكمة والخبرة قبل البدء في أي عمل جديد أو قرار كبير." }
+                    ]
+                },
+                {
+                    name: "10. آداب النوم ليلاً (91-100)",
+                    items: [
+                        { num: 91, title: "الوضوء:", detail: "النوم على طهارة والوضوء قبل الذهاب إلى الفراش ليلاً." },
+                        { num: 92, title: "نفض الفراش:", detail: "نفض الفراش جيدًا ثلاث مرات قبل الاستلقاء عليه." },
+                        { num: 93, title: "النوم على الشق الأيمن:", detail: "الاضطجاع والاستلقاء على الجانب الأيمن وهو الهدي النبوي." },
+                        { num: 94, title: "وضع اليد تحت الخد:", detail: "وضع كف اليد اليمنى تحت الخد الأيمن أثناء الاضطجاع." },
+                        { num: 95, title: "التسبيح:", detail: "تسبيح فاطمة (33 سبحان الله، 33 الحمد لله، 34 الله أكبر) قبل النوم." },
+                        { num: 96, title: "قراءة المعوذات:", detail: "قراءة سور الإخلاص والفلق والناس والنفث في الكفين ومسح الجسد بها." },
+                        { num: 97, title: "آية الكرسي:", detail: "قراءة آية الكرسي قبل النوم للحفظ من الشيطان والشرور طوال الليل." },
+                        { num: 98, title: "دعاء النوم:", detail: "قراءة دعاء النوم المأثور عند الاستلقاء على الفراش.", arabic: "اَللّٰهُمَّ بِاسْمِکَ أَمُوْتُ وَأَحْيَا" },
+                        { num: 99, title: "النوم مبكرًا:", detail: "النوم مبكرًا بعد صلاة العشاء واجتناب السهر بلا فائدة." },
+                        { num: 100, title: "محاسبة النفس:", detail: "مراجعة الأعمال اليومية ومحاسبة النفس واستغفار الله قبل النوم." }
+                    ]
+                }
+            ]
+        }
+
+    };
+
+
+                
+
+    function applySettings() {
+        // localStorage से चुनी हुई भाषा निकालें, डिफ़ॉल्ट 'hi' (हिंदी) रखें
+        const lang = localStorage.getItem('pref_lang') || 'hi';
+        const data = sunnatData[lang] || sunnatData['hi'];
+        
+        // पेज के टाइटल और टेक्स्ट अपडेट करें
+        document.getElementById('pageTitle').innerText = data.title;
+        document.getElementById('pageSub').innerText = data.sub;
+        
+
+        // पूरा कंटेंट लूप चलाकर रेंडर करें
+        let html = '';
+        data.sections.forEach(sec => {
+            html += `<div class="section-header">${sec.name}</div>`;
+            sec.items.forEach(item => {
+                html += `
+                    <div class="sunnat-card">
+                        
+                        <h3>${item.num}. ${item.title}</h3>
+                        <p>${item.detail}</p>
+                        ${item.arabic ? `<div class="arabic-text">${item.arabic}</div>` : ''}
+                    </div>
+                `;
+            });
+        });
+        document.getElementById('dynamic-content').innerHTML = html;
+    }
+
+  
+
+    
+
+    // पेज लोड होते ही सेटिंग्स अप्लाई करें
+    window.onload = applySettings;
+</script>
+</body>
+</html>
+
+    
+
+    

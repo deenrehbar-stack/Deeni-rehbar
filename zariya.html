@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allah se Maangne ka Zariya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        .header { background-color: #004d40; color: white; padding: 20px; text-align: center; font-size: 22px; font-weight: bold; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        
+        .container { padding: 15px; }
+        .topic-card { 
+            background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; color: #333; transition: 0.2s;
+        }
+        .topic-card:active { background-color: #e0f2f1; transform: scale(0.98); }
+        .topic-title { font-size: 16px; font-weight: 500; }
+
+        /* Items Section */
+        #items-section { display: none; padding: 15px; }
+        .back-btn { color: #004d40; font-weight: bold; cursor: pointer; margin-bottom: 15px; display: inline-block; padding: 8px 12px; background: #e0f2f1; border-radius: 5px; }
+        .item-row { 
+            background: white; border-left: 5px solid #004d40; padding: 12px; 
+            margin-bottom: 10px; border-radius: 5px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .item-info { font-size: 13px; color: #666; }
+        .item-title { font-weight: bold; color: #004d40; display: block; margin-bottom: 3px; }
+
+        /* Modal Design */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); overflow-y: auto; }
+        .modal-content { 
+            position: relative; margin: 10vh auto; width: 85%; max-width: 450px; 
+            background: white; border-radius: 20px; padding: 25px; border: 3px solid #004d40;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-btn { position: absolute; top: 10px; right: 15px; color: #004d40; font-size: 28px; cursor: pointer; font-weight: bold; }
+
+        .ayat-box { text-align: center; }
+        .ayat-arabic { 
+            font-family: 'Amiri', serif; font-size: 26px; direction: rtl; line-height: 2; 
+            color: #222; margin: 15px 0; padding-bottom: 15px; border-bottom: 1px solid #eee;
+            word-wrap: break-word;
+        }
+        .tarjuma-box { font-size: 15px; color: #444; line-height: 1.6; text-align: center; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px dashed #004d40; }
+    </style>
+</head>
+<body>
+  <div class="header" id="mainTitle">Allah se Maangne ka Zariya</div>
+
+    <div id="index-page" class="container"></div>
+
+    <div id="items-section">
+        <div class="back-btn" onclick="showIndex()">← Back</div>
+        <h3 id="selected-topic-name" style="color:#004d40; margin: 0 0 15px 0;"></h3>
+        <div id="ayat-list"></div>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeImage()">&times;</span>
+            <div id="modal-body" class="ayat-box"></div>
+        </div>
+    </div>
+
+
+    
+
+    
+    <script>
+      
+        const translations = {
+    hi: {
+        title: "अल्लाह से मांगने का ज़रिया",
+        topics: [
+            { id: 'tarakki', name: "1. तरक़्क़ी और कामयाबी के लिए" },
+            { id: 'rozi', name: "2. रोज़ी के लिए" },
+            { id: 'Gamonaurtangdasti', name: "3. ग़मों और तंगदस्ती से निजात" },
+            { id: 'ilm', name: "4. इल्म के लिए" },
+            { id: 'bimari', name: "5. बीमारी में शिफ़ा के लिए" },
+            { id: 'madad', name: "6. अल्लाह से मदद कैसे मांगें" },
+            { id: 'toba', name: "7. तौबा के लिए" },
+            { id: 'zalim', name: "8. ज़ालिमों से बचने के लिए" },
+            { id: 'pareshani', name: "9. हर परेशानी से बचने के लिए" },
+            { id: 'dua', name: "10. परिवार और औलाद की दुआ" },
+            { id: 'jinnat', name: "11. जिन्नातों से बचने के लिए" },
+            { id: 'jahannam', name: "12. जहन्नम की आग से पनाह" },
+          
+ 
+        ]
+    },
+    en: {
+        title: "Means of Asking Allah",
+        topics: [
+            { id: 'tarakki', name: "1. For Success & Progress" },
+            { id: 'rozi', name: "2. For Provision (Rozi)" },
+            { id: 'Gamonaurtangdasti', name: "3. Relief from Sorrows" },
+            { id: 'ilm', name: "4. For Knowledge" },
+            { id: 'bimari', name: "5. For Shifa in Illness" },
+            { id: 'madad', name: "6. How to ask Allah" },
+            { id: 'toba', name: "7. For Repentance" },
+            { id: 'zalim', name: "8. Against Oppressors" },
+            { id: 'pareshani', name: "9. From Every Trouble" },
+            { id: 'dua', name: "10. Family & Children" },
+            { id: 'jinnat', name: "11. Against Jinn" },
+            { id: 'jahannam', name: "12. From Hellfire" },
+          
+        ]
+    },
+    ur: {
+        title: "اللہ سے مانگنے کا ذریعہ",
+        dir: "rtl",
+        topics: [
+            { id: 'tarakki', name: "1. ترقی اور کامیابی کے لیے" },
+            { id: 'rozi', name: "2. روزی کے لیے" },
+            { id: 'Gamonaurtangdasti', name: "3. غموں اور تنگدستی سے نجات" },
+            { id: 'ilm', name: "4. علم کے لیے" },
+            { id: 'bimari', name: "5. بیماری میں شفا کے لیے" },
+            { id: 'madad', name: "6. اللہ سے مدد کیسے مانگیں" },
+            { id: 'toba', name: "7. توبہ کے لیے" },
+            { id: 'zalim', name: "8. ظالموں سے بچنے کے لیے" },
+            { id: 'pareshani', name: "9. ہر پریشانی سے بچنے کے لیے" },
+            { id: 'dua', name: "10. خاندان اور اولاد کی دعا" },
+            { id: 'jinnat', name: "11. جنات سے بچنے کے لیے" },
+            { id: 'jahannam', name: "12. جہنم کی آگ سے پناہ" },
+          
+        ]
+    },
+    ar: {
+        title: "الوسيلة إلى الله",
+        dir: "rtl",
+        topics: [
+            { id: 'tarakki', name: "1. للترقي والنجاح" },
+            { id: 'rozi', name: "2. لطلب الرزق" },
+            { id: 'Gamonaurtangdasti', name: "3. النجاة من الهموم والضيق" },
+            { id: 'ilm', name: "4. لطلب العلم" },
+            { id: 'bimari', name: "5. للشفاء من الأمراض" },
+            { id: 'madad', name: "6. كيف تطلب العون من الله" },
+            { id: 'toba', name: "7. للتوبة" },
+            { id: 'zalim', name: "8. للنجاة من الظالمين" },
+            { id: 'pareshani', name: "9. للنجاة من كل بلاء" },
+            { id: 'dua', name: "10. دعاء للأهل والأولاد" },
+            { id: 'jinnat', name: "11. للتحصن من الجن" },
+            { id: 'jahannam', name: "12. للنجاة من النار" },
+          
+ 
+        ]
+    }
+};
+
+
+const data = {
+            tarakki: {
+                name: "Tarakki aur Kamyabi",
+                items: [
+{ 
+  surah: "Surah Aal-e-Imran", 
+  para: "3", 
+  ruku: "11", 
+  ayat: "26", 
+  arabic: "قُلِ اللَّهُمَّ مَالِكَ الْمُلْكِ تُؤْتِي الْمُلْكَ مَن تَشَاءُ وَتَنزِعُ الْمُلْكَ مِمَّن تَشَاءُ وَتُعِزُّ مَن تَشَاءُ وَتُذِلُّ مَن تَشَاءُ ۖ بِيَدِكَ الْخَيْرُ ۖ إِنَّكَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", 
+  hi: "आप कहिए: ऐ अल्लाह! ऐ साम्राज्य के मालिक! तू जिसे चाहे राज्य अता करे और जिससे चाहे राज्य छीन ले, और तू जिसे चाहे इज़्ज़त दे और जिसे चाहे ज़िल्लत दे, तेरे ही हाथ में सब भलाई है, बेशक तू हर चीज़ पर क़ादिर है।",
+  en: "Say, 'O Allah, Owner of Sovereignty, You give sovereignty to whom You will and You take sovereignty away from whom You will. You honor whom You will and You humble whom You will. In Your hand is [all] good. Indeed, You are over all things competent.'",
+  ur: "آپ کہئے: اے اللہ! اے بادشاہی کے مالک! تو جسے چاہے بادشاہی دے اور جس سے چاہے بادشاہی چھین لے، اور تو جسے چاہے عزت دے اور جسے چاہے ذلت دے، تیرے ہی ہاتھ میں سب بھلائی ہے، بے شک تو ہر چیز پر قادر ہے۔"
+},
+
+
+                    { 
+                      surah: "Surah Saad", para: "23", ruku: "12", ayat: "35", 
+             arabic:"قَالَ رَبِّ اغْفِرْ لِي وَهَبْ لِي مُلْكًا لَّا يَنۢبَغِي لِأَحَدٍ مِّنۢ بَعْدِي ۖ إِنَّكَ أَنتَ الْوَهَّابُ"
+,
+                      hindi: "ऐ मेरे रब! मुझे बख़्श दे और मुझे ऐसी बादशाही अता फ़रमा कि मेरे बाद किसी और को मुयस्सर न हो, बेशक तू ही बड़ा अता करने वाला है।" ,
+                      en: "My Lord, forgive me and grant me a kingdom such as will not belong to anyone after me. Indeed, You are the Bestower.",
+  ur: "اے میرے رب! مجھے بخش دے اور مجھے ایسی بادشاہی عطا فرما کہ میرے بعد کسی اور کو میسر نہ ہو، بے شک تو ہی بڑا عطا کرنے والا ہے۔"
+
+                    },
+                    
+      { 
+  surah: "Surah An-Najm", 
+  para: "27", 
+  ruku: "7", 
+  ayat: "48", 
+  arabic:"وَاَنَّهُ هُوَ اَغْنَىٰ وَاَقْنَىٰ"
+,
+  
+ hi: "और यह कि वही ग़नी (मालदार) करता है और वही सरमाया (पूँजी) देता है",
+ en: "And that it is He who enriches and suffices." ,
+ur: "اور یہ کہ وہی غنی کرتا ہے اور وہی سرمایہ دیتا ہے۔"
+                    },
+
+                    { 
+                      surah: "Surah Saff", para: "28", ruku: "10", ayat: "13", 
+                     "arabic": "نَصْرٌ مِّنَ اللَّٰهِ وَفَتْحٌ قَرِيبٌ"
+ ,
+                      hindi: "अल्लाह की तरफ़ से मदद और जल्द मिलने वाली कामयाबी।" 
+                 ,
+                 en: "Victory from Allah and an imminent conquest."       ,
+ur: "اللہ کی طرف سے مدد اور جلد ملنے والی کامیابی۔"},
+{ 
+  surah: "Surah Ad-Duha", 
+  para: "30", 
+  ruku: "18", 
+  ayat: "5", 
+  arabic: "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ", 
+  hi: "और यक़ीनन जल्द ही आपका रब आपको इतना अता फरमाएगा कि आप राज़ी (ख़ुश) हो जाएंगे।" ,
+  en: "And your Lord is going to give you, and you will be satisfied.",
+ur: "اور بیشک قریب ہے کہ تمہارا رب تمہیں اتنا دے گا کہ تم راضی ہو جاؤ گے۔"
+},
+{ 
+  surah: "Surah Ad-Duha", 
+  para: "30", 
+  ruku: "18", 
+  ayat: "8", 
+  arabic: "وَوَجَدَكَ عَآئِلًا فَاَغْنَىٰ", 
+  hi: "और उसने आपको नादार (तंगदस्त्त) पाया, फिर उसने (आपको) मालामाल कर दिया।", 
+  en: "And He found you poor and made [you] self-sufficient.",
+  ur: "اور اس نے تمہیں نادار پایا پھر مالدار کر دیا۔"
+}
+
+
+ 
+                ]
+            },
+            rozi: {
+                name: "रोज़ी के लिए",
+                items: [
+{ 
+    surah: "Surah Aal-e-Imran", para: "3", ruku: "4", ayat: "37", 
+    arabic:"اِنَّ اللَّهَ يَرْزُقُ مَن يَّشَآءُ بِغَيْرِ حِسَابٍ"
+,
+    hi: "बेशक अल्लाह जिसे चाहता है बे-हिसाब रिज़्क़ अता फरमाता है।"       ,
+    en: "Indeed, Allah provides for whom He wills without account.",
+ur: "بیشک اللہ جسے چاہتا ہے بے حساب رزق عطا فرماتا ہے۔"
+},
+
+
+                 { 
+    surah: "Surah Al-Ma'idah", 
+    para: "7", 
+    ruku: "5", 
+    ayat: "114", 
+    arabic: "قَالَ عِيسَى ابْنُ مَرْيَمَ اللَّٰهُمَّ رَبَّنَا اَنزِلْ عَلَيْنَا مَآئِدَةً مِّنَ السَّمَآءِ تَكُونُ لَنَا عِيدًا لِّأَوَّلِنَا وَاٰخِرِنَا وَاٰيَةً مِّنكَ ۖ وَارْزُقْنَا وَأَنتَ خَيْرُ الرَّازِقِينَ"
+  , 
+    hi: "ईसा इब्ने मरयम ने अर्ज़ किया: ऐ अल्लाह! हमारे रब्ब! हम पर आसमान से खाने का एक दस्तरख़्वान नाज़िल फ़रमा, जो हमारे अगलों और पिछलों के लिए ख़ुशी का मौक़ा बने और तेरी तरफ़ से एक निशानी हो, और हमें रिज़्क़ अता फ़रमा, तू बेहतरीन रिज़्क़ देने वाला है।",
+    en: "Said Isa (Alaihissalam), 'O Allah, our Lord, send down to us a table [spread with food] from the heaven to be for us a festival for the first of us and the last of us and a sign from You. And provide for us, and You are the best of providers.'",
+ur: "عیسیٰ علیہ السلام نے عرض کیا: اے اللہ! ہمارے رب! ہم پر آسمان سے کھانے کا ایک دسترخوان نازل فرما، جو ہمارے اگلوں اور پچھلوں کے لیے خوشی کا موقع بنے اور تیری طرف سے ایک نشانی ہو، اور ہمیں رزق عطا فرما، تو بہترین رزق دینے والا ہے۔"
+},
+
+{ 
+    surah: "Surah Al-Hajj", 
+    para: "17", 
+    ruku: "15", 
+    ayat: "58", 
+    arabic: "وَاِنَّ اللَّٰهَ لَهُوَ خَيْرُ الرَّٰزِقِينَ"
+,
+    hi: "और बेशक अल्लाह ही बेहतरीन रिज़्क़ देने वाला है।",
+    en: "And indeed, Allah is the best of providers.",
+ur: "اور بیشک اللہ ہی بہترین رزق دینے والا ہے۔"
+}
+,
+
+ { 
+    surah: "Surah Al-Mu'minun", 
+    para: "18", 
+    ruku: "4", 
+    ayat: "72", 
+    arabic: "فَخَرَاجُ رَبِّكَ خَيْرٌ ۖ وَّهُوَ خَيْرُ الرَّٰزِقِينَ"
+,
+    hi: "तो आपके रब्ब का दिया हुआ ही सबसे बेहतर है, और वह बेहतरीन रिज़्क़ देने वाला है।"         ,
+    en: "So whatever your Lord provides is better, and He is the best of providers.",
+ur: "تو آپ کے رب کا دیا ہوا ہی سب سے بہتر ہے، اور وہ بہترین رزق دینے والا ہے۔"
+}
+,
+{ 
+    surah: "Surah Al-Ankabut", 
+    para: "21", 
+    ruku: "7", 
+    ayat: "62", 
+    arabic: "اَللَّٰهُ يَبْسُطُ الرِّزْقَ لِمَن يَّشَآءُ مِنْ عِبَادِهِٖ وَيَقْدِرُ لَهُ ۚ اِنَّ اللَّٰهَ بِكُلِّ شَيْءٍ عَلِيمٌ"
+,
+    hi: "अल्लाह अपने बंदों में से जिसके लिए चाहता है रिज़्क़ कुशादा (ज़्यादा) कर देता है और जिसके लिए चाहता है तंग (नापा-तुला) कर देता है; बेशक अल्लाह हर चीज़ का जानने वाला है।"     ,
+    en: "Allah extends provision for whom He wills of His servants and restricts it for him; indeed Allah is, of all things, Knowing.",
+ur: "اللہ اپنے بندوں میں سے جس کے لیے چاہتا ہے رزق کشادہ (زیادہ) کر دیتا ہے اور جس کے لیے چاہتا ہے تنگ (ناپا تلا) کر دیتا ہے؛ بیشک اللہ ہر چیز کا جاننے والا ہے۔"
+    
+}
+
+
+                   ,
+           { 
+    surah: "Surah Saba", 
+    para: "22", 
+    ruku: "10", 
+    ayat: "36", 
+    arabic:"قُلْ اِنَّ رَبِّ يَبْسُطُ الرِّزْقَ لِمَن يَّشَآءُ وَيَقْدِرُ وَلَٰكِنَّ أَكْثَرَ النَّاسِ لَا يَعْلَمُونَ"
+,
+    hi: "आप कह दीजिए: बेशक मेरा रब्ब जिसके लिए चाहता है रिज़्क़ कुशादा (ज़्यादा) कर देता है और (जिसके लिए चाहता है) तंग कर देता है, लेकिन अक्सर लोग नहीं जानते।"       ,
+    en: "Say: Indeed, my Lord extends provision for whom He wills and restricts it, but most of the people do not know.",
+ur: "آپ کہہ دیجیے: بیشک میرا رب جس کے لیے چاہتا ہے رزق کشادہ (زیادہ) کر دیتا ہے اور (جس کے لیے چاہتا ہے) تنگ کر دیتا ہے، لیکن اکثر لوگ نہیں جانتے۔"
+    
+},
+{ 
+    surah: "Surah Saba", 
+    para: "22", 
+    ruku: "11", 
+    ayat: "39", 
+    arabic:"قُلْ اِنَّ رَبِّي يَبْسُطُ الرِّزْقَ لِمَن يَّشَآءُ مِنْ عِبَادِهِٖ وَيَقْدِرُ لَهُ ۚ وَمَآ أَنفَقْتُم مِّن شَيْءٍ فَهوُ يُخْلِفُهُ ۖ وَهُوَ خَيْرُ الرَّٰزِقِينَ"
+,
+    hi: "आप कह दीजिए: बेशक मेरा रब्ब अपने बंदों में से जिसके लिए चाहता है रिज़्क़ कुशादा (ज़्यादा) कर देता है और जिसके लिए चाहता है तंग कर देता है; और तुम जो कुछ भी (अल्लाह की राह में) ख़र्च करोगे वह उसका बदला देगा, और वह बेहतरीन रिज़्क़ देने वाला है।" ,
+    en: "Say: Indeed, my Lord extends provision for whom He wills of His servants and restricts it for him. But whatever thing you spend [in His cause] - He will compensate it; and He is the best of providers.",
+ur: "آپ کہہ دیجیے: بیشک میرا رب اپنے بندوں میں سے جس کے لیے چاہتا ہے رزق کشادہ (زیادہ) کر دیتا ہے اور جس کے لیے چاہتا ہے تنگ کر دیتا ہے؛ اور تم جو کچھ بھی (اللہ کی راہ میں) خرچ کرو گے وہ اس کا بدلہ دے گا، اور وہ بہترین رزق دینے والا ہے۔"
+    
+}
+,
+
+               { 
+    surah: "Surah Ash-Shura", 
+    para: "25", 
+    ruku: "2", 
+    ayat: "12", 
+    arabic: "لَّهُۥٗ مَقَالِيدُ السَّمَٰوَٰتِ وَالْأَرْضِ ۖ يَبْسُطُ الرِّزْقَ لِمَن يَّشَآءُ وَيَقْدِرُ ۚ اِنَّهُۥ بِكُلِّ شَيْءٍ عَلِيمٌ"
+,
+
+    hi: "आसमानों और ज़मीन की कुंजियाँ (चाबियाँ) उसी के पास हैं, वह जिसके लिए चाहता है रिज़्क़ कुशादा (ज़्यादा) कर देता है और (जिसके लिए चाहता है) तंग कर देता है; बेशक वह हर चीज़ का जानने वाला है।"  ,
+    en: "To Him belong the keys of the heavens and the earth. He extends provision for whom He wills and restricts [it]. Indeed, He is, of all things, Knowing.",
+ur: "آسمانوں اور زمین کی کنجیاں (چابیاں) اسی کے پاس ہیں، وہ جس کے لیے چاہتا ہے رزق کشادہ (زیادہ) کر دیتا ہے اور (جس کے لیے چاہتا ہے) تنگ کر دیتا ہے؛ بیشک وہ ہر چیز کا جاننے والا ہے۔"
+    
+},
+
+                    { 
+                        surah: "Surah Ash-Shura", para: "25", ruku: "3", ayat: "19", 
+                 arabic:"اَللَّٰهُ لَطِيفۢ بِعِبَادِهِٖ يَرْزُقُ مَن يَّشَآءُ ۖ وَهُوَ الْقَوِيُّ الْعَزِيزُ"
+,       
+                        hi: "अल्लाह अपने बंदों पर बहुत मेहरबान है, जिसे चाहता है रिज़्क़ अता फरमाता है, और वही बड़ी कुव्वत वाला, इज़्ज़त वाला है।" ,
+                        en: "Allah is Most Kind to His servants; He gives provision to whom He wills. And He is the Powerful, the Exalted in Might.",
+ur: "اللہ اپنے بندوں پر بہت مہربان ہے، جسے چاہتا ہے رزق عطا فرماتا ہے، اور وہی بڑی قوت والا، عزت والا ہے۔"
+                    },
+                    { 
+                        surah: "Surah Adh-Dhariyat", para: "27", ruku: "2", ayat: "58", 
+                        arabic:"اِنَّ اللَّٰهَ هُوَ الرَّزَّاقُ ذُو الْقُوَّةِ الْمَتِينُ"
+,
+                        hi: "बेशक अल्लाह ही रिज़्क़ देने वाला और बड़ी कुव्वत वाला, मज़बूत है।" ,
+                        en: "Indeed, it is Allah who is the Continual Provider, the possessor of power and the Firm.",
+ur: "بیشک اللہ ہی رزق دینے والا اور بڑی قوت والا، مضبوط ہے۔"
+                        
+                    },
+
+                    { 
+                        surah: "Surah Al-Jumu'ah", para: "28", ruku: "12", ayat: "11", 
+                        arabic: "وَاللَّٰهُ خَيْرُ الرَّٰزِقِينَ"
+,
+                        hi: "और अल्लाह बेहतरीन रिज़्क़ देने वाला है।"    ,
+                        en: "And Allah is the best of providers.",
+ur: "اور اللہ بہترین رزق دینے والا ہے۔"
+                    },
+                                       { 
+    surah: "Surah At-Talaq", 
+    para: "28", 
+    ruku: "17", 
+    ayat: "3", 
+    arabic:"وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ ۚ وَمَن يَّتَوَكَّلْ عَلَى اللَّٰهِ فَهُوَ حَسْبُهُ ۚ اِنَّ اللَّٰهَ بَالِغُ أَمْرِهِ ۚ قَدْ جَعَلَ اللَّٰهُ لِكُلِّ شَيْءٍ قَدْرًا"
+,
+    hi: "और उसे वहां से रिज़्क़ देगा जहां से उसे वहम-ओ-गुमान (उम्मीद) भी न होगा; और जो अल्लाह पर भरोसा रखे तो वह उसे काफ़ी है; बेशक अल्लाह अपना काम पूरा करके रहता है; यक़ीनन अल्लाह ने हर चीज़ का एक अंदाज़ा (वक़्त) मुक़र्रर कर रखा है।",
+    en: "And He will provide for him from where he does not expect. And whoever relies upon Allah - then He is sufficient for him. Indeed, Allah will accomplish His purpose. Allah has already set for everything a [decreed] extent.",
+ur: "اور اسے وہاں سے رزق دے گا جہاں سے اسے وہم و گمان (امید) بھی نہ ہوگا؛ اور جو اللہ پر بھروسہ رکھے تو وہ اسے کافی ہے؛ بیشک اللہ اپنا کام پورا کرکے رہتا ہے؛ یقیناً اللہ نے ہر چیز کا ایک اندازہ (وقت) مقرر کر رکھا ہے۔"
+    
+}
+,
+                    { 
+                        
+    surah: "Surah At-Talaq", 
+    para: "28", 
+    ruku: "17", 
+    ayat: "7", 
+    arabic: "سَيَجْعَلُ اللَّٰهُ بَعْدَ عُسْرٍ يَّسْرًا"
+,
+    hi: "अल्लाह जल्द ही तंगी के बाद आसानी (फ़राख़ी) पैदा कर देगा।" ,
+    en: "Allah will bring about, after hardship, ease (plenty).",
+ur: "اللہ جلد ہی تنگی کے بعد آسانی (فراخی) پیدا کر دے گا۔"
+}
+
+                ]
+            },
+            Gamonaurtangdasti: {
+    name: "ग़मों और तंगदस्ती से निजात",
+    items: [
+
+{ 
+    surah: "Surah An-Naml", 
+    para: "20", 
+    ruku: "1", 
+    ayat: "62", 
+    arabic: "اَمَّن يُّجِيبُ الْمُضْطَرَّ اِذَا دَعَاهُ وَيَكْشِفُ السُّوٓءَ وَيَجْعَلُكُمْ خُلَفَآءَ الْاَرْضِ ۗ اَاِلَٰهٌ مَّعَ اللَّٰهِ ۚ قَلِيلًا مَّا تَذَكَّرُونَ"
+,
+    hi: "भला कौन है जो बेक़रार (लाचार) की पुकार सुनता है जब वह उसे पुकारता है और उसकी तकलीफ़ दूर कर देता है, और तुम्हें ज़मीन का वारिस बनाता है? क्या अल्लाह के साथ कोई और माबूद है? तुम बहुत ही कम नसीहत पकड़ते हो।"    ,
+    en: "Is He [not best] who responds to the desperate one when he calls upon Him and removes evil and makes you inheritors of the earth? Is there a deity with Allah? Little do you remember.",
+ur: "بھلا کون ہے جو بےقرار (لاچار) کی پکار سنتا ہے جب وہ اسے پکارتا ہے اور اس کی تکلیف دور کر دیتا ہے، اور تمہیں زمین کا وارث بناتا ہے؟ کیا اللہ کے ساتھ کوئی اور معبود ہے؟ تم بہت ہی کم نصیحت پکڑتے ہو۔"
+},
+{ 
+    surah: "Surah Al-Anbiya", 
+    para: "17", 
+    ruku: "6", 
+    ayat: "87-88", 
+    arabic: " لَّآ اِلَٰهَ اِلَّآ اَنْتَ سُبْحَٰنَكَ اِنِّي كُنْتُ مِنَ الظَّٰلِمِينَ ۝ فَاسْتَجَبْنَا لَهُۥ وَنَجَّيْنَٰهُ مِنَ الْغَمِّ ۚ وَكَذَٰلِكَ نُنْجِي الْمُؤْمِنِينَ"
+,
+
+
+    hi: "तेरे सिवा कोई माबूद (इबादत के लायक) नहीं, तू पाक है, बेशक मैं ही क़सूरवारों (ज़ालिमों) में से था। फिर हमने उनकी दुआ क़बूल कर ली और उन्हें ग़म से निजात (छुटकारा) दी, और इसी तरह हम ईमान वालों को निजात देते हैं।"
+,
+    en:  "There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers. So We responded to him and saved him from the distress. And thus do We save the believers."
+,
+ur: "تیرے سوا کوئی معبود نہیں، تو پاک ہے، بیشک میں ہی قصورواروں (ظالموں) میں سے تھا۔ پھر ہم نے ان کی دعا قبول کر لی اور انہیں غم سے نجات دی، اور اسی طرح ہم ایمان والوں کو نجات دیتے ہیں۔"
+
+}
+
+]
+
+     },
+     ilm: {
+    name : "इल्म के लिए",
+    items: [
+      { 
+    surah: "Surah Yusuf", 
+    para: "13", 
+    ruku: "3", 
+    ayat: "76", 
+    arabic:"نَرْفَعُ دَرَجَٰتِ مَن نَّشَآءُ ۗ وَفَوْقَ كُلِّ ذِي عِلْمٍ عَلِيمٌ"
+,
+    hi: "हम जिसके चाहते हैं दर्जे बुलंद कर देते हैं, और हर इल्म वाले के ऊपर एक बहुत बड़ा इल्म वाला (अल्लाह) है।",
+    en: "We raise in degrees whom We will, but over every possessor of knowledge is one more knowing (Allah).",
+    ur: "ہم جس کے چاہتے ہیں درجے بلند کر دیتے ہیں، اور ہر علم والے کے اوپر ایک بڑا علم والا (اللہ) ہے۔"
+},
+
+      { 
+    surah: "Surah Taha", 
+    para: "16", 
+    ruku: "11", 
+    ayat: "25-26", 
+arabic: "قَالَ رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي اَمْرِي "
+,
+    hi: "ऐ मेरे रब! मेरा सीना मेरे लिए खोल दे, और मेरा काम मेरे लिए आसान कर दे।",
+    en: "O my Lord! Open for me my chest (grant me self-confidence), and ease for me my task.",
+    ur: "اے میرے رب! میرا سینہ میرے لیے کھول دے، اور میرا کام میرے لیے آسان کر دے۔"
+},
+{ 
+    surah: "Surah Taha", 
+    para: "16", 
+    ruku: "15", 
+    ayat: "114 (Part)", 
+   arabic: "رَّبِّ زِدْنِي عِلْمًا",
+
+    hi: "ऐ मेरे रब! मेरे इल्म में इज़ाफ़ा फ़रमा।",
+    en: "My Lord, increase me in knowledge.",
+    ur: "اے میرے رب! میرے علم میں اضافہ فرما۔"
+}
+
+]
+     },
+     bimari: {
+                name:  "बीमारी में शिफ़ा के लिए",
+                items: [
+                  { 
+    "surah": "Surah At-Tawbah", 
+    "para": "10", 
+    "ruku": "8", 
+    "ayat": "14 (Part)", 
+   arabic:"وَيَشْفِ صُدُورَ قَوْمٍ مُّؤْمِنِينَ"
+,
+    "hi": "और (अल्लाह) मोमिनों के सीनों को शिफ़ा (सुकून) अता फ़रमाएगा।",
+    "en": "And [He will] heal the breasts (hearts) of a believing people.",
+    "ur": "اور (اللہ) مومنوں کے سینوں کو شفا (سکون) عطا فرمائے گا۔"
+},
+{ 
+    "surah": "Surah Yunus", 
+    "para": "11", 
+    "ruku": "11", 
+    "ayat": "57 (Part)", 
+    arabic: "وَشِفَآءٌ لِّمَا فِي الصُّدُورِ"
+,
+    "hi": "और (अल्लाह) उन बीमारियों की शिफ़ा (सुकून) देता है जो सीनों में हैं।",
+    "en": "And a healing for what is in the breasts (hearts).",
+    "ur": "اور (اللہ) ان بیماریوں کی شفا (سکون) دیتا ہے جو سینوں میں ہیں۔"
+},
+{ 
+    "surah": "Surah An-Nahl", 
+    "para": "14", 
+    "ruku": "15", 
+    "ayat": "69 (Part)", 
+ arabic:"يَخْرُجُ مِنۢ بُطُونِهَا شَرَابٌ مُّخْتَلِفٌ اَلْوَانُهُ فِيهِ شِفَآءٌ لِّلنَّاسِ ۗ"
+,
+    "hi": "उसके (मक्खी के) पेट से मुख़्तलिफ़ रंगों का एक शरबत (शहद) निकलता है जिसमें लोगों के लिए शिफ़ा है।",
+    "en": "There emerges from their bellies a drink, varying in colors, in which there is healing for people. ",
+    "ur": "اس کے (مکھی کے) پیٹ سے مختلف رنگوں کا ایک شربت (شہد) نکلتا ہے جس میں لوگوں کے لیے شفا ہے؛ "
+}       ,
+{ 
+    "surah": "Surah Bani Isra'il", 
+    "para": "15", 
+    "ruku": "9", 
+    "ayat": "82 (Part)", 
+    arabic: "وَنُنَزِّلُ مِنَ الْقُرْاٰنِ مَا هُوَ شِفَآءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ"
+,
+
+    "hi": "और हम क़ुरआन में वह चीज़ नाज़िल करते हैं जो मोमिनों के लिए शिफ़ा और रहमत है।",
+    "en": "And We send down of the Qur'an that which is healing and mercy for the believers.",
+    "ur": "اور ہم قرآن میں وہ چیز نازل کرتے ہیں جو مومنوں کے لیے شفا اور رحمت ہے۔"
+} ,
+{ 
+    surah: "Surah Al-Anbiya", 
+    para: "17", 
+    ruku: "6", 
+    ayat: "83 - 84", 
+    arabic: "وَاَيُّوبَ اِذْ نَادٰى رَبَّهُۥٓ اَنِّي مَسَّنِيَ الضُّرُّ وَاَنتَ اَرْحَمُ الرَّٰحِمِينَ فَاسْتَجَبْنَا لَهُۥ فَكَشَفْنَا مَا بِهِۦ مِن ضُرٍّ ۖ وَاٰتَيْنٰهُ اَهْلَهُۥ وَمِثْلَهُم مَّعَهُمْ رَحْمَةً مِّنْ عِندِنَا وَذِكْرٰى لِلْعٰبِدِينَ"
+  ,  hi:"और (याद करो) अय्यूब को जब उन्होंने अपने रब (पालनहार) को पुकारा कि: 'मुझे तकलीफ़ पहुँची है और तू सब रहम करने वालों से बढ़कर रहम करने वाला है।' फिर हमने उनकी दुआ क़बूल कर ली और जो तकलीफ़ उन्हें थी उसे दूर कर दिया, और हमने उन्हें उनका परिवार (अहल-ओ-अय्याल) दोबारा अता किया और उनके साथ उतने ही और भी दिए। यह हमारी तरफ़ से एक ख़ास रहमत है और इबादत करने वालों के लिए एक नसीहत (याद दहानी) है।",
+  en:"And [remember] Job (Ayyub), when he cried out to his Lord, 'Indeed, adversity has touched me, and You are the most merciful of the merciful.' So We responded to him and removed what afflicted him of adversity. And We gave him [back] his family and the like thereof with them as a mercy from Us and a reminder for the worshippers.",
+  ur:"اور (یاد کرو) ایوب کو جب انہوں نے اپنے رب کو پکارا کہ: 'مجھے تکلیف پہنچی ہے اور تو سب رحم کرنے والوں سے بڑھ کر رحم کرنے والا ہے۔' پس ہم نے ان کی دعا قبول کر لی اور جو تکلیف انہیں تھی اسے دور کر دیا، اور ہم نے انہیں ان کا اہل و عیال (خاندان) عطا فرمایا اور ان کے ساتھ اتنے ہی اور بھی دیے۔ یہ ہماری طرف سے ایک خاص رحمت ہے اور عبادت کرنے والوں کے لیے ایک نصیحت ہے۔"
+
+
+}
+,
+
+{ 
+    "surah": "Surah Ash-Shu'ara", 
+    "para": "19", 
+    "ruku": "9", 
+    "ayat": "80", 
+ arabic: "وَاِذَا مَرِضْتُ فَهُوَ يَشْفِينِ"
+,
+    "hi": "और जब मैं बीमार होता हूँ, तो वही (अल्लाह) मुझे शिफ़ा देता है।",
+    "en": "And when I am ill, it is He who cures me.",
+    "ur": "اور جب میں بیمار ہوتا ہوں، تو وہی (اللہ) مجھے شفا دیتا ہے۔"
+},
+{ 
+    "surah": "Surah Ha-Mim As-Sajdah", 
+    "para": "24", 
+    "ruku": "19", 
+    "ayat": "44 (Part)", 
+ arabic:"قُلْ هُوَ لِلَّذِينَ اٰمَنُوا هُدًى وَّشِفَآءٌ"
+,
+
+    "hi": "आप कह दीजिए: वह (ईमान वालों के लिए) हिदायत और शिफ़ा है।",
+    "en": "Say: It is for those who believe, a guidance and healing.",
+    "ur": "آپ کہہ دیجیے: وہ (ایمان والوں کے لیے) ہدایت اور شفا ہے۔"
+}
+
+
+]
+} ,
+madad: {
+                name: "अल्लाह से मदद कैसे मांगें"
+         ,items: [
+            {
+    "surah": "Surah Al-Baqarah",
+    "para": "2",
+    "ruku": "7",
+    "ayat": "186",
+  arabic:"وَاِذَا سَاَلَكَ عِبَادِي عَنِّي فَاِنِّي قَرِيبٌ ۖ اُجِيبُ دَعْوَةَ الدَّاعِ اِذَا دَعَانِ ۖ فَلْيَسْتَجِيبُوا لِي وَلْيُؤْمِنُوا بِي لَعَلَّهُمْ يَرْشُدُونَ"
+ ,
+    "hi": "और जब मेरे बंदे मेरे बारे में आपसे सवाल करें, तो (कह दीजिए कि) मैं तो उनके बहुत करीब हूँ। पुकारने वाला जब भी मुझे पुकारता है, मैं उसकी दुआ कबूल करता हूँ। तो उन्हें चाहिए कि मेरा हुक्म मानें और मुझ पर ईमान रखें, ताकि वे सही रास्ता पा सकें।",
+    "en": "And when My servants ask you, [O Muhammad], concerning Me - indeed I am near. I respond to the invocation of the supplicant when he calls upon Me. So let them respond to Me and believe in Me that they may be [rightly] guided.",
+    "ur": "اور جب میرے بندے آپ سے میرے بارے میں سوال کریں تو (کہہ دیجیے کہ) میں تو (ان کے) بہت ہی قریب ہوں۔ پکارنے والا جب بھی مجھے پکارتا ہے میں اس کی دعا قبول کرتا ہوں، تو انہیں چاہیے کہ میرا حکم مانیں اور مجھ پر ایمان لائیں تاکہ وہ ہدایت پا سکیں۔"
+},
+{ 
+    "surah": "Surah Al-Baqarah", 
+    "para": "2", 
+    "ruku": "10", 
+    "ayat": "214 (Part)", 
+   "arabic": "اَلَآ اِنَّ نَصْرَ اللَّهِ قَرِيبٌ",
+
+    "hi": "सुन लो! बेशक अल्लाह की मदद करीब है।",
+    "en": "Unquestionably, the help of Allah is near.",
+    "ur": "سن لو! بے شک اللہ کی مدد قریب ہے۔"
+},
+{
+    "surah": "Surah Ali 'Imran",
+    "para": "3",
+    "ruku": "11",
+    "ayat": "26",
+   arabic:"قُلِ اللَّهٰهُمَّ مٰلِكَ الْمُلْكِ تُؤْتِي الْمُلْكَ مَن تَشَآءُ وَتَنزِعُ الْمُلْكَ مِمَّن تَشَآءُ وَتُعِزُّ مَن تَشَآءُ وَتُذِلُّ مَن تَشَآءُ ۖ بِيَدِكَ الْخَيْرُ ۖ اِنَّكَ عَلٰى كُلِّ شَيْءٍ قَدِيرٌ"
+,
+    "hi": "आप कहिए: ऐ अल्लाह! ऐ बादशाही के मालिक! तू जिसे चाहे बादशाही दे और जिससे चाहे बादशाही छीन ले, और तू जिसे चाहे इज़्ज़त दे और जिसे चाहे ज़िल्लत दे, तेरे ही हाथ में सब भलाई है। बेशक तू हर चीज़ पर क़ादिर है।",
+    "en": "Say: O Allah, Owner of Sovereignty, You give sovereignty to whom You will and You take sovereignty away from whom You will. You honor whom You will and You humble whom You will. In Your hand is [all] good. Indeed, You are over all things competent.",
+    "ur": "آپ کہیے: اے اللہ! اے بادشاہی کے مالک! تو جسے چاہے بادشاہی دے اور جس سے چاہے بادشاہی چھین لے، اور تو جسے چاہے عزت دے اور جسے چاہے ذلت دے، تیرے ہی ہاتھ میں سب بھلائی ہے۔ بے شک تو ہر چیز پر قادر ہے۔"
+},
+{ 
+    "surah": "Surah Ali 'Imran", 
+    "para": "3", 
+    "ruku": "12", 
+    "ayat": "35 (Part)", 
+    "arabic": "إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ",
+    "hi": "बेशक तू सब कुछ सुनने वाला और (सब कुछ) जानने वाला है।",
+    "en": "Indeed, You are the Hearing, the Knowing.",
+    "ur": "بے شک تو سب کچھ سننے والا اور (سب کچھ) جاننے والا ہے۔"
+},
+{
+    "surah": "Surah Ali 'Imran",
+    "para": "4",
+    "ruku": "7",
+    "ayat": "150",
+ "arabic": "بَلِ اللَّٰهُ مَوْلَٰكُمْ ۖ وَهُوَ خَيْرُ النَّٰصِرِينَ"
+,
+    "hi": "बल्कि अल्लाह ही तुम्हारा मौला (कारसाज़/मालिक) है, और वह सबसे बेहतरीन मददगार है।",
+    "en": "But Allah is your protector, and He is the best of helpers.",
+    "ur": "بلکہ اللہ ہی تمہارا مولیٰ (کارساز) ہے، اور وہ بہترین مددگار ہے۔"
+},
+{
+    "surah": "Surah Ali 'Imran",
+    "para": "4",
+    "ruku": "8",
+    "ayat": "160",
+    "arabic": "اِن يَّنصُرْكُمُ اللَّٰهُ فَلَا غَالِبَ لَكُمْ ۖ وَاِن يَّخْذُلْكُمْ فَمَن ذَا الَّذِي يَنصُرُكُم مِّنۢ بَعْدِهِ ۗ وَعَلَى اللَّٰهِ فَلْيَتَوَكَّلِ الْمُؤْمِنُونَ"
+ ,
+    "hi": "अगर अल्लाह तुम्हारी मदद करे तो तुम पर कोई ग़ालिब (हावी) नहीं आ सकता, और अगर वह तुम्हें छोड़ दे तो उसके बाद कौन है जो तुम्हारी मदद कर सके? और ईमान वालों को अल्लाह ही पर भरोसा करना चाहिए।",
+    "en": "If Allah should aid you, no one can overcome you; but if He should forsake you, who is there that can aid you after Him? And upon Allah let the believers rely.",
+    "ur": "اگر اللہ تمہاری مدد کرے تو تم پر کوئی غالب نہیں آ سکتا، اور اگر وہ تمہیں چھوڑ دے تو اس کے بعد کون ہے جو تمہاری مدد کر سکے؟ اور ایمان والوں کو اللہ ہی پر بھروسہ کرنا چاہیے۔"
+}  ,
+{
+    "surah": "Surah Ali 'Imran",
+    "para": "4",
+    "ruku": "9",
+    "ayat": "173",
+   "arabic": "حَسْبُنَا اللَّٰهُ وَنِعْمَ الْوَكِيلُ"
+ ,
+    "hi": "अल्लाह हमारे लिए काफी है और वह सबसे बेहतरीन कारसाज़ है।",
+    "en": "Sufficient for us is Allah, and [He is] the best Disposer of affairs.",
+    "ur": "اللہ ہمارے لیے کافی ہے اور وہ بہترین کارساز ہے۔"
+},
+{
+    "surah": "Surah Al-A'raf",
+    "para": "8",
+    "ruku": "14",
+    "ayat": "55-56",
+ "arabic": "اُدْعُوا رَبَّكُمْ تَضَرُّعًا وَّخُفْيَةً ۚ اِنَّهُۥ لَا يُحِبُّ الْمُعْتَدِينَ وَلَا تُفْسِدُوا فِي الْاَرْضِ بَعْدَ اِصْلَاحِهَا وَادْعُوهُ خَوْفًا وَّطَمَعًا ۚ اِنَّ رَحْمَتَ اللَّٰهِ قَرِيبٌ مِّنَ الْمُحْسِنِينَ"
+ ,
+    "hi": "तुम अपने रब को गिड़गिड़ाकर और चुपके-चुपके पुकारो। बेशक वह हद से बढ़ने वालों को पसंद नहीं करता। और ज़मीन में सुधार के बाद बिगाड़ न फैलाओ, और उसे (अल्लाह को) डर और उम्मीद के साथ पुकारो। बेशक अल्लाह की रहमत नेक काम करने वालों के करीब है।",
+    "en": "Call upon your Lord in humility and privately; indeed, He does not like transgressors. And cause not corruption upon the earth after its reformation, and invoke Him in fear and aspiration. Indeed, the mercy of Allah is near to the doers of good.",
+    "ur": "اپنے رب کو گڑگڑا کر اور چپکے چپکے پکارو۔ بے شک وہ حد سے بڑھنے والوں کو پسند نہیں کرتا۔ اور زمین میں اس کی اصلاح کے بعد فساد نہ پھیلاؤ، اور اسے (اللہ کو) ڈر اور امید کے ساتھ پکارو۔ بے شک اللہ کی رحمت نیکی کرنے والوں کے قریب ہے۔"
+},
+{
+    "surah": "Surah Al-A'raf",
+    "para": "9",
+    "ruku": "14",
+    "ayat": "205",
+ "arabic": "وَاذْكُر رَّبَّكَ فِي نَفْسِكَ تَضَرُّعًا وَّخِيفَةً وَّدُونَ الْجَهْرِ مِنَ الْقَوْلِ بِالْغُدُوِّ وَالْاٰصَالِ وَلَا تَكُن مِّنَ الْغَافِلِينَ"
+ ,
+    "hi": "और अपने रब को अपने दिल ही दिल में आजिज़ी (गिड़गिड़ाकर) और डर के साथ, और हल्की आवाज़ में सुबह और शाम याद किया करो, और तुम ग़ाफ़िलों (बेखबरों) में से न हो जाना।",
+    "en": "And remember your Lord within yourself in humility and in fear without being loud in speaking - in the mornings and the evenings. And do not be among the heedless.",
+    "ur": "اور اپنے رب کو اپنے دل میں عاجزی اور ڈر کے ساتھ، اور ہلکی آواز میں صبح اور شام یاد کیا کرو، اور تم غافلوں میں سے نہ ہو جانا۔"
+},
+{
+    "surah": "Surah Al-Anfal",
+    "para": "9",
+    "ruku": "15",
+    "ayat": "9-10",
+    "arabic": "اِذْ تَسْتَغِيثُونَ رَبَّكُمْ فَاسْتَجَابَ لَكُمْ اَنِّي مُمِدُّكُم بِاَلْفٍ مِّنَ الْمَلٰٓئِكَةِ مُرْدِفِينَ وَمَا جَعَلَهُ اللَّٰهُ اِلَّا بُشْرٰى وَلِتَطْمَئِنَّ بِهٖ قُلُوبُكُمْ ۚ وَمَا النَّصْرُ اِلَّا مِنْ عِنْدِ اللَّٰهِ ۚ اِنَّ اللَّٰهَ عَزِيزٌ حَكِيمٌ"
+,
+    "hi": "जब तुम अपने रब से फ़रियाद कर रहे थे, तो उसने तुम्हारी दुआ सुन ली कि मैं एक हज़ार फ़रिश्तों से तुम्हारी मदद करूँगा जो एक के बाद एक आएँगे। और अल्लाह ने यह (मदद) सिर्फ इसलिए की ताकि तुम्हें खुशखबरी मिले और तुम्हारे दिल इससे मुतमइन (संतुष्ट) हो जाएँ, वरना मदद तो सिर्फ अल्लाह ही की तरफ से होती है। बेशक अल्लाह ज़बरदस्त और हिकमत वाला है।",
+    "en": "[Remember] when you asked help of your Lord, and He answered you, 'Indeed, I will reinforce you with a thousand from the angels, following one another.' And Allah made it not but good tidings and so that your hearts would be assured thereby. And victory is not but from Allah. Indeed, Allah is Exalted in Might and Wise.",
+    "ur": "جب تم اپنے رب سے فریاد کر رہے تھے، تو اس نے تمہاری دعا قبول فرمائی کہ میں ایک ہزار فرشتوں سے تمہاری مدد کروں گا جو ایک کے بعد ایک آئیں گے۔ اور اللہ نے یہ (مدد) صرف اس لیے کی تاکہ تمہیں خوشخبری ملے اور تمہارے دل اس سے مطمئن ہو جائیں، ورنہ مدد تو صرف اللہ ہی کی طرف سے ہوتی ہے۔ بے شک اللہ زبردست اور حکمت والا ہے۔"
+},
+{
+    "surah": "Surah An-Naml",
+    "para": "20",
+    "ruku": "1",
+    "ayat": "62",
+ "arabic": "اَمَّن يُّجِيبُ الْمُضْطَرَّ اِذَا دَعَاهُ وَيَكْشِفُ السُّوٓءَ وَيَجْعَلُكُمْ خُلَفَآءَ الْاَرْضِ ۗ اَاِلٰهٌ مَّعَ اللَّٰهِ ۚ قَلِيلًا مَّا تَذَكَّرُونَ"
+,
+    "hi": "भला कौन है जो बेकरार (बेबस) की पुकार सुनता है जब वह उसे पुकारता है, और उसकी तकलीफ दूर कर देता है और तुम्हें ज़मीन का खलीफा (वारिस) बनाता है? क्या अल्लाह के साथ कोई और खुदा भी है? तुम लोग बहुत कम नसीहत मानते हो।",
+    "en": "Is He [not best] who responds to the desperate one when he calls upon Him and removes evil and makes you inheritors of the earth? Is there a deity with Allah? Little do you remember.",
+    "ur": "بھلا کون ہے جو بے قرار کی پکار سنتا ہے جب وہ اسے پکارتا ہے، اور اس کی تکلیف دور کر دیتا ہے اور تمہیں زمین کا خلیفہ بناتا ہے؟ کیا اللہ کے ساتھ کوئی اور معبود بھی ہے؟ تم لوگ بہت کم نصیحت مانتے ہو۔"
+},
+{ 
+    "surah": "Surah Al-Qasas", 
+    "para": "20", 
+    "ruku": "6", 
+    "ayat": "24 (Part)", 
+"arabic": "فَقَالَ رَبِّ اِنِّي لِمَآ اَنْزَلْتَ اِلَيَّ مِنْ خَيْرٍ فَقِيرٌ"
+ ,
+    "hi": "तो उसने कहा: ऐ मेरे रब्बी! मैं उस भलाई का मोहताज हूँ जो तू मेरी तरफ उतारे।",
+    "en": "So he said: My Rabbi, indeed I am, for whatever good You would send down to me, in need.",
+    "ur": "تو اس نے کہا: اے میرے ربی! میں اس بھلائی کا محتاج ہوں جو تو میری طرف اتارے۔"
+}
+]
+},
+toba : {
+                name: "तौबा के लिए"
+                 ,items: [
+                  {
+    "surah": "Surah An-Nisa",
+    "para": "5",
+    "ruku": "13",
+    "ayat": "106",
+  "arabic": "وَاسْتَغْفِرِ اللَّٰهَ ۖ اِنَّ اللَّٰهَ كَانَ غَفُورًا رَّحِيمًا"
+,
+    "hi": "और अल्लाह से माफ़ी माँगो, बेशक अल्लाह बहुत माफ़ करने वाला और बड़ा रहम करने वाला है।",
+    "en": "And seek forgiveness of Allah. Indeed, Allah is ever Forgiving and Merciful.",
+    "ur": "اور اللہ سے معافی مانگو، بے شک اللہ بہت معاف کرنے والا اور بڑا رحم کرنے والا ہے۔"
+} ,
+{
+    "surah": "Surah An-Nisa",
+    "para": "5",
+    "ruku": "13",
+    "ayat": "110",
+ "arabic": "وَمَن يَّعْمَلْ سُوٓءًا اَوْ يَظْلِمْ نَفْسَهُۥ ثُمَّ يَسْتَغْفِرِ اللَّٰهَ يَجِدِ اللَّٰهَ غَفُورًا رَّحِيمًا"
+,
+    "hi": "और जो कोई बुरा काम करे या अपनी जान पर जुल्म (गुनाह) करे, फिर अल्लाह से माफी माँगे, तो वह अल्लाह को बहुत माफ करने वाला और बड़ा रहम करने वाला पाएगा।",
+    "en": "And whoever does a wrong or wrongs himself but then seeks forgiveness of Allah will find Allah Forgiving and Merciful.",
+    "ur": "اور جو کوئی برا کام کرے یا اپنی جان پر ظلم (گناہ) کرے، پھر اللہ سے معافی مانگے، تو وہ اللہ کو بہت معاف کرنے والا اور بڑا رحم کرنے والا پائے گا۔"
+},
+{
+    "surah": "Surah Al-Ma'idah",
+    "para": "6",
+    "ruku": "10",
+    "ayat": "39-40",
+"arabic": "فَمَن تَابَ مِنۢ بَعْدِ ظُلْمِهِٖ وَاَصْلَحَ فَاِنَّ اللَّٰهَ يَتُوبُ عَلَيْهِ ۗ اِنَّ اللَّٰهَ غَفُورٌ رَّحِيمٌ اَلَمْ تَعْلَمْ اَنَّ اللَّٰهَ لَهُۥ مُلْكُ السَّمَاوَاتِ وَالْاَرْضِ يُعَذِّبُ مَن يَّشَآءُ وَيَغْفِرُ لِمَن يَّشَآءُ ۗ وَاللَّٰهُ عَلَى كُلِّ شَيْءٍ قَدِيرٌ"
+,
+    "hi": "फिर जो अपने जुल्म के बाद तौबा कर ले और अपनी इस्लाह (सुधार) कर ले, तो अल्लाह उसकी तौबा कुबूल फरमा लेता है। बेशक अल्लाह बहुत माफ करने वाला और बड़ा रहम करने वाला है। क्या तुम्हें नहीं मालूम कि आसमानों और ज़मीन की बादशाही अल्लाह ही के लिए है? वह जिसे चाहे सजा दे और जिसे चाहे माफ कर दे, और अल्लाह हर चीज़ पर कादिर है।",
+    "en": "But whoever repents after his wrongdoing and reforms, indeed, Allah will turn to him in forgiveness. Indeed, Allah is Forgiving and Merciful. Do you not know that to Allah belongs the dominion of the heavens and the earth? He punishes whom He wills and forgives whom He wills, and Allah is over all things competent.",
+    "ur": "پھر جو اپنے ظلم کے بعد توبہ کر لے اور اپنی اصلاح کر لے، تو اللہ اس کی توبہ قبول فرما لیتا ہے۔ بے شک اللہ بہت معاف کرنے والا اور بڑا رحم کرنے والا ہے۔ کیا تمہیں معلوم نہیں کہ آسمانوں اور زمین کی بادشاہی اللہ ہی کے لیے ہے؟ وہ جسے چاہے سزا دے اور جسے چاہے معاف کر دے، اور اللہ ہر چیز پر قادر ہے۔"
+},
+{
+    "surah": "Surah Al-A'raf",
+    "para": "8",
+    "ruku": "9",
+    "ayat": "23 (Dua Part)",
+"arabic": "رَبَّنَا ظَلَمْنَآ اَنْفُسَنَا وَاِنْ لَّمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ"
+,
+    "hi": "ऐ हमारे रब्बी! हमने अपनी जानों पर ज़ुल्म किया, और अगर तूने हमें माफ़ न किया और हम पर रहम न फरमाया, तो यकीनन हम नुक़सान उठाने वालों में से हो जाएँगे।",
+    "en": "Our Rabbi, we have wronged ourselves, and if You do not forgive us and have mercy upon us, we will surely be among the losers.",
+    "ur": "اے ہمارے ربی! ہم نے اپنی جانوں پر ظلم کیا، اور اگر تو نے ہمیں معاف نہ فرمایا اور ہم پر رحم نہ کیا، تو یقیناً ہم نقصان اٹھانے والوں میں سے ہو جائیں گے۔"
+},
+{
+    "surah": "Surah At-Tawbah",
+    "para": "11",
+    "ruku": "2",
+    "ayat": "104",
+  "arabic": "اَلَمْ يَعْلَمُوآ اَنَّ اللَّٰهَ هُوَ يَقْبَلُ التَّوْبَةَ عَنْ عِبَادِهِٖ وَيَاْخُذُ الصَّدَقَاتِ وَاَنَّ اللَّٰهَ هُوَ التَّوَّابُ الرَّحِيمُ"
+,
+    "hi": "क्या उन्हें मालूम नहीं कि अल्लाह ही अपने बंदों की तौबा कुबूल करता है और वही सदक़ात (खैरात) लेता है, और बेशक अल्लाह ही बहुत तौबा कुबूल करने वाला और बड़ा रहम करने वाला है।",
+    "en": "Do they not know that it is Allah who accepts repentance from His servants and receives charities and that it is Allah who is the Accepting of repentance, the Merciful?",
+    "ur": "کیا انہیں معلوم نہیں کہ اللہ ہی اپنے بندوں کی توبہ قبول کرتا ہے اور وہی صدقات (خیرات) لیتا ہے، اور بے شک اللہ ہی بہت توبہ قبول کرنے والا اور بڑا رحم کرنے والا ہے۔"
+},
+{
+    "surah": "Surah Az-Zumar",
+    "para": "24",
+    "ruku": "3",
+    "ayat": "53",
+"arabic": "قُلْ يٰعِبَادِيَ الَّذِينَ اَسْرَفُوا عَلٰى اَنْفُسِهِمْ لَا تَقْنَطُوا مِنْ رَّحْمَةِ اللَّٰهِ ۚ اِنَّ اللَّٰهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا ۚ اِنَّهُۥ هُوَ الْغَفُورُ الرَّحِيمُ"
+,
+    "hi": "कह दो कि ऐ मेरे बंदों! जिन्होंने अपनी जानों पर ज़्यादती (गुनाह) की है, अल्लाह की रहमत से मायूस न हो। बेशक अल्लाह तमाम गुनाहों को माफ कर देता है, और यकीनन वह बहुत माफ करने वाला और बड़ा रहम करने वाला है।",
+    "en": "Say: O My servants who have transgressed against themselves, do not despair of the mercy of Allah. Indeed, Allah forgives all sins. Indeed, it is He who is the Forgiving, the Merciful.",
+    "ur": "کہہ دو کہ اے میرے بندو! جنہوں نے اپنی جانوں پر زیادتی (گناہ) کی ہے، اللہ کی رحمت سے مایوس نہ ہو۔ بے شک اللہ تمام گناہوں کو معاف کر دیتا ہے، اور یقیناً وہ بہت معاف کرنے والا اور بڑا رحم کرنے والا ہے۔"
+}
+
+]
+},
+zalim : {
+                name:  "ज़ालिमों से बचने के लिए",
+                
+                items: [
+   
+                  
+            {
+    "surah": "Surah Yunus",
+    "para": "11",
+    "ruku": "14",
+    "ayat": "85-86",
+"arabic": "فَقَالُوا عَلَى اللَّٰهِ تَوَكَّلْنَا ۚ رَبَّنَا لَا تَجْعَلْنَا فِتْنَةً لِّـلْقَوْمِ الظَّٰلِمِينَ وَنَجِّنَا بِرَحْمَتِكَ مِنَ الْقَوْمِ الْكَٰفِرِينَ"
+ ,
+    "hi": "तो उन्होंने कहा: हमने अल्लाह ही पर भरोसा किया। ऐ हमारे रब्बी! हमें ज़ालिम लोगों के लिए आज़माइश (फितना) न बना। और हमें अपनी रहमत से काफ़िर लोगों (के शिकंजे) से निजात दे।",
+    "en": "So they said: Upon Allah do we rely. Our Rabbi, make us not [objects of] trial for the wrongdoing people. And save us by Your mercy from the disbelieving people.",
+    "ur": "تو انہوں نے کہا: ہم نے اللہ ہی پر بھروسہ کیا۔ اے ہمارے ربی! ہمیں ظالم لوگوں کے لیے آزمائش نہ بنا۔ اور ہمیں اپنی رحمت سے کافر لوگوں (کے قبضے) سے نجات دے۔"
+},
+{
+    "surah": "Surah Al-Mu'minun",
+    "para": "18",
+    "ruku": "6",
+    "ayat": "97-98",
+"arabic": "وَقُلْ رَّبِّ اَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ وَاَعُوذُ بِكَ رَبِّ اَنْ يَّحْضُرُونِ"
+,
+    "hi": "और दुआ करो: ऐ मेरे रब्बी! मैं शैतानों के वसवसों (उकसावे) से तेरी पनाह माँगता हूँ। और ऐ मेरे रब्बी! मैं इस बात से भी तेरी पनाह माँगता हूँ कि वे मेरे पास आएँ।",
+    "en": "And say: My Rabbi, I seek refuge in You from the incitements of the devils. And I seek refuge in You, my Rabbi, lest they be present with me.",
+    "ur": "اور دعا کرو: اے میرے ربی! میں شیطانوں کے وسوسوں سے تیری پناہ مانگتا ہوں۔ اور اے میرے ربی! میں اس بات سے بھی تیری پناہ مانگتا ہوں کہ وہ میرے پاس آئیں۔"
+},
+{ 
+    "surah": "Surah Al-Qasas", 
+    "para": "20", 
+    "ruku": "5", 
+    "ayat": "21 (Dua Part)", 
+"arabic": "رَبِّ نَجِّنِي مِنَ الْقَوْمِ الظَّٰلِمِينَ"
+,
+    "hi": "ऐ मेरे रब्बी! मुझे ज़ालिम लोगों से निजात (छुटकारा) दे।",
+    "en": "My Rabbi, save me from the wrongdoing people.",
+    "ur": "اے میرے ربی! مجھے ظالم لوگوں سے نجات (چھٹکارا) دے۔"
+},
+{
+    "surah": "Surah Al-Ankabut",
+    "para": "20",
+    "ruku": "15",
+    "ayat": "30",
+"arabic": "قَالَ رَبِّ انْصُرْنِي عَلَى الْقَوْمِ الْمُفْسِدِينَ"
+,
+    "hi": "उसने कहा: ऐ मेरे रब्बी! फ़साद फैलाने वाले लोगों के खिलाफ मेरी मदद फरमा।",
+    "en": "He said: My Rabbi, support me against the corrupting people.",
+    "ur": "اس نے کہا: اے میرے ربی! فساد پھیلانے والے لوگوں کے خلاف میری مدد فرما۔"
+},
+{
+    "surah": "Surah Al-Mumtahanah",
+    "para": "28",
+    "ruku": "7",
+    "ayat": "5",
+"arabic": "رَبَّنَا لَا تَجْعَلْنَا فِتْنَةً لِّـلَّذِينَ كَفَرُوا وَاغْفِرْ لَنَا رَبَّنَا ۖ اِنَّكَ اَنْتَ الْعَزِيزُ الْحَكِيمُ"
+,
+    "hi": "ऐ हमारे रब्बी! हमें काफिरों के लिए आज़माइश (फितना) न बना, और ऐ हमारे रब्बी! हमें माफ़ कर दे। बेशक तू ही ज़बरदस्त और हिकमत वाला है।",
+    "en": "Our Rabbi, make us not [objects of] trial for the disbelievers, and forgive us, our Rabbi. Indeed, it is You who is the Exalted in Might, the Wise.",
+    "ur": "اے ہمارے ربی! ہمیں کافروں کے لیے آزمائش نہ بنا، اور اے ہمارے ربی! ہمیں معاف کر دے۔ بے شک تو ہی زبردست اور حکمت والا ہے۔"
+}
+
+
+
+
+]
+},
+pareshani : {
+                name:  "हर परेशानी से बचने के लिए",
+                
+                items: [
+                  {
+    "surah": "Surah Al-Anbiya",
+    "para": "17",
+    "ruku": "6",
+    "ayat": "87-88",
+"arabic": "لَّآ اِلٰهَ اِلَّا اَنْتَ سُبْحٰنَكَ اِنِّي كُنْتُ مِنَ الظَّٰلِمِينَ فَاسْتَجَبْنَا لَهُۥ وَنَجَّيْنٰهُ مِنَ الْغَمِّ ۗ وَكَذٰلِكَ نُنْجِي الْمُؤْمِنِينَ"
+ ,
+    "hi": "(यूनुस ने पुकारा:) तेरे सिवा कोई माबूद नहीं, तू पाक है, बेशक मैं ही कसूरवारों (ज़ुल्म करने वालों) में से था। तो हमने उनकी पुकार सुन ली और उन्हें ग़म से निजात दी, और इसी तरह हम ईमान वालों को निजात देते हैं।",
+    "en": "There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers. So We responded to him and saved him from the distress. And thus do We save the believers.",
+    "ur": "(یونس نے پکارا:) تیرے سوا کوئی معبود نہیں، تو پاک ہے، بے شک میں ہی قصورواروں میں سے تھا۔ تو ہم نے ان کی پکار سن لی اور انہیں غم سے نجات دی، اور اسی طرح ہم ایمان والوں کو نجات دیتے ہیں۔"
+},
+{
+    "surah": "Surah Al-Anbiya",
+    "para": "17",
+    "ruku": "6",
+    "ayat": "88",
+"arabic": "فاسْتَجَبْنَا لَهُۥ وَنَجَّيْنٰهُ مِنَ الْغَمِّ ۗ وَكَذٰلِكَ نُنْجِي الْمُؤْمِنِينَ"
+,
+    "hi": "तो हमने उनकी (दुआ) कुबूल कर ली और उन्हें ग़म (परेशानी) से निजात दी, और इसी तरह हम ईमान वालों को निजात देते हैं।",
+    "en": "So We responded to him and saved him from the distress. And thus do We save the believers.",
+    "ur": "تو ہم نے ان کی (دعا) قبول کر لی اور انہیں غم (پریشانی) سے نجات دی، اور اسی طرح ہم ایمان والوں کو نجات دیتے ہیں۔"
+},
+{
+    "surah": "Surah An-Naml",
+    "para": "20",
+    "ruku": "1",
+    "ayat": "62",
+ "arabic": "اَمَّنْ يُّجِيبُ الْمُضْطَرَّ اِذَا دَعَاهُ وَيَكْشِفُ السُّوٓءَ وَيَجْعَلُكُمْ خُلَفَآءَ الْاَرْضِ ۗ اَاِلٰهٌ مَّعَ اللَّٰهِ ۗ قَلِيلًا مَّا تَذَكَّرُونَ"
+,
+    "hi": "भला कौन है जो बेकरार (परेशान हाल) की पुकार सुनता है जब वह उसे पुकारता है, और उसकी तकलीफ को दूर कर देता है और तुम्हें ज़मीन का खलीफा (वारिस) बनाता है? क्या अल्लाह के साथ कोई और माबूद है? तुम बहुत कम ही नसीहत मानते हो।",
+    "en": "Is He [not best] who responds to the desperate one when he calls upon Him and removes evil and makes you inheritors of the earth? Is there a deity with Allah? Little do you remember.",
+    "ur": "بھلا کون ہے جو بے قرار (پریشان حال) کی پکار سنتا ہے جب وہ اسے پکارتا ہے، اور اس کی تکلیف کو دور کر دیتا ہے اور تمہیں زمین کا خلیفہ (وارث) بناتا ہے؟ کیا اللہ کے ساتھ کوئی اور معبود ہے؟ تم بہت کم ہی نصیحت مانتے ہو۔"
+}
+]
+},
+dua : {
+                name:  "परिवार और औलाद की दुआ",
+                
+                items: [
+                  {
+    "surah": "Surah Al-Baqarah",
+    "para": "1",
+    "ruku": "15",
+    "ayat": "128",
+ "arabic": "رَبَّنَا وَاجْعَلْنَا مُسْلِمَيْنِ لَكَ وَمِنْ ذُرِّيَّتِنَآ اُمَّةً مُّسْلِمَةً لَّكَ وَاَرِنَا مَنَاسِكَنَا وَتُبْ عَلَيْنَا ۖ اِنَّكَ اَنْتَ التَّوَّابُ الرَّحِيمُ"
+,
+    "hi": "ऐ हमारे रब्बी! हमें अपना फरमाबरदार (मुस्लिम) बना ले और हमारी औलाद में से भी अपनी एक फरमाबरदार उम्मत पैदा कर, और हमें हमारी इबादत के तरीके बता दे और हमारी तौबा कुबूल फरमा। बेशक तू ही तौबा कुबूल करने वाला और बड़ा रहम करने वाला है।",
+    "en": "Our Rabbi, and make us submissive to You and from our descendants a Muslim nation [submissive] to You. And show us our rites and accept our repentance. Indeed, it is You who is the Accepting of repentance, the Merciful.",
+    "ur": "اے ہمارے ربی! ہمیں اپنا فرمانبردار (مسلم) بنا لے اور ہماری اولاد میں سے بھی اپنی ایک فرمانبردار امت پیدا کر، اور ہمیں ہماری عبادت کے طریقے بتا دے اور ہماری توبہ قبول فرما۔ بے شک تو ہی توبہ قبول کرنے والا اور بڑا رحم کرنے والا ہے۔"
+},
+{
+    "surah": "Surah Ibrahim",
+    "para": "13",
+    "ruku": "18",
+    "ayat": "35",
+ "arabic": "رَبَّنَا وَاجْعَلْنَا مُسْلِمَيْنِ لَكَ وَمِنْ ذُرِّيَّتِنَآ اُمَّةً مُّسْلِمَةً لَّكَ وَاَرِنَا مَنَاسِكَنَا وَتُبْ عَلَيْنَا ۖ اِنَّكَ اَنْتَ التَّوَّابُ الرَّحِيمُ"
+,
+    "hi": "और (याद करो) जब इब्राहीम ने कहा: ऐ मेरे रब्बी! इस शहर (मक्का) को अमन वाला बना दे, और मुझे और मेरी औलाद को इस बात से बचा ले कि हम बुतों की इबादत करें।",
+    "en": "And [remember] when Abraham said: My Rabbi, make this city [Makkah] secure and keep me and my sons away from worshipping idols.",
+    "ur": "اور (یاد کرو) جب ابراہیم نے کہا: اے میرے ربی! اس شہر (مکہ) کو امن والا بنا دے، اور مجھے اور میری اولاد کو اس بات سے بچا لے کہ ہم بتوں کی عبادت کریں۔"
+},
+{
+    "surah": "Surah Ibrahim",
+    "para": "13",
+    "ruku": "18",
+    "ayat": "39 (end) - 41",
+"arabic": "رَبِّي لَسَمِيعُ الدُّعَآءِ ۞ رَبِّ اجْعَلْنِي مُقِيمَ الصَّلٰوةِ وَمِنْ ذُرِّيَّتِي ۚ رَبَّنَا وَتَقَبَّلْ دُعَآءِ ۞ رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ"
+,
+    "hi": "बेशक मेरा रब्बी दुआ सुनने वाला है। ऐ मेरे रब्बी! मुझे नमाज़ कायम करने वाला बना और मेरी औलाद में से भी (नमाज़ी बना), ऐ हमारे रब्बी! और मेरी दुआ कुबूल फरमा। ऐ हमारे रब्बी! मुझे और मेरे माँ-बाप को और सब मोमिनों को उस दिन माफ कर देना जिस दिन हिसाब कायम होगा।",
+    "en": "Indeed, my Rabbi is the Hearer of supplication. My Rabbi, make me an establisher of prayer, and [many] from my descendants. Our Rabbi, and accept my supplication. Our Rabbi, forgive me and my parents and the believers the Day the account is established.",
+    "ur": "بے شک میرا ربی دعا سننے والا ہے۔ اے میرے ربی! مجھے نماز قائم کرنے والا بنا اور میری اولاد میں سے بھی، اے ہمارے ربی! اور میری دعا قبول فرما۔ اے ہمارے ربی! مجھے اور میرے ماں باپ کو اور سب مومنوں کو اس دن معاف کر دینا جس دن حساب قائم ہوگا۔"
+}
+
+
+
+
+
+
+]
+},
+jinnat : {
+                name:  "जिन्नातों से बचने के लिए" ,
+                
+                items: [
+                  
+{
+    "surah": "Surah Al-Baqarah",
+    "para": "1",
+    "ruku": "1",
+    "ayat": "1-4",
+"arabic": "الٓمٓ ۞ ذٰلِكَ الْكِتٰبُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ ۞ الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلٰوةِ وَمِمَّا رَزَقْنٰهُمْ يُنْفِقُونَ ۞ وَالَّذِينَ يُؤْمِنُونَ بِمَآ اُنْزِلَ اِلَيْكَ وَمَآ اُنْزِلَ مِنْ قَبْلِكَ وَبِالْاٰخِرَةِ هُمْ يُوقِنُونَ"
+,
+    "hi": "अलिफ़. लाम. मीम. यह वह किताब है जिसमें कोई शक नहीं, हिदायत है डर रखने वालों (परहेज़गारों) के लिए। जो लोग ग़ैब (अनदेखी चीज़ों) पर ईमान लाते हैं और नमाज़ कायम करते हैं और जो कुछ हमने उन्हें दिया है उसमें से खर्च करते हैं। और जो लोग ईमान लाते हैं उस पर जो आपकी तरफ उतारा गया और उस पर जो आपसे पहले उतारा गया, और आखिरत पर वे पूरा यकीन रखते हैं।",
+    "en": "Alif, Lam, Meem. This is the Book about which there is no doubt, a guidance for those conscious of Allah. Who believe in the unseen, establish prayer, and spend out of what We have provided for them. And who believe in what has been revealed to you, [O Muhammad], and what was revealed before you, and of the Hereafter they are certain [in faith].",
+    "ur": "الف۔ لام۔ میم۔ یہ وہ کتاب ہے جس میں کوئی شک نہیں، ہدایت ہے ڈر رکھنے والوں (پرہیزگاروں) کے لیے۔ جو لوگ غیب پر ایمان لاتے ہیں اور نماز قائم کرتے ہیں اور جو کچھ ہم نے انہیں دیا ہے اس میں سے خرچ کرتے ہیں۔ اور جو لوگ ایمان لاتے ہیں اس پر جو آپ کی طرف اتارا گیا اور اس پر جو آپ سے پہلے اتارا گیا، اور آخرت پر وہ پورا یقین رکھتے ہیں۔"
+} ,
+{
+    "surah": "Surah Al-Baqarah",
+    "para": "2",
+    "ayat": "163-164 (Selection)",
+"arabic": "وَاِلٰهُكُمْ اِلٰهٌ وَّاحِدٌ ۚ لَّآ اِلٰهَ اِلَّا هُوَ الرَّحْمٰنُ الرَّحِيمُ ۞ اِنَّ فِي خَلْقِ السَّمٰوٰتِ وَالْاَرْضِ وَاخْتِلَافِ الَّيْلِ وَالنَّهَارِ وَالْفُلْكِ الَّتِي تَجْرِي فِي الْبَحْرِ بِمَا يَنْفَعُ النَّاسَ وَمَآ اَنْزَلَ اللَّٰهُ مِنَ السَّمَآءِ مِنْ مَّآءٍ فَاَحْيَا بِهِ الْاَرْضَ بَعْدَ مَوْتِهَا وَبَثَّ فِيهَا مِنْ كُلِّ دَآبَّةٍ وَتَصْرِيفِ الرِّيٰحِ وَالسَّحَابِ الْمُسَخَّرِ بَيْنَ السَّمَآءِ وَالْاَرْضِ لَاٰيٰتٍ لِّقَوْمٍ يَّعْقِلُونَ"
+,
+"hi": "और तुम्हारा खुदा एक ही खुदा है, उसके सिवा कोई इबादत के लायक नहीं, वह बहुत मेहरबान और रहम करने वाला है। बेशक आसमानों और ज़मीन की पैदाइश में, रात और दिन के अदल-बदल में, और उन कश्तियों (जहाज़ों) में जो दरिया में लोगों के फायदे की चीज़ें लेकर चलती हैं, और उस पानी में जिसे अल्लाह ने आसमान से बरसाया फिर उससे ज़मीन को उसकी मौत (सूख जाने) के बाद ज़िंदा किया और उसमें हर किस्म के जानवर फैला दिए, और हवाओं के रुख बदलने में, और उन बादलों में जो आसमान और ज़मीन के बीच हुक्म के पाबंद हैं, अक्लमंद लोगों के लिए (अल्लाह की कुदरत की) बहुत सी निशानियाँ हैं।",
+
+"en": "And your god is one God. There is no deity [worthy of worship] except Him, the Entirely Merciful, the Especially Merciful. Indeed, in the creation of the heavens and the earth, the alternation of the night and the day, the ships which sail through the sea with that which benefits people, the water which Allah sends down from the sky, giving life thereby to the earth after its lifelessness and dispersing therein every kind of moving creature, the directing of the winds, and the clouds controlled between the sky and the earth are signs for a people who use reason.",
+
+"ur": "اور تمہارا خدا ایک ہی خدا ہے، اس کے سوا کوئی عبادت کے لائق نہیں، وہ بہت مہربان اور رحم کرنے والا ہے۔ بے شک آسمانوں اور زمین کی پیدائش میں، رات और دن کے ہیر پھیر میں، اور ان کشتیوں میں جو دریا میں لوگوں کے فائدے کی چیزیں لے کر چلتی ہیں، اور اس پانی میں جسے اللہ نے آسمان سے برسایا پھر اس سے زمین کو اس کی موت (سوکھ جانے) کے بعد زندہ کیا اور اس میں ہر قسم کے جانور پھیلا دیے، اور ہواؤں کے رخ بدلنے میں، اور ان بادلوں میں جو آسمان اور زمین کے درمیان حکم کے پابند ہیں، عقل مند لوگوں کے لیے (اللہ کی قدرت کی) بہت سی نشانیاں ہیں۔"
+},
+{
+    "surah": "Surah Al-Baqarah",
+    "para": "3",
+    "ayat": "255",
+    "title": "Ayat-ul-Kursi (آیة الکرسی)",
+"arabic": "اللَّٰهُ لَآ اِلٰهَ اِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَّلَا نَوْمٌ ۚ لَهُۥ مَا فِي السَّمٰوٰتِ وَمَا فِي الْاَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُۥٓ اِلَّا بِاِذْنِهِۥ ۚ يَعْلَمُ مَا بَيْنَ اَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِۦٓ اِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمٰوٰتِ وَالْاَرْضَ ۖ وَلَا يَؤُودُهُۥ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ"
+,
+    "hi": "अल्लाह! उसके सिवा कोई माबूद नहीं, वह हमेशा ज़िंदा रहने वाला और सब को थामने वाला है। उसे न ऊँघ आती है न नींद। उसी का है जो कुछ आसमानों में है और जो कुछ ज़मीन में है। कौन है जो उसकी इजाज़त के बिना उसके पास सिफारिश कर सके? वह जानता है जो कुछ उनके सामने है और जो कुछ उनके पीछे है। और वे उसके इल्म में से किसी चीज़ का अहाता नहीं कर सकते मगर जितना वह चाहे। उसकी 'कुर्सी' आसमानों और ज़मीन को घेरे हुए है, और उनकी हिफाज़त उसे थकाती नहीं। और वह बहुत बुलंद और बहुत अज़ीम (बड़ा) है।",
+    "en": "Allah - there is no deity except Him, the Ever-Living, the Sustainer of [all] existence. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is [presently] before them and what will be after them, and they encompass not a thing of His knowledge except for what He wills. His Kursi extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great.",
+    "ur": "اللہ! اس کے سوا کوئی معبود نہیں، وہ ہمیشہ زندہ رہنے والا اور سب کو تھامنے والا ہے۔ اسے نہ اونگھ آتی ہے نہ نیند۔ اسی کا ہے جو کچھ آسمانوں میں ہے اور جو کچھ زمین میں ہے۔ کون ہے جو اس کی اجازت کے بغیر اس کے پاس سفارش کر سکے؟ وہ جانتا ہے جو کچھ ان کے سامنے ہے اور جو کچھ ان کے پیچھے ہے، اور وہ اس کے علم میں سے کسی چیز کا احاطہ نہیں کر سکتے مگر جتنا وہ چاہے۔ اس کی 'کرسی' آسمانوں اور زمین کو گھیرے ہوئے ہے، اور ان کی حفاظت اسے تھکاتی نہیں۔ اور وہ بہت بلند اور بہت عظیم (بڑا) ہے۔"
+},
+{
+    "surah": "Surah Ali 'Imran",
+    "para": "3",
+    "ruku": "10 (Para 3 का Ruku 10, Surah का Ruku 2)",
+    "ayat": "17-18",
+ "arabic": "الصَّابِرِينَ وَالصَّادِقِينَ وَالْقَانِتِينَ وَالْمُنْفِقِينَ وَالْمُسْتَغْفِرِينَ بِالْاَسْحَارِ ۞ شَهِدَ اللَّٰهُ اَنَّهُۥ لَآ اِلٰهَ اِلَّا هُوَ وَالْمَلٰٓئِكَةُ وَاُولُوا الْعِلْمِ قَآئِمًۢا بِالْقِسْطِ ۚ لَآ اِلٰهَ اِلَّا هُوَ الْعَزِيزُ الْحَكِيمُ"
+,
+    "hi": "(ये वे लोग हैं) जो सब्र करने वाले हैं, सच्चे हैं, फरमाबरदार हैं, (अल्लाह की राह में) खर्च करने वाले हैं और रात के आखिरी हिस्सों (सहरी के वक्त) में माफी माँगने वाले हैं। अल्लाह ने खुद गवाही दी है कि उसके सिवा कोई माबूद नहीं, और फरिश्तों ने और अक्ल वालों ने भी, और वह इंसाफ पर कायम है। उसके सिवा कोई माबूद नहीं, वह ज़बरदस्त और हिकमत वाला है।",
+    "en": "The patient, the true, the obedient, those who spend [in the way of Allah], and those who seek forgiveness before dawn. Allah witnesses that there is no deity except Him, and [so do] the angels and those of knowledge - [He is] maintaining [creation] in justice. There is no deity except Him, the Exalted in Might, the Wise.",
+    "ur": "(یہ وہ لوگ ہیں) جو صبر کرنے والے ہیں، سچے ہیں، فرمانبردار ہیں، (اللہ کی راہ میں) خرچ کرنے والے ہیں اور رات کے آخری حصوں (سحر کے وقت) میں معافی مانگنے والے ہیں۔ اللہ نے خود گواہی دی ہے کہ اس کے سوا کوئی معبود نہیں، اور فرشتوں نے اور عقل والوں نے بھی، اور وہ انصاف پر قائم ہے۔ اس کے سوا کوئی معبود نہیں، وہ زبردست اور حکمت والا ہے۔"
+},
+{
+    "surah": "Surah Al-A'raf",
+    "para": "8",
+    "ruku": "7 (Surah का Ruku 7)",
+    "ayat": "54",
+  "arabic": "اِنَّ رَبَّكُمُ اللَّٰهُ الَّذِي خَلَقَ السَّمٰوٰتِ وَالْاَرْضَ فِي سِتَّةِ اَيَّامٍ ثُمَّ اسْتَوَىٰ عَلَى الْعَرْشِ يُغْشِي الَّيْلَ النَّهَارَ يَطْلُبُهُۥ حَثِيثًا وَّالشَّمْسَ وَالْقَمَرَ وَالنُّجُومَ مُسَخَّرٰتٍۭ بِاَمْرِهِۦ ۗ اَلَا لَهُ الْخَلْقُ وَالْاَمْرُ ۗ تَبٰرَكَ اللَّٰهُ رَبُّ الْعٰلَمِينَ"
+,
+    "hi": "बेशक तुम्हारा रब्बी अल्लाह है जिसने आसमानों और ज़मीन को छह दिनों में पैदा किया, फिर वह 'अर्श' पर मुस्तवी (कायम) हुआ। वह रात को दिन पर ढाँप देता है, जो तेज़ी से उसके पीछे आता है। और सूरज, चाँद और सितारों को पैदा किया जो उसके हुक्म के पाबंद हैं। सुन लो! पैदा करना और हुक्म चलाना उसी का काम है। बड़ी बरकत वाला है अल्लाह, जो तमाम जहानों का पालने वाला है।",
+    "en": "Indeed, your Rabbi is Allah, who created the heavens and earth in six days and then established Himself above the Throne. He covers the night with the day, [another night] chasing it rapidly; and [He created] the sun, the moon, and the stars, subjected by His command. Unquestionably, His is the creation and the command; blessed is Allah, Rabbi of the worlds.",
+    "ur": "بے شک تمہارا ربی اللہ ہے جس نے آسمانوں اور زمین کو چھ دنوں میں پیدا کیا، پھر وہ 'عرش' پر مستوی (قائم) ہوا۔ وہ رات کو دن پر ڈھانپ دیتا ہے، جو تیزی سے اس کے پیچھے آتا ہے۔ اور سورج، چاند اور ستاروں کو پیدا کیا جو اس کے حکم کے پابند ہیں۔ سن لو! پیدا کرنا اور حکم چلانا اسی کا کام ہے۔ بڑی برکت والا ہے اللہ، جو تمام جہانوں کا پالنے والا ہے۔"
+},
+{
+    "surah": "Surah Al-Mu'minun",
+    "para": "18",
+    "ruku": "6 (Surah का आख़िरी रुकू)",
+    "ayat": "115-118",
+"arabic": "اَفَحَسِبْتُمْ اَنَّمَا خَلَقْنٰكُمْ عَبَثًا وَّاَنَّكُمْ اِلَيْنَا لَا تُرْجَعُونَ ۞ فَتَعٰلَى اللَّٰهُ الْمَلِكُ الْحَقُّ ۚ لَآ اِلٰهَ اِلَّا هُوَ رَبُّ الْعَرْشِ الْكَرِيمِ ۞ وَمَنْ يَّدْعُ مَعَ اللَّٰهِ اِلٰهًا اٰخَرَ لَا بُرْهَانَ لَهُۥ بِهِۦ فَاِنَّمَا حِسَابُهُۥ عِنْدَ رَبِّهِۦ ۗ اِنَّهُۥ لَا يُفْلِحُ الْكٰفِرُونَ ۞ وَقُلْ رَّبِّ اغْفِرْ وَارْحَمْ وَاَنْتَ خَيْرُ الرَّاحِمِينَ"
+
+,
+    "hi": "क्या तुमने यह समझ रखा था कि हमने तुम्हें बेकार ही पैदा किया है और तुम हमारी तरफ नहीं लौटाए जाओगे? तो बहुत बुलंद है अल्लाह, जो सच्चा बादशाह है, उसके सिवा कोई माबूद नहीं, वही अ़र्श-ए-करीम का मालिक है। और जो शख्स अल्लाह के साथ किसी और को पुकारे, जिसकी उसके पास कोई दलील नहीं, तो उसका हिसाब उसके रब्बी के पास है। बेशक काफिर कामयाब नहीं होंगे। और (ऐ नबी!) आप कहिए: ऐ मेरे रब्बी! मुझे माफ़ कर दे और मुझ पर रहम कर, और तू सबसे बेहतर रहम करने वाला है।",
+    "en": "Then did you think that We created you uselessly and that to Us you would not be returned? So exalted is Allah, the Sovereign, the Truth; there is no deity except Him, Lord of the Noble Throne. And whoever invokes besides Allah another deity for which he has no proof - then his account is only with his Lord. Indeed, the disbelievers will not succeed. And, [O Muhammad], say: My Lord, forgive and have mercy, and You are the best of the merciful.",
+    "ur": "کیا تم نے یہ سمجھ رکھا تھا کہ ہم نے تمہیں بے کار ہی پیدا کیا ہے اور تم ہماری طرف نہیں لوٹائے جاؤ گے؟ تو بہت بلند ہے اللہ، جو سچا بادشاہ ہے، اس کے سوا کوئی معبود نہیں، وہی عرشِ کریم کا مالک ہے۔ اور جو شخص اللہ کے ساتھ کسی اور کو پکارے، جس کی اس کے پاس کوئی دلیل نہیں، تو اس کا حساب اس کے رب کے پاس ہے۔ بے شک کافر کامیاب نہیں ہوں گے۔ اور (اے نبی!) آپ کہیے: اے میرے رب! مجھے معاف کر دے اور مجھ پر رحم کر، اور تو سب سے بہتر رحم کرنے والا ہے۔"
+},
+{
+    "surah": "Surah Al-Hashr",
+    "para": "28",
+    "ayat": "23-24",
+"arabic": "هُوَ اللَّٰهُ الَّذِي لَآ اِلٰهَ اِلَّا هُوَ الْمَلِكُ الْقُدُّوسُ السَّلَامُ الْمُؤْمِنُ الْمُهَيْمِنُ الْعَزِيزُ الْجَبَّارُ الْمُتَكَبِّرُ ۗ سُبْحٰنَ اللَّٰهِ عَمَّا يُشْرِكُونَ ۞ هُوَ اللَّٰهُ الْخَالِقُ الْبَارِئُ الْمُصَوِّرُ ۖ لَهُۥ الْاَسْمَآءُ الْحُسْنٰى ۗ يُسَبِّحُ لَهُۥ مَا فِي السَّمٰوٰتِ وَالْاَرْضِ ۖ وَهُوَ الْعَزِيزُ الْحَكِيمُ"
+,
+    "hi": "वही अल्लाह है जिसके सिवा कोई माबूद नहीं, वह बादशाह है, निहायत पाक है, सलामती देने वाला है, अमन देने वाला है, निगहबान है, ज़बरदस्त है, खराबी दुरुस्त करने वाला है और बड़ाई वाला है। अल्लाह उन चीज़ों से पाक है जिन्हें वे शरीक ठहराते हैं। वही अल्लाह है जो पैदा करने वाला, वजूद में लाने वाला और सूरत बनाने वाला है। उसके लिए सबसे अच्छे नाम हैं। आसमानों और ज़मीन की हर चीज़ उसकी तस्बीह करती है, और वह ज़बरदस्त और हिकमत वाला है।",
+    "en": "He is Allah, other than whom there is no deity, the Sovereign, the Pure, the Perfection, the Bestower of Faith, the Overseer, the Exalted in Might, the Compeller, the Superior. Exalted is Allah above whatever they associate with Him. He is Allah, the Creator, the Inventor, the Fashioner; to Him belong the best names. Whatever is in the heavens and earth is exalting Him. And He is the Exalted in Might, the Wise.",
+    "ur": "وہی اللہ ہے جس کے سوا کوئی معبود نہیں، وہ بادشاہ ہے، نہایت پاک ہے، سلامتی دینے والا ہے، امن دینے والا ہے، نگہبان ہے، زبردست ہے، خرابی درست کرنے والا ہے اور بڑائی والا ہے۔ اللہ ان چیزوں سے پاک ہے جنہیں وہ شریک ٹھہراتے ہیں۔ وہی اللہ ہے جو پیدا کرنے والا، وجود میں لانے والا اور صورت بنانے والا ہے۔ اسی کے لیے اچھے نام ہیں۔ آسمانوں اور زمین کی ہر چیز اس کی تسبیح کرتی ہے، اور وہ زبردست اور حکمت والا ہے۔"
+}
+
+]
+},
+jahannam : {
+                name: "जहन्नम की आग से पनाह" 
+                 ,items: [
+                   {
+    "surah": "Surah Al-Furqan",
+    "para": "19",
+    "ruku": "4 (Para 19 का Ruku 4, Surah का Ruku 6)",
+    "ayat": "65-66",
+ "arabic": "وَالَّذِينَ يَقُولُونَ رَبَّنَا اصْرِفْ عَنَّا عَذَابَ جَهَنَّمَ ۖ اِنَّ عَذَابَهَا كَانَ غَرَامًا ۞ اِنَّهَا سَآءَتْ مُسْتَقَرًّا وَمُقَامًا"
+,
+ 
+  "hi": "और जो लोग यह दुआ करते हैं: ऐ हमारे रब्बी! हमसे जहन्नम का अज़ाब टाल दे, बेशक उसका अज़ाब चिमट जाने वाला है। बेशक वह बहुत ही बुरा ठिकाना और ठहरने की जगह है।",
+    "en": "And those who say: Our Rabbi, avert from us the punishment of Hell. Indeed, its punishment is ever adhering. Indeed, it is evil as a settlement and residence.",
+    "ur": "اور جو لوگ یہ دعا کرتے ہیں: اے ہمارے ربی! ہم سے جہنم کا عذاب ٹال دے، بے شک اس کا عذاب چمٹ جانے والا ہے۔ بے شک وہ بہت ہی برا ٹھکانا اور ٹھہرنے کی جگہ ہے۔"
+}
+]
+}
+
+
+
+
+   
+     
+        };
+
+
+        // 1. Home Page se language utha kar Page Setup karna
+        function applySettings() {
+            const lang = localStorage.getItem('pref_lang') || 'hi'; 
+
+            const content = translations[lang];
+
+            // Header ka Title badalna
+            document.getElementById('mainTitle').innerText = content.title;
+
+            // Urdu/Arabic ke liye Right-to-Left setting
+            document.body.style.direction = (content.dir === 'rtl') ? 'rtl' : 'ltr';
+
+            const indexPage = document.getElementById('index-page');
+            indexPage.innerHTML = ''; 
+
+            // Topics generate karna
+            content.topics.forEach(topic => {
+                const card = document.createElement('div');
+                card.className = 'topic-card';
+                
+                // Click Logic
+                card.onclick = () => (topic.id === 'locked') ? handleLocked() : showTopic(topic.id);
+
+                const arrow = (content.dir === 'rtl') ? '←' : '➔';
+                card.innerHTML = `<span class="topic-title">${topic.name}</span><span>${arrow}</span>`;
+                indexPage.appendChild(card);
+            });
+        }
+
+        // 2. Topic khulne par Ayaton ki list dikhana
+        function showTopic(topicKey) {
+            const topic = data[topicKey];
+            if (!topic) return;
+
+            document.getElementById('index-page').style.display = 'none';
+            document.getElementById('items-section').style.display = 'block';
+            document.getElementById('selected-topic-name').innerText = topic.name;
+
+            const listDiv = document.getElementById('ayat-list');
+            listDiv.innerHTML = '';
+            
+            topic.items.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'item-row';
+                row.onclick = () => openModal(item);
+                row.innerHTML = `
+                    <span class="item-title">${item.surah}</span>
+                    <span class="item-info">Para: ${item.para} | Ayat: ${item.ayat}</span>
+                `;
+                listDiv.appendChild(row);
+            });
+        }
+        // 3. Back button function
+        function showIndex() {
+            document.getElementById('index-page').style.display = 'block';
+            document.getElementById('items-section').style.display = 'none';
+        }
+
+                // 4. Modal mein sahi Language ka tarjuma dikhana
+        function openModal(item) {
+            const lang = localStorage.getItem('pref_lang') || 'hi'; 
+
+            const body = document.getElementById('modal-body');
+            
+            // Item mein se selected language uthao, warna hindi dikhao
+            const translation = item[lang] || item['hindi'];
+            
+            // Label ke liye text
+            const labels = { 
+                hi: 'तर्जुमा', 
+                en: 'Translation', 
+                ur: 'ترجمہ', 
+                ar: 'الترجمة' 
+            };
+
+            body.innerHTML = `
+                <div style="font-size:12px; color:#666; margin-bottom:5px;">${item.surah} (Ayat: ${item.ayat})</div>
+                <div class="ayat-arabic">${item.arabic}</div>
+                <div class="tarjuma-box"><b>${labels[lang] || 'Tarjuma'}:</b><br>${translation}</div>
+            `;
+            document.getElementById('imageModal').style.display = 'block';
+        }
+
+        // 5. Helpers
+        function closeImage() { document.getElementById('imageModal').style.display = 'none'; }
+        
+        function handleLocked() { 
+            const lang = localStorage.getItem('pref_lang') || 'hi'; 
+            const msg = (lang === 'ur') ? 'یہ ڈیٹا جلد آ رہا ہے' : 
+                        (lang === 'en') ? 'Data coming soon' : 'इसका डेटा जल्द आएगा';
+            alert(msg); 
+        }
+
+        // Window click se modal band karna
+        window.onclick = function(event) {
+            let modal = document.getElementById('imageModal');
+            if (event.target == modal) { modal.style.display = "none"; }
+        }
+
+        // Sabse important: Page load hote hi settings apply karna
+        window.onload = applySettings;
+
+    </script>
+</body>
+</html>

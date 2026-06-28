@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Baby Names - Deeni Rehbar</title>
+    <style>
+        :root {
+            --p-green: #004d40;
+            --gold: #c5a059;
+            --bg-light: #f4fbf4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        .header {
+            background: var(--p-green);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: -25px;
+        }
+
+        .tab-btn {
+            background: white;
+            border: 2px solid var(--gold);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            color: var(--p-green);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--gold);
+            color: white;
+        }
+
+        .container {
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .names-list {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .names-list.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #e8f5e9;
+            color: var(--p-green);
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .name-ar {
+            font-size: 20px;
+            color: var(--p-green);
+            font-weight: bold;
+            text-align: right;
+            display: block;
+        }
+
+        .hindi-meaning {
+            color: #444;
+            font-size: 13px;
+        }
+
+        .name-en {
+            font-size: 16px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2 id="main-title" style="margin:0;">Islamic Baby Names</h2>
+        <p id="sub-title" style="font-size: 14px;">250+ Ladke aur Ladkiyon ke Pyare Naam</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="btn-boys" onclick="showTab('boys')">लड़कों के नाम (250)</button>
+        <button class="tab-btn" id="btn-girls" onclick="showTab('girls')">लड़कियों के नाम (250)</button>
+    </div>
+
+    <div class="container">
+        <div id="boys" class="names-list active">
+            <table>
+                <thead><tr><th>Name</th><th style="text-align:right" id="table-head">Meaning</th></tr></thead>
+                <tbody id="boys-body"></tbody>
+            </table>
+        </div>
+        <div id="girls" class="names-list">
+            <table>
+                <thead><tr><th>Name</th><th style="text-align:right" id="table-head-girls">Meaning</th></tr></thead>
+                <tbody id="girls-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // --- MULTI-LANGUAGE SETTINGS ---
+        const userLang = localStorage.getItem('selectedLanguage') || 'hi';
+        
+        const langPack = {
+            hi: { title: "इस्लामिक नाम", sub: "250+ लड़के और लड़कियों के प्यारे नाम", label: "अर्थ:", head: "अरबी और हिंदी अर्थ", bBtn: "लड़कों के नाम (250)", gBtn: "लड़कियों के नाम (250)" },
+            en: { title: "Islamic Baby Names", sub: "250+ Beautiful Names for Boys & Girls", label: "Meaning:", head: "Arabic & Hindi Meaning", bBtn: "Boys Names (250)", gBtn: "Girls Names (250)" },
+            ur: { title: "اسلامی نام", sub: "لڑکوں اور لڑکیوں کے خوبصورت نام", label: "مطلب:", head: "عربی اور ہندی مطلب", bBtn: "لڑکوں کے نام (250)", gBtn: "लड़कियों के नाम (250)" },
+            ar: { title: "الأسماء الإسلامية", sub: "أكثر من ٢٥٠ اسماً جميلاً للأولاد والبنات", label: "المعنى:", head: "المعنى بالعربية والهندية", bBtn: "أسماء الأولاد (٢٥٠)", gBtn: "أسماء البنات (٢٥٠)" }
+        };
+
+        const t = langPack[userLang] || langPack['hi'];
+
+        // UI Language Apply
+        document.getElementById('main-title').innerText = t.title;
+        document.getElementById('sub-title').innerText = t.sub;
+        document.getElementById('table-head').innerText = t.head;
+        document.getElementById('table-head-girls').innerText = t.head;
+        document.getElementById('btn-boys').innerText = t.bBtn;
+        document.getElementById('btn-girls').innerText = t.gBtn;
+
+        // --- DATA (Strictly Intact - No names missing) ---
+        const boysData = [
+    {en: "Musab", ar: "مُصْعَب", hi: "मजबूत, पैगंबर के सहाबी का नाम"},
+    {en: "Aariz", ar: "عَارِض", hi: "सम्मानित व्यक्ति, बादल"},
+    {en: "Aayan", ar: "آيَان", hi: "अल्लाह का उपहार"},
+    {en: "Abdullah", ar: "عَبْدُ الله", hi: "अल्लाह का बंदा"},
+    {en: "Abbas", ar: "عَبَّاس", hi: "शेर, पैगंबर के चाचा"},
+    {en: "Adnan", ar: "عَدْنَان", hi: "जन्नत में रहने वाला"},
+    {en: "Ahad", ar: "أحد", hi: "एक, अकेला"},
+    {en: "Ahsan", ar: "أَحْسَن", hi: "बेहतरीन, उपकार करने वाला"},
+    {en: "Akil", ar: "عاقل", hi: "बुद्धिमान"},
+    {en: "Ali", ar: "علي", hi: "महान, उच्च"},
+    {en: "Aman", ar: "أمان", hi: "शांति"},
+    {en: "Amir", ar: "أمير", hi: "शहजादा, शासक"},
+    {en: "Anas", ar: "أنس", hi: "मोहब्बत, सादगी"},
+    {en: "Aqib", ar: "عاقب", hi: "पीछे आने वाला"},
+    {en: "Arham", ar: "أَرْحَم", hi: "सबसे दयालु"},
+    {en: "Arshad", ar: "أرشد", hi: "नेक हिदायत वाला"},
+    {en: "Asad", ar: "أسد", hi: "शेर"},
+    {en: "Ashraf", ar: "أشرف", hi: "सबसे शरीफ"},
+    {en: "Atif", ar: "عاطف", hi: "मेहरबान"},
+    {en: "Ayaz", ar: "أياز", hi: "सच्चा सेवक"},
+    {en: "Azhar", ar: "أزهر", hi: "चमकदार"},
+    {en: "Azlan", ar: "أَزْلَان", hi: "बहादुर शेर"},
+    {en: "Babar", ar: "بَابَر", hi: "शेर"},
+    {en: "Baqir", ar: "باقر", hi: "ज्ञानी"},
+    {en: "Bilal", ar: "بِلَال", hi: "सहाबी का नाम, पानी"},
+    {en: "Burhan", ar: "برهان", hi: "दलील, सबूत"},
+    {en: "Daniyal", ar: "دَانِيَال", hi: "बुद्धिमान"},
+    {en: "Dawar", ar: "دَاوَر", hi: "शासक, खुदा"},
+    {en: "Ehan", ar: "إِيْهَان", hi: "पूरा चाँद"},
+    {en: "Eisa", ar: "عيسى", hi: "पैगंबर का नाम"},
+    {en: "Fahad", ar: "فَهْد", hi: "तेंदुआ"},
+    {en: "Faisal", ar: "فيصل", hi: "फैसला करने वाला"},
+ {en: "Faiz", ar: "فيض", hi: "कृपा, उदारता, सफलता"}
+,
+    {en: "Faraz", ar: "فراز", hi: "ऊँचाई"},
+    {en: "Fardeen", ar: "فَرْدِيْن", hi: "अद्वितीय"},
+    {en: "Farhan", ar: "فرحان", hi: "प्रसन्न"},
+    {en: "Faris", ar: "فارس", hi: "घुड़सवार"},
+    {en: "Firoz", ar: "فيروز", hi: "विजेता"},
+    {en: "Ghalib", ar: "غالب", hi: "जीतने वाला"},
+    {en: "Ghufran", ar: "غفران", hi: "क्षमा, माफी"},
+    {en: "Hadi", ar: "هادي", hi: "मार्गदर्शक"},
+    {en: "Haider", ar: "حيدر", hi: "शेर, हजरत अली"},
+    {en: "Hameed", ar: "حميد", hi: "तारीफ के काबिल"},
+{en: "Hamza", ar: "حمزة", hi: "शेर, ताकतवर, बहादुर"}
+,
+    {en: "Haris", ar: "حارث", hi: "किसान, rक्षक"},
+    {en: "Haroon", ar: "هارون", hi: "एक पैगंबर का नाम"},
+    {en: "Hasan", ar: "حسن", hi: "खूबसूरत"},
+    {en: "Hashim", ar: "هاشم", hi: "बुराई मिटाने वाला"},
+    {en: "Hassan", ar: "حَسّان", hi: "अत्यंत सुंदर"},
+    {en: "Huzaifa", ar: "حُذَيْفَة", hi: "बुद्धिमान सहाबी"},
+    {en: "Ibrahim", ar: "إِبْرَاهِيْم", hi: "दयालु पिता, पैगंबर"},
+    {en: "Idris", ar: "إِدْرِيْس", hi: "सीखने वाला, पैगंबर"},
+    {en: "Ikram", ar: "إكرام", hi: "सम्मान"},
+    {en: "Imad", ar: "عماد", hi: "स्तंभ, सहारा"},
+    {en: "Imran", ar: "عِمْرَان", hi: "आबादी और समृद्धि"},
+    {en: "Imtiaz", ar: "إِمْتِيَاز", hi: "पहचान, अंतर"},
+    {en: "Iqbal", ar: "إقبال", hi: "सौभाग्य"},
+{en: "Irfan", ar: "عرفان", hi: "ज्ञान, पहचान, बुद्धिमत्ता"}
+,
+    {en: "Ishaaq", ar: "إِسْحَاق", hi: "पैगंबर का नाम"},
+    {en: "Ismail", ar: "إسماعيل", hi: "पैगंबर का नाम"},
+    {en: "Jafar", ar: "جعفر", hi: "नदी"},
+    {en: "Jalal", ar: "جلال", hi: "शान, महानता"},
+    {en: "Jamil", ar: "جميل", hi: "सुंदर"},
+    {en: "Jasim", ar: "جَاسِم", hi: "शक्तिशाली"},
+    {en: "Jawad", ar: "جواد", hi: "दरियादिल"},
+{en: "Junaid", ar: "جنيد", hi: "योद्धा, सेना की टुकड़ी"}
+,
+    {en: "Kabir", ar: "كَبِيْر", hi: "महान"},
+    {en: "Kamal", ar: "كمال", hi: "पूर्णता"},
+ {en: "Kamran", ar: "كامران", hi: "सफल, भाग्यशाली"}
+,
+    {en: "Kashif", ar: "كاشف", hi: "खोजने वाला"},
+    {en: "Khalid", ar: "خالد", hi: "अमर, सहाबी"},
+    {en: "Latif", ar: "لطيف", hi: "दयालु"},
+    {en: "Luqman", ar: "لُقْمَان", hi: "बुद्धिमान हकीम"},
+    {en: "Mahad", ar: "مهد", hi: "महान"},
+    {en: "Mahmood", ar: "محمود", hi: "प्रशंसित"},
+    {en: "Mansoor", ar: "منصور", hi: "विजेता"},
+    {en: "Masood", ar: "مسعود", hi: "भाग्यशाली"},
+    {en: "Mazhar", ar: "مَظْهَر", hi: "प्रकट होना"},
+    {en: "Misbah", ar: "مصباح", hi: "दीपक"},
+    {en: "Mohammad", ar: "مُحَمَّد", hi: "प्रशंसित"},
+{en: "Zayan", ar: "زيان", hi: "सुंदर, जो चीज़ों को खूबसूरत बनाए"}
+,
+    {en: "Muneer", ar: "منير", hi: "चमकदार"},
+    {en: "Murad", ar: "مراد", hi: "इच्छा"},
+    {en: "Musa", ar: "موسى", hi: "पैगंबर का नाम"},
+    {en: "Mustafa", ar: "مصطفى", hi: "चुना हुआ"},
+    {en: "Nabeel", ar: "نَبِيْل", hi: "कुलीन, शरीफ"},
+    {en: "Nadim", ar: "نديم", hi: "दोस्त और सच्चा साथी"},
+ {en: "Nafees", ar: "نفيس", hi: "कीमती, उत्तम, मूल्यवान"}
+,
+    {en: "Nasir", ar: "ناصر", hi: "मददगार"},
+    {en: "Naveed", ar: "نويد", hi: "खुशखबरी"},
+    {en: "Nawaz", ar: "نَوَاز", hi: "मेहरबान"},
+    {en: "Nazir", ar: "نَظِيْر", hi: "मिसाल, दर्शक"},
+    {en: "Nizam", ar: "نظام", hi: "व्यवस्था"},
+    {en: "Noaman", ar: "نعمان", hi: "अल्लाह की रहमत, सुख-चैन"},
+    {en: "Noor", ar: "نور", hi: "रौशनी"},
+    {en: "Omar", ar: "عُمَر", hi: "लंबी उम्र"},
+    {en: "Osman", ar: "عثمان", hi: "खलीफा का नाम"},
+    {en: "Owais", ar: "أُوَيْس", hi: "पैगंबर के आशिक"},
+    {en: "Parvez", ar: "پرویز", hi: "सफल"},
+    {en: "Qadir", ar: "قادر", hi: "समर्थ"},
+    {en: "Qasim", ar: "قَاسِم", hi: "बाँटने वाला"},
+    {en: "Rafeeq", ar: "رفيق", hi: "साथी"},
+    {en: "Rahat", ar: "رَاحَة", hi: "आराम"},
+    {en: "Raheem", ar: "رحيم", hi: "दयालु"},
+    {en: "Rahman", ar: "رحمن", hi: "कृपालु"},
+    {en: "Rais", ar: "رَئِيْس", hi: "अमीर"},
+    {en: "Rashid", ar: "رَاشِد", hi: "हिदायत पाने वाला"},
+    {en: "Rayyan", ar: "ريان", hi: "जन्नत का एक विशेष द्वार"}
+,
+    {en: "Raza", ar: "رِضَا", hi: "मर्जी"},
+    {en: "Rehan", ar: "رَيْحَان", hi: "जन्नत का खुशबूदार पौधा"},
+    {en: "Rizwan", ar: "رِضْوَان", hi: "संतुष्टि"},
+    {en: "Saad", ar: "سَعْد", hi: "खुशकिस्मत"},
+    {en: "Sabir", ar: "صَابِر", hi: "धैर्यवान, मजबूत सब्र वाला"},
+    {en: "Sadiq", ar: "صادق", hi: "सच्चा"},
+    {en: "Saeed", ar: "سعيد", hi: "खुशहाल, भाग्यशाली"},
+    {en: "Safwan", ar: "صفوان", hi: "साफ पत्थर, शुद्ध"},
+    {en: "Sahil", ar: "سَاحِل", hi: "किनारा"},
+    {en: "Saif", ar: "سيف", hi: "तलवार"},
+    {en: "Sajid", ar: "سَاجِد", hi: "सजदा और इबादत करने वाला"},
+    {en: "Salah", ar: "صلاح", hi: "नेकी"},
+    {en: "Salman", ar: "سَلْمَان", hi: "सलामती वाला"},
+    {en: "Sameer", ar: "سَمِيْر", hi: "रात का साथी, कहानी सुनाने वाला"},
+    {en: "Saqib", ar: "ثَاقِب", hi: "चमकता सितारा"},
+    {en: "Sarfraz", ar: "سَرْفَرَاز", hi: "सम्मानित"},
+    {en: "Sarmad", ar: "سَرْمَد", hi: "शाश्वत"},
+    {en: "Shadab", ar: "شَادَاب", hi: "हरा-भरा"},
+    {en: "Shafeeq", ar: "شَفِيْق", hi: "मेहरबान"},
+    {en: "Shahid", ar: "شَاهِد", hi: "गवाह"},
+    {en: "Shahnawaz", ar: "شَاه نَوَاز", hi: "राजा का लाडला"},
+    {en: "Shahzad", ar: "شَهْزَاد", hi: "राजकुमार"},
+    {en: "Shakil", ar: "شَكِيْل", hi: "सुंदर"},
+    {en: "Shakir", ar: "شَاكِر", hi: "शुक्रगुजार"},
+    {en: "Sharif", ar: "شريف", hi: "नेक"},
+    {en: "Shoaib", ar: "شعيب", hi: "पैगंबर का नाम"},
+    {en: "Sohail", ar: "سُهَيْل", hi: "एक सितारा"},
+    {en: "Sufyan", ar: "سُفْيَان", hi: "तेज चलने वाला"},
+    {en: "Sultan", ar: "سلطان", hi: "बादशाह"},
+    {en: "Tabrez", ar: "تَبْرِيز", hi: "कुल्हाड़ी चलाने वाला"},
+    {en: "Tahir", ar: "طَاهِر", hi: "पवित्र"},
+    {en: "Talha", ar: "طَلْحَة", hi: "सहाबी का नाम"},
+    {en: "Tanveer", ar: "تَنْوِيْر", hi: "रौशनी"},
+    {en: "Tariq", ar: "طارق", hi: "सुबह का तारा"},
+    {en: "Taufeeq", ar: "توفيق", hi: "सफलता"},
+    {en: "Aarif", ar: "عارف", hi: "ईश्वर को जानने वाला, ज्ञानी"},
+    {en: "Abdul", ar: "عبد", hi: "बंदा"},
+    {en: "Abid", ar: "عابد", hi: "इबादत गुजार"},
+    {en: "Adil", ar: "عادل", hi: "न्यायप्रिय"},
+    {en: "Afzal", ar: "أفضل", hi: "बेहतर"},
+    {en: "Ahmad", ar: "أحمد", hi: "प्रशंसित"},
+    {en: "Akram", ar: "أكرم", hi: "उدار"},
+    {en: "Altaf", ar: "ألطاف", hi: "मेहरबानियां"},
+    {en: "Anwar", ar: "أنور", hi: "प्रकाशवान"},
+    {en: "Aslam", ar: "أسلم", hi: "सलामती वाला"},
+    {en: "Atiq", ar: "عتيق", hi: "प्राचीन, आजाद"},
+    {en: "Ayub", ar: "أيوب", hi: "पैगंबर का नाम"},
+    {en: "Azad", ar: "آزاد", hi: "स्वतंत्र"},
+    {en: "Azim", ar: "عظيم", hi: "महान"},
+    {en: "Aziz", ar: "عزيز", hi: "प्यारा"},
+    {en: "Bdr", ar: "بدر", hi: "चौदहवीं का चाँद"},
+    {en: "Bakhtiar", ar: "بختيار", hi: "भाग्यशाली"},
+    {en: "Baseer", ar: "بصير", hi: "देखने वाला"},
+    {en: "Danish", ar: "دانش", hi: "बुद्धि"},
+   {en: "Dilawar", ar: "دلاور", hi: "बहादुर, साहसी"}
+,
+    {en: "Ehtesham", ar: "إحتشام", hi: "शानदार"},
+    {en: "Faheem", ar: "فهيم", hi: "समझदार"},
+    {en: "Faiyaz", ar: "فياض", hi: "दानी"},
+    {en: "Farhad", ar: "فرهاد", hi: "खुशी"},
+    {en: "Fariq", ar: "فارق", hi: "अंतर करने वाला"},
+    {en: "Farrukh", ar: "فروخ", hi: "भाग्यशाली"},
+    {en: "Fatih", ar: "فاتح", hi: "विजेता"},
+    {en: "Fawad", ar: "فؤاد", hi: "दिल"},
+    {en: "Fazil", ar: "فاضل", hi: "विद्वान"},
+    {en: "Ghiyas", ar: "غياث", hi: "मदद"},
+    {en: "Gulzar", ar: "گلزار", hi: "बगीचा"},
+    {en: "Habib", ar: "حبيب", hi: "दोस्त"},
+    {en: "Hafeez", ar: "حفيظ", hi: "रक्षक"},
+    {en: "Haikal", ar: "هيكل", hi: "बड़ा महल"},
+    {en: "Hakim", ar: "حكيم", hi: "बुद्धिमान"},
+    {en: "Hamad", ar: "حمد", hi: "प्रशंसा"},
+    {en: "Hanif", ar: "حنيف", hi: "सच्चा मोमिन"},
+    {en: "Hasnain", ar: "حسنين", hi: "हसन और हुसैन"},
+    {en: "Hayat", ar: "حياة", hi: "जीवन"},
+    {en: "Hidayat", ar: "هداية", hi: "मार्गदर्शन"},
+    {en: "Humam", ar: "همام", hi: "हिम्मतती"},
+    {en: "Husain", ar: "حسين", hi: "खूबसूरत"},
+    {en: "Ijaz", ar: "إعجاز", hi: "चमत्कार"},
+    {en: "Ikhlas", ar: "إخلاص", hi: "शुद्धता"},
+    {en: "Ilyas", ar: "إلياس", hi: "पैगंबर का नाम"},
+    {en: "Inayat", ar: "عناية", hi: "कृपा"},
+    {en: "Iqtidar", ar: "إقتدار", hi: "शक्ति"},
+    {en: "Irshad", ar: "إرشاد", hi: "आदेश"},
+    {en: "Israr", ar: "إصرار", hi: "जिद, पक्का इरादा"},
+    {en: "Itimad", ar: "إعتماد", hi: "भरोसा"},
+    {en: "Izaan", ar: "إذان", hi: "आज्ञाकारी"},
+    {en: "Izhar", ar: "إظهار", hi: "प्रकटीकरण"},
+    {en: "Jabbar", ar: "جبار", hi: "शक्तिशाली"},
+    {en: "Javed", ar: "جاويد", hi: "अमर"},
+    {en: "Kaif", ar: "كيف", hi: "आनंद"},
+    {en: "Kalim", ar: "كليم", hi: "बात करने वाला"},
+    {en: "Karam", ar: "كرم", hi: "उदारता"},
+    {en: "Kausar", ar: "كوثر", hi: "जन्नत की नहर"},
+    {en: "Lutf", ar: "لطف", hi: "आनंद"},
+    {en: "Mahbub", ar: "محبوب", hi: "प्यारा"},
+    {en: "Maheen", ar: "مَهِيْن", hi: "बारीक, कोमल"},
+    {en: "Majid", ar: "ماجد", hi: "महान"},
+    {en: "Malik", ar: "مالك", hi: "मालिक"},
+    {en: "Maqbool", ar: "مقبول", hi: "स्वीकृत"},
+    {en: "Mateen", ar: "مَتِيْن", hi: "मजब्त"},
+    {en: "Mehtab", ar: "مَهْتَاب", hi: "चाँद"},
+    {en: "Mubarak", ar: "مبارك", hi: "धन्य"},
+    {en: "Mueen", ar: "معين", hi: "मददगार"},
+    {en: "Mughis", ar: "مغيث", hi: "मदद करने वाला"},
+    {en: "Mujtaba", ar: "مجتبى", hi: "चुना हुआ"},
+    {en: "Mumtaz", ar: "ممتاز", hi: "श्रेष्ठ"},
+    {en: "Muqaddas", ar: "مقدس", hi: "पवित्र"},
+    {en: "Mursal", ar: "مرسل", hi: "संदेशवाहक"},
+    {en: "Mushir", ar: "مشير", hi: "सलाहकार"},
+    {en: "Muslim", ar: "مسلم", hi: "आज्ञाकारी"},
+    {en: "Muzaffar", ar: "مظفر", hi: "विजेता"},
+    {en: "Nadir", ar: "نادر", hi: "दुर्लभ"},
+    {en: "Najeeb", ar: "نجيب", hi: "बुद्धिमान, कुलीन"},
+    {en: "Naqib", ar: "نقیب", hi: "नेता, प्रधान"},
+    {en: "Naseem", ar: "نسيم", hi: "ठंडी हवा"},
+    {en: "Naseer", ar: "نصير", hi: "मददगार, समर्थक"},
+{en: "Natiq", ar: "ناطق", hi: "वक्ता, बोलने वाला, समझदार"}
+,
+    {en: "Nayyar", ar: "نير", hi: "चमकदार सितारा"},
+    {en: "Niyaz", ar: "نیاز", hi: "प्रार्थना, तोहफा"},
+    {en: "Qamar", ar: "قمر", hi: "चाँद"},
+    {en: "Quddus", ar: "قدوس", hi: "पवित्र, शुद्ध"},
+    {en: "Rabbani", ar: "رباني", hi: "दिव्य, ईश्वर से जुड़ा"},
+    {en: "Rfi", ar: "رفيع", hi: "उच्च, ऊँचा"},
+    {en: "Raghib", ar: "راغب", hi: "इच्छुक, चाहने वाला"},
+    {en: "Rakin", ar: "ركين", hi: "भरोसेमंद, गंभीर"},
+    {en: "Rami", ar: "رامي", hi: "निशानेबाज"},
+    {en: "Raqib", ar: "رقيب", hi: "निगरानी रखने वाला"},
+    {en: "Rauf", ar: "رؤوف", hi: "दयालु, नर्मदिल"},
+    {en: "Rawan", ar: "روان", hi: "तेज़ तर्रार, बहता हुआ"},
+    {en: "Rayid", ar: "رائد", hi: "नेता, मार्गदर्शक"},
+    {en: "Riyaz", ar: "رياض", hi: "बगीचा, अभ्यास"},
+    {en: "Rushd", ar: "رشد", hi: "सही रास्ता, हिदायत"},
+    {en: "Sadad", ar: "سداد", hi: "सच्चाई, सही निर्णय"},
+    {en: "Sadeem", ar: "سديم", hi: "हल्की धुंध, आकाशगंगा"},
+    {en: "Safeer", ar: "سفير", hi: "दूत, एंबेसडर"},
+    {en: "Safi", ar: "صفي", hi: "शुद्ध, साफ़ दिल"},
+    {en: "Saheim", ar: "سهم", hi: "तीर, हिस्सा"},
+    {en: "Saji", ar: "ساجي", hi: "नर्म, कोमल"},
+    {en: "Sajidun", ar: "ساجدون", hi: "सजदा करने वाले"},
+    {en: "Sakin", ar: "ساكن", hi: "शांत, गंभीर"},
+    {en: "Salif", ar: "سالف", hi: "पूर्वज, पहले आने वाला"},
+    {en: "Salik", ar: "سالك", hi: "राहगीर, मार्ग पर चलने वाला, मुसाफिर"}
+,
+    {en: "Samee", ar: "سميع", hi: "सब कुछ सुनने वाला"},
+    {en: "Sami", ar: "سامي", hi: "उच्च, प्रतिष्ठित"},
+    {en: "Samman", ar: "سمان", hi: "समृद्ध, कुलीन"},
+    {en: "Sanad", ar: "سند", hi: "सहारा, प्रमाण"},
+    {en: "Saood", ar: "سعود", hi: "नेक, भाग्यशाली"},
+    {en: "Sari", ar: "ساري", hi: "रात का मुसाफिर"},
+    {en: "Sariya", ar: "سارية", hi: "रात का बादल"},
+    {en: "Sauban", ar: "ثوبان", hi: "तौबा करने वाला, सहाबी"},
+    {en: "Sauda", ar: "سودة", hi: "काली भूमि, संपत्ति"},
+    {en: "Sawad", ar: "سواد", hi: "अमीर, बड़ी आबादी"},
+    {en: "Sayyar", ar: "سيار", hi: "लगातार चलने वाला"},
+    {en: "Shafay", ar: "شافع", hi: "सिफारिश करने वाला"},
+    {en: "Shafi", ar: "شافي", hi: "शिफा देने वाला"},
+    {en: "Shahat", ar: "شحات", hi: "अनोखा"},
+    {en: "Shaheem", ar: "شهيم", hi: "बुद्धिमान, चतुर"},
+    {en: "Shahin", ar: "شاهين", hi: "बाज पक्षी"},
+    {en: "Shahir", ar: "شهير", hi: "प्रसिद्ध"},
+    {en: "Shahmeer", ar: "شاهمير", hi: "खूबसूरत, राजाओं का राजा"},
+    {en: "Shahrur", ar: "شحرور", hi: "गाती हुई चिड़िया"},
+    {en: "Shaiban", ar: "شيبان", hi: "सफेद बादल"},
+    {en: "Shajee", ar: "شجيع", hi: "बहादुर, निडर"},
+    {en: "Shamas", ar: "شماس", hi: "सूरज, रौशनी"},
+    {en: "Shameem", ar: "شميم", hi: "सौंधी खुशबू"},
+    {en: "Shams", ar: "شمس", hi: "सूरज"},
+    {en: "Sharaf", ar: "شرف", hi: "इज्जत, सम्मान"},
+    {en: "Shariq", ar: "شارق", hi: "चमकता हुआ, पूर्व दिशा"},
+    {en: "Shaukat", ar: "شوكت", hi: "शान-ओ-शौकत"},
+    {en: "Shayan", ar: "شايان", hi: "योग्य, लायक"},
+    {en: "Shazad", ar: "شاذاد", hi: "राजकुमार का रूप"},
+    {en: "Shazil", ar: "شازل", hi: "अनोखा, राजा का दोस्त"},
+    {en: "Shehraz", ar: "شهراز", hi: "रहस्यमयी राजा"},
+    {en: "Shibli", ar: "شبلي", hi: "शेर का बच्चा, विद्वान"},
+    {en: "Shifa", ar: "شفاء", hi: "तंदुरुस्ती, इलाज"},
+    {en: "Siddiq", ar: "صديق", hi: "बेहद सच्चा"},
+    {en: "Sifat", ar: "صفات", hi: "गुण, तारीफ"},
+    {en: "Sikandar", ar: "إسكندر", hi: "विजेता राजा"},
+    {en: "Sila", ar: "صلة", hi: "रिश्ता, जुड़ाव"},
+    {en: "Silah", ar: "سلاح", hi: "हथियार, ढाल"},
+    {en: "Siraj", ar: "سراج", hi: "चिराग, दीया"},
+    {en: "Suhaib", ar: "صهيب", hi: "सुनहरे बालों वाला, सहाबी"},
+    {en: "Suhaili", ar: "سهيلي", hi: "मार्गदर्शन सितारा"},
+    {en: "Suhaim", ar: "سهيم", hi: "छोटा तीर"},
+    {en: "Sulaiman", ar: "سليمان", hi: "शांतिप्रिय, पैगंबर"},
+    {en: "Suroor", ar: "سرور", hi: "खुशी, आनंद"},
+    {en: "Tabish", ar: "تابش", hi: "चमक, गर्मी"},
+    {en: "Taj", ar: "تاج", hi: "मुकुट"},
+    {en: "Tajuddin", ar: "تاج الدين", hi: "धर्म का मुकुट"},
+    {en: "Talal", ar: "طلال", hi: "सुंदर, सुखद"},
+    {en: "Talib", ar: "طالب", hi: "ज्ञान पाने का इच्छुक"},
+    {en: "Tamim", ar: "تميم", hi: "मजबूत, पूर्ण"},
+    {en: "Tamjeed", ar: "تمجيد", hi: "महिमा, बड़प्पन"},
+    {en: "Tammam", ar: "تمام", hi: "पूरा करने वाला, परफेक्ट"},
+    {en: "Tanzil", ar: "تنزيل", hi: "ऊपर से उतारा हुआ, कुरान"},
+    {en: "Ubaid", ar: "عبيد", hi: "छोटा बंदा, वफादार"},
+    {en: "Wafi", ar: "وافي", hi: "वफादार, पूरा"},
+    {en: "Wajdan", ar: "وجدان", hi: "भावना, अंतरात्मा"},
+    {en: "Wali", ar: "ولي", hi: "रक्षक, दोस्त"},
+    {en: "Waris", ar: "وارث", hi: "उत्तराधिकारी"},
+    {en: "Wasif", ar: "واصف", hi: "तारीफ करने वाला"},
+    {en: "Zaeem", ar: "زعيم", hi: "नेता, जिम्मेदार व्यक्ति"},
+    {en: "Zafaruddin", ar: "ظفر الدين", hi: "धर्म की जीत"},
+    {en: "Zahi", ar: "زاهي", hi: "चमकदार, सुंदर"},
+    {en: "Zahir", ar: "ظاهر", hi: "प्रकट, साफ"},
+    {en: "Zakar", ar: "ذَكَر", hi: "याद करने वाला"},
+    {en: "Zakariya", ar: "زكريا", hi: "एक पैगंबर का नाम"},
+    {en: "Zaki", ar: "زكي", hi: "पवित्र, बुद्धिमान"},
+    {en: "Zakir", ar: "ذاكر", hi: "अल्लाह का जिक्र करने वाला"},
+ {en: "Zalamat", ar: "سلامات", hi: "सुरक्षा, सलामती, शांति"}
+,
+    {en: "Zarar", ar: "ضرار", hi: "बहादुर योद्धा"},
+        {en: "Aftab", ar: "أَفْتَاب", hi: "सूरज"},
+    {en: "Affan", ar: "عَفَّان", hi: "माफ करने वाला, पवित्र"},
+    {en: "Arfan", ar: "عَرْفَان", hi: "कृतज्ञता, बुद्धि"},
+    {en: "Arsh", ar: "عَرْش", hi: "आसमान, अल्लाह का तख्त"},
+    {en: "Asif", ar: "آصِف", hi: "योग्य, बुद्धिमान वजीर"},
+    {en: "Awwal", ar: "أَوَّل", hi: "पहला, सबसे आगे"},
+    {en: "Azmeel", ar: "أَزْمِيل", hi: "जन्नत का एक दरिया"},
+    {en: "Basil", ar: "بَاسِل", hi: "बहादुर, निडर"},
+    {en: "Darim", ar: "دَارِم", hi: "एक सहाबी का नाम"},
+    {en: "Dayyan", ar: "دَيَّان", hi: "सच्चा न्यायाधीश, शासक"},
+    {en: "Fardan", ar: "فَرْدَان", hi: "अकेला, अद्वितीय"},
+    {en: "Farzan", ar: "فَرْزَان", hi: "बुद्धिमान, समझदार"},
+    {en: "Fasih", ar: "فَصِيح", hi: "साफ और मधुर बोलने वाला"},
+    {en: "Fauzan", ar: "فَوْزَان", hi: "सफलता, जीत"},
+    {en: "Hamdan", ar: "حَمْدَان", hi: "तारीफ करने वाला"}
+    ,
+    {en: "Hariz", ar: "حريز", hi: "सुरक्षित, मजबूत, हिफाज़त करने वाला"}
+,
+    
+    {en: "Hashir", ar: "حَاشِر", hi: "इकट्ठा करने वाला"},
+    {en: "Arshman", ar: "أَرْشَمَان", hi: "आसमान का राजा, जन्नत का राजा"},
+    {en: "Faizaan", ar: "فَيْزَان", hi: "उदारता, बड़ा फायदा"},
+{en: "Izyan", ar: "إزيان", hi: "सजावट, सुंदरता, सुशोभित करना"}
+  ,
+    {en: "Jari", ar: "جَارِي", hi: "बहादुर, साहसी"},
+    {en: "Kamil", ar: "كَامِل", hi: "पूर्ण, परफेक्ट"},
+    {en: "Kashan", ar: "كَاشَان", hi: "प्रसिद्ध शहर, महल"},
+    {en: "Khizar", ar: "خِضْر", hi: "मार्गदर्शक, हरा-भरा"},
+    {en: "Mehran", ar: "مِهْرَان", hi: "दयालु, एक नदी का नाम"},
+    {en: "Mikail", ar: "مِيكَائِيل", hi: "एक फरिश्ते का नाम"},
+    {en: "Minhaj", ar: "مِنْهَاج", hi: "रास्ता, तरीका"},
+    {en: "Miraj", ar: "مِعْرَاج", hi: "ऊँचाई, जन्नत का सफर"},
+       {en: "Huzaifa", ar: "حذيفة", hi: "एक मशहूर सहाबी का नाम"},
+  {en: "Musawwir", ar: "مصور", hi: "चित्रकार, रूप देने वाला (अल्लाह का एक नाम)"}
+,
+
+    {en: "Zulfiqar", ar: "ذُو الْفَقَار", hi: "हजरत अली की तलवार, प्रसिद्ध"},
+    {en: "Rohan", ar: "رُوحَان", hi: "आध्यात्मिक, खुशमिजाज"},
+{en: "Saifuddin", ar: "سيف الدين", hi: "धर्म की तलवार"},
+    {en: "Zoriz", ar: "زُورِيز", hi: "रौशनी फैलाने वाला"},
+    {en: "Shahroz", ar: "شَهْرُوز", hi: "चमकदार चेहरा, राजा का मुख"},
+    {en: "Shariq", ar: "شَارِق", hi: "चमकता हुआ, उगता सूरज"},
+    {en: "Subhan", ar: "سُبْحَان", hi: "पवित्र, अल्लाह की महिमा"},
+    {en: "Turab", ar: "تُرَاب", hi: "मिट्टी, हजरत अली का लकब"},
+    {en: "Uzair", ar: "عُزَيْر", hi: "एक पैगंबर का नाम, मददगार"},
+    {en: "Zidaan", ar: "زِيدَان", hi: "तरक्की, विकास और वृद्धि"},
+    {en: "Zamil", ar: "زَمِيل", hi: "सच्चा साथी, दोस्त"},
+    {en: "Zaroon", ar: "زَارُون", hi: "मुसाफिर, मिलने आने वाला"}
+
+];
+
+        const girlsData = [
+    {en: "Aafreen", ar: "آفرين", hi: "प्रशंसा, धन्यवाद"},
+    {en: "Aisha", ar: "عائشة", hi: "जीवित, समृद्ध, पैगंबर की पत्नी"},
+    {en: "Aiza", ar: "عائزة", hi: "कुलीन, सम्मानित"},
+    {en: "Alia", ar: "عالية", hi: "उच्च, महान"},
+    {en: "Alina", ar: "ألينا", hi: "सुंदर, रेशम की तरह कोमल"},
+    {en: "Alisha", ar: "عليشة", hi: "अल्लाह द्वारा संरक्षित"},
+    {en: "Amara", ar: "عمارة", hi: "अमर, अनन्त सुंदरता"},
+    {en: "Amina", ar: "آمنة", hi: "ईमानदार, सुरक्षित, पैगंबर की मां"},
+    {en: "Amira", ar: "أميرة", hi: "शहजादी, राजकुमारी"},
+    {en: "Anam", ar: "أنام", hi: "अल्लाह की रहमत, जीव"},
+    {en: "Anisa", ar: "أنيسة", hi: "सच्ची सहेली, मिलनसार"},
+    {en: "Aqsa", ar: "أقصى", hi: "दूर की मस्जिद, सीमा"},
+    {en: "Areesha", ar: "عريشة", hi: "सायबान, ऊँचा स्थान"},
+    {en: "Arfa", ar: "عرفة", hi: "महान, उच्च पद वाली"},
+    {en: "Asma", ar: "أسماء", hi: "उच्च, सुंदर, सहाबिया का नाम"},
+    {en: "Asra", ar: "أسرى", hi: "रात की यात्रा"},
+    {en: "Atiya", ar: "عطية", hi: "तोहफा, उपहार"},
+    {en: "Ayat", ar: "آيات", hi: "कुरान की आयतें, अल्लाह की निशानी"},
+    {en: "Ayla", ar: "آيلا", hi: "चाँद की रोशनी"},
+    {en: "Azra", ar: "عذراء", hi: "पवित्र, कुंवारी"},
+    {en: "Badriya", ar: "بدرية", hi: "चौदहवीं के चाँद जैसी"},
+    {en: "Barakah", ar: "بركة", hi: "आशीर्वाद, बरकत"},
+    {en: "Basma", ar: "بسمة", hi: "मुस्कान"},
+    {en: "Benazir", ar: "بينظير", hi: "अनोखी, जिसके जैसा कोई न हो"},
+    {en: "Bilquis", ar: "بلقيس", hi: "सबा की रानी"},
+    {en: "Bushra", ar: "بشرى", hi: "खुशखबरी"},
+    {en: "Daneya", ar: "دانية", hi: "करीब आने वाली, प्यारी"},
+    {en: "Deeba", ar: "ديبا", hi: "रेशम, आज्ञाकारी"},
+    {en: "Dua", ar: "دعاء", hi: "प्रार्थना, मन्नत"},
+    {en: "Eiman", ar: "إيمان", hi: "आस्था, विश्वास"},
+    {en: "Eiza", ar: "إيزا", hi: "सम्मान, शक्ति"},
+    {en: "Elaf", ar: "إيلاف", hi: "सुरक्षा, प्रेम"},
+    {en: "Elham", ar: "إلهام", hi: "प्रेरणा"},
+    {en: "Erina", ar: "إرينا", hi: "सुंदर स्त्री"},
+    {en: "Isha", ar: "عشاء", hi: "रात की नमाज, इबादत का समय"},
+    {en: "Eshal", ar: "إيشال", hi: "जन्नत के फूल का नाम"},
+    {en: "Faiza", ar: "فائزة", hi: "विजेता, सफल"},
+    {en: "Falak", ar: "فلك", hi: "आसमान, आकाश"},
+    {en: "Farah", ar: "فرح", hi: "खुशी, आनंद"},
+    {en: "Farhana", ar: "فرحانة", hi: "प्रसन्न, मुस्कुराती हुई"},
+    {en: "Farhat", ar: "فرحت", hi: "शांति, खुशी"},
+    {en: "Faria", ar: "فارعة", hi: "ऊंचे कद वाली, सुंदर"},
+    {en: "Farida", ar: "فريدة", hi: "अनोखी, कीमती"},
+    {en: "Fariya", ar: "فارية", hi: "दयालु, अच्छी दोस्त"},
+    {en: "Fatima", ar: "فاطمة", hi: "परहेजगार, पैगंबर की बेटी"},
+    {en: "Fauzia", ar: "فوزية", hi: "सफल, विजयी"}
+,
+    {en: "Fayza", ar: "فيضة", hi: "उदार, भरपूर"},
+    {en: "Fazila", ar: "فاضلة", hi: "विद्वान, गुणी"},
+    {en: "Firdous", ar: "فردوس", hi: "जन्नत का सबसे ऊँचा बाग"},
+    {en: "Fiza", ar: "فضة", hi: "हवा, वातावरण"},
+    {en: "Ghazal", ar: "غزل", hi: "कविता, प्रेम की बातें"},
+    {en: "Ghazala", ar: "غزالة", hi: "हिरण, सुबह का सूरज"},
+    {en: "Gia", ar: "جيا", hi: "दिल की धड़कन, प्यारी"},
+    {en: "Gul", ar: "گل", hi: "फूल"},
+    {en: "Gulbano", ar: "گلبانو", hi: "फूलों की रानी"}, // अरबी फिक्स किया
+    {en: "Gulistan", ar: "گلستان", hi: "फूलों का बगीचा"},
+    {en: "Habiba", ar: "حبيبة", hi: "प्यारी, प्रेमिका"},
+    {en: "Hadiya", ar: "هادية", hi: "मार्गदर्शक, तोहफा"},
+    {en: "Hafsa", ar: "حفصة", hi: "शेरनी, पैगंबर की पत्नी"},
+    {en: "Hajra", ar: "هاجرة", hi: "प्रवास करने वाली, पैगंबर की पत्नी"},
+    {en: "Halima", ar: "حليمة", hi: "नर्मदिल, पैगंबर की दाई मां"},
+    {en: "Hamida", ar: "حميدة", hi: "प्रशंसनीय, शुक्रगुजार"},
+    {en: "Haniya", ar: "هانية", hi: "खुशहाल, सुखद"},
+    {en: "Haseena", ar: "حسينة", hi: "अत्यंत सुंदर"},
+    {en: "Heena", ar: "حناء", hi: "मेहंदी"},
+    {en: "Hiba", ar: "هبة", hi: "अल्लाह का उपहार"},
+    {en: "Hina", ar: "حنا", hi: "मेहंदी का पौधा"},
+    {en: "Hira", ar: "حراء", hi: "उस गुफा का नाम जहाँ कुरान उतरी"},
+    {en: "Hoor", ar: "حور", hi: "जन्नत की अप्सरा"},
+    {en: "Hoorain", ar: "حورين", hi: "जन्नत की खूबसूरत आंखें"},
+    {en: "Humaira", ar: "حميراء", hi: "सुर्ख रंग वाली, आयशा का लकब"},
+    {en: "Husna", ar: "حسنى", hi: "सबसे सुंदर"},
+    {en: "Iffat", ar: "عفت", hi: "पवित्रता, शालीनता"},
+    {en: "Ikram", ar: "إكرام", hi: "सम्मान, आदर"},
+    {en: "Ilham", ar: "إلهام", hi: "मन की आवाज, प्रेरणा"},
+    {en: "Iman", ar: "إيمان", hi: "विश्वास, आस्था"},
+    {en: "Inaya", ar: "عناية", hi: "अल्लाह की इनायत, देखभाल"},
+    {en: "Insha", ar: "إنشاء", hi: "अल्लाह की मर्जी, रचना"},
+    {en: "Iram", ar: "إرم", hi: "जन्नत का एक बाग"},
+    {en: "Irat", ar: "إيرات", hi: "जन्नत की कली"},
+    {en: "Irma", ar: "إرما", hi: "पूरी तरह सुरक्षित"},
+    {en: "Ismat", ar: "عصمت", hi: "पवित्रता, शुद्धता"},
+    {en: "Iva", ar: "إيفا", hi: "जीवित, उच्च पद"},
+    {en: "Jabeen", ar: "جبين", hi: "माथा, ललाट"},
+    {en: "Jahan", ar: "جهان", hi: "दुनिया, संसार"},
+    {en: "Jahana", ar: "جهانة", hi: "युवा स्त्री"},
+    {en: "Jalila", ar: "جليلة", hi: "शानदार, प्रतिष्ठित"},
+    {en: "Jamila", ar: "جميلة", hi: "सुंदर, आकर्षक"},
+    {en: "Jannat", ar: "جنات", hi: "स्वर्ग, बगीचा"},
+    {en: "Jasmin", ar: "ياسمين", hi: "चमेली का फूल"},
+    {en: "Javeda", ar: "جاويدة", hi: "अमर, हमेशा रहने वाली"},
+    {en: "Juhi", ar: "جوھي", hi: "एक खुशबूदार फूल (नोट: यह मूल रूप से भारतीय/हिंदी नाम है)"}, 
+    {en: "Kaina", ar: "كائنة", hi: "मौजूदगी, रचना"},
+    {en: "Kainat", ar: "كائنات", hi: "ब्रह्मांड, सृष्टि"},
+    {en: "Kamila", ar: "كاملة", hi: "पूर्ण, परफेक्ट"},
+    {en: "Kanza", ar: "كنزة", hi: "छिपा हुआ खजाना"},
+    {en: "Kashish", ar: "کشش", hi: "आकर्षण (फ़ारसी मूल)"},
+    {en: "Khadija", ar: "خديجة", hi: "भरोसेमंद, पैगंबर की पहली पत्नी"},
+    {en: "Khalida", ar: "خالدة", hi: "अमर, हमेशा रहने वाली"},
+    {en: "Khansa", ar: "خنساء", hi: "एक मशहूर कवियित्री और सहाबिया"},
+    {en: "Kiran", ar: "كيران", hi: "प्रकाश की किरण, रश्मि"}
+,
+    {en: "Kishwar", ar: "کشور", hi: "देश, मुल्क"},
+    {en: "Kubra", ar: "كبرى", hi: "महान, बड़ी"},
+    {en: "Kulsum", ar: "كلثوم", hi: "भरे गालों वाली, पैगंबर की बेटी"},
+    {en: "Laila", ar: "ليلى", hi: "रात, गहरे काले बालों वाली"},
+    {en: "Laraib", ar: "لاريب", hi: "बिना किसी शक के, सच्चा"},
+    {en: "Latifa", ar: "لطيفة", hi: "नर्मदिल, मजाकिया"},
+    {en: "Libah", ar: "ليبة", hi: "सबसे सुंदर जन्नती स्त्री"},
+    {en: "Lubna", ar: "لبنى", hi: "सफेद रंग का खुशबूदार पेड़"},
+    {en: "Maheen", ar: "مهين", hi: "बारीक, पतली, कोमल"},
+    {en: "Mahira", ar: "ماهرة", hi: "कुशल, एक्सपर्ट"},
+    {en: "Mahnoor", ar: "ماهنور", hi: "चाँद की रोशनी"},
+    {en: "Mahu", ar: "ماحو", hi: "मिटा देने वाली (बुराई को)"},
+    {en: "Maira", ar: "مايرة", hi: "फुर्तीली, अनुकूल"},
+    {en: "Malika", ar: "ملكة", hi: "रानी, शासक"},
+    {en: "Mariam", ar: "مريم", hi: "पवित्र, ईसा मसीह की मां"},
+    {en: "Marzia", ar: "مرضية", hi: "पसंदीदा, अल्लाह से राजी"},
+    {en: "Masooma", ar: "معصومة", hi: "मासूम, निष्पाप"},
+    {en: "Maya", ar: "مايا", hi: "शहजादी, धन-दौलत"},
+    {en: "Mehak", ar: "محك", hi: "खुशबू, सुगंध"},
+    {en: "Mehar", ar: "مهر", hi: "कृपा, दया"},
+    {en: "Mehmooda", ar: "محمودة", hi: "तारीफ के काबिल"},
+    {en: "Mehrunisa", ar: "مهر النساء", hi: "महिलाओं का सूरज"},
+    {en: "Mehtab", ar: "مهتاب", hi: "चाँद"},
+    {en: "Mina", ar: "ميناء", hi: "बंदरगाह, कांच"},
+    {en: "Minal", ar: "منال", hi: "मंजिल, उपलब्धि"},
+    {en: "Misbah", ar: "مصباح", hi: "दीपक, रोशनी"},
+    {en: "Misha", ar: "ميشا", hi: "खुशहाल, खूबसूरत"},
+    {en: "Mona", ar: "منى", hi: "इच्छा, तमन्ना"},
+    {en: "Mubashira", ar: "مبشرة", hi: "खुशखबरी देने वाली"},
+    {en: "Mumina", ar: "مؤمنة", hi: "सच्ची आस्था वाली महिला"},
+    {en: "Muna", ar: "منى", hi: "इच्छा, मन्नत"},
+    {en: "Munira", ar: "منيرة", hi: "चमकदार, रौशन"},
+    {en: "Muskaan", ar: "مسكان", hi: "हंसी, खुशी (फ़ारसी/उर्दू मूल)"},
+    {en: "Nabeela", ar: "نبيلة", hi: "कुलीन, शरीफ"},
+    {en: "Nadia", ar: "نادية", hi: "पुकारने वाली, ओस की बूंद"},
+    {en: "Nadiya", ar: "نادية", hi: "नदी, प्रवाह"},
+    {en: "Nafeesa", ar: "نفيسة", hi: "कीमती, मूल्यवान"},
+    {en: "Nagina", ar: "نگینہ", hi: "रत्न, कीमती पत्थर"},
+    {en: "Nahid", ar: "ناهد", hi: "प्रतिष्ठित, वीनस ग्रह"},
+    {en: "Naila", ar: "نائلة", hi: "पाने वाली, सफल"},
+    {en: "Naima", ar: "نعيمة", hi: "सुख-सुविधा वाली, शांत"},
+    {en: "Najma", ar: "نجمة", hi: "सितारा"},
+    {en: "Nargis", ar: "نرجس", hi: "एक खूबसूरत फूल"},
+    {en: "Nasira", ar: "ناصرة", hi: "मददगार, रक्षक"},
+    {en: "Nasreen", ar: "نسرين", hi: "जंगली गुलाब"},
+    {en: "Naveeda", ar: "نويدة", hi: "खुशखबरी"},
+    {en: "Nazia", ar: "نازية", hi: "गर्व करने वाली, प्यारी"},
+    {en: "Nazima", ar: "ناظمة", hi: "प्रबंधक, कविता लिखने वाली"},
+    {en: "Nazish", ar: "نازش", hi: "गर्व, नाज़"},
+    {en: "Nazma", ar: "نظمة", hi: "कविता, व्यवस्था"},
+    {en: "Neelam", ar: "نیلم", hi: "एक कीमती रत्न"},
+    {en: "Nida", ar: "نداء", hi: "आवाज, पुकार"},
+    {en: "Nigar", ar: "نگار", hi: "सुंदर, प्रियतम"},
+    {en: "Nilofer", ar: "نيلوفر", hi: "कमल का फूल"},
+    {en: "Nimra", ar: "نمرة", hi: "नरम, एक मस्जिद का नाम"},
+    {en: "Nisa", ar: "النساء", hi: "महिला, स्त्री"},
+    {en: "Nisha", ar: "نیشا", hi: "रात (नोट: यह शुद्ध संस्कृत नाम है, मुस्लिम नाम नहीं है)"},
+    {en: "Noor", ar: "نور", hi: "रौशनी, नूर"},
+    {en: "Nusrat", ar: "نصرة", hi: "मदद, सफलता"},
+    {en: "Parveen", ar: "پروين", hi: "तारों का समूह"},
+    {en: "Qadira", ar: "قادرة", hi: "शक्तिशाली, समर्थ"},
+    {en: "Qamar", ar: "قمر", hi: "चाँद"},
+    {en: "Qurrat", ar: "قرة", hi: "आंखों की ठंडक"},
+    {en: "Rabia", ar: "رابعة", hi: "चौथी, एक मशहूर नेक महिला"},
+    {en: "Rafeeqa", ar: "رفيقة", hi: "सच्ची साथी"},
+    {en: "Raha", ar: "راها", hi: "शांति, आज़ादी"},
+    {en: "Rahat", ar: "راحت", hi: "आराम, सुकून"},
+    {en: "Raheela", ar: "رحيلة", hi: "यात्रा करने वाली"},
+    {en: "Rahima", ar: "رحيمة", hi: "दयालु महिला"},
+    {en: "Raihana", ar: "ريحانة", hi: "खुशबूदार पौधा"},
+    {en: "Raina", ar: "راينة", hi: "शांतिपूर्ण रानी"},
+    {en: "Raisa", ar: "رئيسة", hi: "नेता, अमीर महिला"},
+    {en: "Raniya", ar: "رانيا", hi: "गंभीरता से देखने वाली"},
+    {en: "Rashida", ar: "راشدة", hi: "नेक राह पर चलने वाली"},
+    {en: "Rayyan", ar: "ريان", hi: "जन्नत का एक दरवाजा"},
+    {en: "Raza", ar: "رضا", hi: "संतुष्टि"},
+    {en: "Raziya", ar: "راضية", hi: "संतुष्ट, राजी"},
+    {en: "Rehana", ar: "ريحانة", hi: "तुलसी का पौधा, खुशबू"},
+    {en: "Resham", ar: "ریشم", hi: "कोमल कपड़ा"},
+    {en: "Rida", ar: "رداء", hi: "अल्लाह का पर्दा, आज्ञाकारी"},
+    {en: "Rifat", ar: "رفعت", hi: "ऊँचाई, बुलंद मुकाम"},
+    {en: "Rizwana", ar: "رضوانة", hi: "खुश, संतुष्ट"},
+    {en: "Rubina", ar: "روبينة", hi: "रत्न, कीमती पत्थर"},
+    {en: "Ruhi", ar: "روحي", hi: "आत्मा से जुड़ी, आध्यात्मिक"},
+    {en: "Rukhsana", ar: "رخصانة", hi: "खूबसूरत गालों वाली"},
+    {en: "Rukhsar", ar: "رخسار", hi: "चेहरा, गाल"},
+    {en: "Rumaisa", ar: "رميصاء", hi: "फूलों का गुच्छा"},
+    {en: "Ruqaiya", ar: "رقية", hi: "उच्च, पैगंबर की बेटी"},
+    {en: "Saba", ar: "صبا", hi: "सुबह की ठंडी हवा"},
+    {en: "Sabiha", ar: "صبيحة", hi: "खूबसूरत, सुबह जैसी"},
+    {en: "Sabina", ar: "سابينة", hi: "मीठी, प्यारी"},
+    {en: "Sabira", ar: "صابرة", hi: "धैर्य रखने वाली"},
+    {en: "Sadia", ar: "سعدية", hi: "भाग्यशाली, खुशहाल"},
+    {en: "Sadiya", ar: "صادية", hi: "सच्ची, वफादार"},
+    {en: "Safa", ar: "صفا", hi: "पवित्र, साफ दिल, पहाड़ी"},
+    {en: "Safiya", ar: "صفية", hi: "शुद्ध, पैगंबर की पत्नी"},
+    {en: "Sahar", ar: "سحر", hi: "सुबह का समय"},
+    {en: "Sahila", ar: "ساحلة", hi: "किनारा, मार्गदर्शक"},
+    {en: "Saida", ar: "سعيدة", hi: "भाग्यशाली, नेता"},
+    {en: "Saima", ar: "صائمة", hi: "रोजा रखने वाली"},
+    {en: "Sajida", ar: "ساجدة", hi: "सजदा करने वाली"},
+    {en: "Sakina", ar: "سكينة", hi: "शांति, सुकून"},
+    {en: "Salma", ar: "سلمى", hi: "सुरक्षित, सलामत"},
+    {en: "Salwa", ar: "سلوى", hi: "सुकून देने वाली, शहद"},
+    {en: "Samiya", ar: "سامية", hi: "उच्च, प्रतिष्ठित, महान"}
+,
+    {en: "Sana", ar: "ثناء", hi: "तारीफ, चमक"},
+    {en: "Sanam", ar: "صنم", hi: "प्रियतम, सुंदर"},
+    {en: "Sania", ar: "ثانية", hi: "शानदार, चमकने वाली"},
+    {en: "Sara", ar: "سارة", hi: "खुशी देने वाली, इब्राहिम की पत्नी"},
+    {en: "Seema", ar: "سيماء", hi: "चेहरा, निशानी"},
+    {en: "Sehrish", ar: "سحرش", hi: "चमकता हुआ सूरज, सुबह की ताज़गी"}
+,
+    {en: "Shabana", ar: "شبانة", hi: "रात की रानी, युवा महिला"},
+    {en: "Shabnam", ar: "شبنم", hi: "ओस की बूंदें"},
+    {en: "Shadiya", ar: "شادية", hi: "गाने वाली, खुशहाल"},
+    {en: "Shafeeqa", ar: "شفيقة", hi: "दयालु, नर्मदिल"},
+    {en: "Shagufta", ar: "شكفته", hi: "खिला हुआ फूल"},
+    {en: "Shahida", ar: "شاهدة", hi: "गवाह, सच्ची"},
+    {en: "Shahina", ar: "شاهينة", hi: "बाज पक्षी की तरह तेज़"},
+    {en: "Shahlina", ar: "شهلينا", hi: "कोमल फूल"},
+    {en: "Shahzadi", ar: "شاهزادي", hi: "राजकुमारी"},
+    {en: "Shaila", ar: "شائلة", hi: "सुंदर आंखें (फ़ारसी)"},
+    {en: "Shaima", ar: "شيماء", hi: "अच्छे गुणों वाली, पैगंबर की दूध-बहन"},
+    {en: "Shakila", ar: "شكيلة", hi: "सुंदर, सुडौल"},
+    {en: "Shakira", ar: "شاكرة", hi: "शुक्रगुजार महिला"},
+    {en: "Shama", ar: "شمع", hi: "मोमबत्ती, रोशनी"},
+    {en: "Shameem", ar: "شميم", hi: "खुशबूदार हवा"},
+    {en: "Shamina", ar: "ثمينة", hi: "कीमती, खूबसूरत"},
+    {en: "Shams", ar: "شمس", hi: "सूरज"},
+    {en: "Shamsa", ar: "شمسة", hi: "धूप, सूरज की किरण"},
+    {en: "Shasmeen", ar: "شاسمين", hi: "बहुत सुंदर"},
+    {en: "Shayla", ar: "شائلة", hi: "छोटा सा काला बादल"},
+    {en: "Shayan", ar: "شايان", hi: "योग्य, लायक"},
+    {en: "Shaza", ar: "شذى", hi: "सौंधी खुशबू"},
+    {en: "Shazba", ar: "شذبة", hi: "अनोखी"},
+    {en: "Shazia", ar: "شاذية", hi: "अनोखी, खुशबूदार"},
+    {en: "Sheeba", ar: "شيبة", hi: "आकर्षण, एक रानी का नाम"},
+    {en: "Shehla", ar: "شهلاء", hi: "गहरी डार्क आँखें"},
+    {en: "Shehnaz", ar: "شهناز", hi: "राजकुमारी का नाज़"},
+    {en: "Shereen", ar: "شيرين", hi: "मीठी, प्यारी"},
+    {en: "Shifa", ar: "شفاء", hi: "तंदुरुस्ती, इलाज"},
+    {en: "Shiza", ar: "شذا", hi: "उपहार, तोहफा"},
+    {en: "Shubnam", ar: "شبنم", hi: "ताजा ओस"},
+    {en: "Siddiqua", ar: "صديقة", hi: "बेहद सच्ची महिला"},
+    {en: "Sidra", ar: "سدرة", hi: "जन्नत का एक पेड़"},
+    {en: "Simran", ar: "سمران", hi: "ध्यान, ईश्वर का स्मरण"}
+,
+    {en: "Sobia", ar: "ثوبية", hi: "अच्छे कपड़े पहनने वाली"},
+    {en: "Sofia", ar: "صوفية", hi: "बुद्धिमान, पवित्र"},
+    {en: "Sohana", ar: "سوهانا", hi: "सुंदर, आकर्षक"},
+    {en: "Sohila", ar: "سهيلا", hi: "एक चमकता सितारा"},
+    {en: "Soniya", ar: "سونيا", hi: "बुद्धिमान (नोट: यह ग्रीक/हिंदी नाम है, अरबी नहीं)"},
+    {en: "Suha", ar: "سهى", hi: "एक छोटा चमकता तारा"},
+    {en: "Suhaila", ar: "سهيلة", hi: "नर्मदिल, चाँद की रोशनी"},
+    {en: "Sultana", ar: "سلطانة", hi: "रानी, शासक महिला"},
+    {en: "Sumaiya", ar: "سمية", hi: "उच्च पद वाली, पहली महिला शहीद"},
+    {en: "Suraiya", ar: "ثريا", hi: "तारों का समूह"},
+  {en: "Tabassum", ar: "تبسم", hi: "मुस्कुराहट, मुस्कान"}
+,
+    {en: "Tahira", ar: "طاهرة", hi: "पवित्र, साफ दिल"},
+    {en: "Talat", ar: "طلعت", hi: "चेहरा, रूप"},
+    {en: "Tanveer", ar: "تنوير", hi: "रौशनी, प्रकाश"},
+    {en: "Tanzila", ar: "تنزيل", hi: "आतिथ्य, कुरान का उतरना"},
+    {en: "Tasleem", ar: "تسليم", hi: "स्वीकार करना, सलाम"},
+    {en: "Tasneem", ar: "تسنيم", hi: "जन्नत का एक झरना"},
+    {en: "Ulyana", ar: "أوليانا", hi: "नरम बाल, युवा (रशियन/अरबी मिक्स)"},
+    {en: "Umaima", ar: "أميمة", hi: "छोटी माँ, सहाबिया का नाम"},
+    {en: "Umera", ar: "عميرة", hi: "लंबी उम्र वाली, रहने वाली"},
+    {en: "Uzma", ar: "عظمى", hi: "सबसे महान, सर्वोच्च"},
+    {en: "Wafiya", ar: "وافية", hi: "वफादार, भरोसेमंद"},
+    {en: "Wahida", ar: "وحيدة", hi: "अकेली, अनोखी"},
+    {en: "Wajeeha", ar: "وجيهة", hi: "प्रतिष्ठित, सुंदर चेहरा"},
+    {en: "Waliya", ar: "ولية", hi: "रक्षक, अल्लाह की सहेली"},
+    {en: "Warda", ar: "وردة", hi: "गुलाब का फूल"},
+    {en: "Yasmine", ar: "ياسمين", hi: "चमेली का फूल"},
+    {en: "Yusra", ar: "يسرى", hi: "आसानी, समृद्धि"},
+    {en: "Zaara", ar: "زهرة", hi: "खूबसूरत फूल, सुबह का उजाला"},
+    {en: "Zafira", ar: "ظافرة", hi: "हमेशा जीतने वाली"},
+    {en: "Zahida", ar: "زاهدة", hi: "परहेजगार, अल्लाह भक्त"},
+    {en: "Zahra", ar: "زهراء", hi: "चमकदार, सफेद रंग, फातिमा का लकब"},
+    {en: "Zaida", ar: "زائدة", hi: "बढ़ने वाली, समृद्ध"},
+    {en: "Zaina", ar: "زينة", hi: "सुंदर, आकर्षक"},
+    {en: "Zainab", ar: "زينب", hi: "सजा हुआ पेड़, पैगंबर की बेटी"},
+    {en: "Zakiya", ar: "زكية", hi: "बुद्धिमान, पवित्र"},
+    {en: "Zalfa", ar: "زلفى", hi: "रात का शुरुआती हिस्सा"},
+    {en: "Zara", ar: "زارة", hi: "शहजादी, फूल"},
+    {en: "Zarina", ar: "زرينة", hi: "सोने की बनी हुई"},
+    {en: "Zarish", ar: "زاريش", hi: "अмир, सोने की चमक"},
+    {en: "Zeba", ar: "زیبا", hi: "सुंदर, प्यारी"},
+    {en: "Zeenat", ar: "زينة", hi: "सजावट, सुंदरता"},
+    {en: "Zoya", ar: "زويا", hi: "जीवित, प्यार करने वाली, सच्ची सहेली"},
+    {en: "Zubadia", ar: "زبيدة", hi: "उत्कृष्ट, बेहतरीन"},
+    {en: "Zubeda", ar: "زبيدة", hi: "मक्खन का अर्क, शुद्ध"},
+    {en: "Zuha", ar: "ضحى", hi: "सुबह का उजाला, चाश्त का समय"},
+    {en: "Zuhra", ar: "زهراء", hi: "चमकदार तारा, वीनस ग्रह"},
+    {en: "Zulekha", ar: "زليخة", hi: "अत्यंत सुंदर महिला"},
+    {en: "Zunaira", ar: "زنيرا", hi: "जन्नत में मिलने वाला फूल"},
+        {en: "Ayra", ar: "آيرة", hi: "सम्मानित, विस्मयकारी, आँखें खोलने वाली"},
+    {en: "Inaya", ar: "عناية", hi: "अल्लाह की इनायत, देखभाल, सुरक्षा"},
+ {en: "Mirha", ar: "مرحة", hi: "अल्लाह का उपहार, खुशमिजाज, फुर्तीली"}
+,
+    {en: "Zoya", ar: "زويا", hi: "जीवित, प्यार करने वाली, सच्ची सहेली"}
+
+];
+
+
+        // --- FUNCTIONS ---
+        function fillTable(id, data) {
+            const body = document.getElementById(id);
+            body.innerHTML = "";
+            data.forEach(item => {
+                let row = `<tr>
+                    <td><span class="name-en">${item.en}</span></td>
+                    <td style="text-align:right">
+                        <span class="name-ar">${item.ar}</span>
+                        <span class="hindi-meaning"><b>${t.label}</b> ${item.hi}</span>
+                    </td>
+                </tr>`;
+                body.innerHTML += row;
+            });
+        }
+
+        function showTab(type) {
+            document.querySelectorAll('.names-list').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(type).classList.add('active');
+            
+            if(type === 'boys') {
+                document.getElementById('btn-boys').classList.add('active');
+            } else {
+                document.getElementById('btn-girls').classList.add('active');
+            }
+        }
+
+        // Initialize tables on load
+        fillTable('boys-body', boysData);
+        fillTable('girls-body', girlsData);
+    </script>
+</body>
+</html>

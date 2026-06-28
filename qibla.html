@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Qibla Compass Premium</title>
+    <style>
+        :root { --dark-green: #002b1c; --gold: #c5a059; --white: #ffffff; --success: #00c853; }
+        body { margin: 0; padding: 0; background: var(--dark-green); font-family: sans-serif; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+
+        .app-container { width: 100%; max-width: 400px; position: relative; background: var(--dark-green); }
+
+        .lanterns { position: absolute; top: 0; width: 100%; display: flex; justify-content: space-around; padding-top: 15px; z-index: 5; }
+        .css-lantern { width: 25px; height: 40px; background: var(--gold); border-radius: 5px; position: relative; box-shadow: 0 0 15px var(--gold); }
+        .css-lantern::after { content: ''; position: absolute; top: -10px; left: 5px; width: 15px; height: 10px; background: var(--gold); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+
+        .mehrab-card { 
+            position: absolute; bottom: 0; width: 100%; height: 82%; 
+            background: var(--white); border-radius: 160px 160px 0 0; 
+            border-top: 6px solid var(--gold); box-sizing: border-box;
+            display: flex; flex-direction: column; align-items: center; padding-top: 30px;
+        }
+
+        .direction-info { color: #1a3c34; font-size: 32px; font-weight: bold; margin-bottom: 20px; transition: 0.3s; }
+        .direction-info.correct { color: var(--success); transform: scale(1.1); }
+
+        .compass-wrap { position: relative; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; }
+        
+        #dial { 
+            width: 100%; height: 100%; border-radius: 50%; 
+            background: white; border: 2px solid #ddd; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: absolute; transition: transform 0.1s linear;
+        }
+
+        .mark { position: absolute; font-weight: bold; font-size: 26px; color: #4d2a14; }
+        .n { top: 15px; left: 50%; transform: translateX(-50%); color: #d32f2f; }
+        .s { bottom: 15px; left: 50%; transform: translateX(-50%); }
+        .e { left: 15px; top: 50%; transform: translateY(-50%); }
+        .w { right: 15px; top: 50%; transform: translateY(-50%); }
+
+        .css-kaaba { 
+            width: 55px; height: 55px; background: #222; z-index: 10; position: absolute;
+            border-top: 8px solid var(--gold); box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .css-kaaba.correct { background: var(--success); border-top-color: white; box-shadow: 0 0 20px var(--success); }
+
+        .red-arrow { 
+            position: absolute; top: 15px; width: 0; height: 0; 
+            border-left: 14px solid transparent; border-right: 14px solid transparent; 
+            border-bottom: 30px solid #d32f2f; z-index: 15;
+        }
+
+        .btn-start { 
+            background: var(--dark-green); color: white; border: none; 
+            padding: 16px 50px; border-radius: 35px; font-weight: bold; 
+            margin-top: 40px; cursor: pointer; width: 85%; font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="lanterns">
+        <div class="css-lantern"></div>
+        <span style="color:white; font-weight:bold; font-size:18px; letter-spacing:1px;">Qibla Compass</span>
+        <div class="css-lantern"></div>
+    </div>
+
+    <div class="mehrab-card">
+        <div class="direction-info" id="degText">Wait...</div>
+        
+        <div class="compass-wrap">
+            <div class="red-arrow"></div>
+            <div class="css-kaaba" id="kaabaIcon"></div>
+            
+            <div id="dial">
+                <div class="mark n">N</div>
+                <div class="mark s">S</div>
+                <div class="mark e">W</div> <div class="mark w">E</div>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="initApp()">SENSOR ACTIVE</button>
+        <p id="qiblaDegText" style="font-size:14px; color:var(--gold); font-weight:bold; margin-top:10px;">Finding Qibla...</p>
+        <p style="font-size:12px; color:#999;">Phone ko zameen ke barabar (flat) rakhein</p>
+    </div>
+</div>
+
+<script>
+    let qiblaAngle = 291; // Default for India/Pakistan
+    let isFoundPlayed = false;
+
+    function initApp() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                calculateQibla(lat, lng);
+            });
+        }
+        startSensor();
+    }
+
+    function calculateQibla(lat, lng) {
+        const phiK = 21.4225 * Math.PI / 180;
+        const lambdaK = 39.8262 * Math.PI / 180;
+        const phi = lat * Math.PI / 180;
+        const lambda = lng * Math.PI / 180;
+        
+        const y = Math.sin(lambdaK - lambda);
+        const x = Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda);
+        qiblaAngle = Math.atan2(y, x) * 180 / Math.PI;
+        if (qiblaAngle < 0) qiblaAngle += 360;
+        
+        document.getElementById('qiblaDegText').innerText = "Qibla: " + Math.round(qiblaAngle) + "°";
+    }
+
+    function startSensor() {
+        if (window.DeviceOrientationEvent) {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission().then(permission => {
+                    if (permission === 'granted') window.addEventListener('deviceorientation', update);
+                });
+            } else {
+                window.addEventListener('deviceorientationabsolute', update);
+                window.addEventListener('deviceorientation', update);
+            }
+        }
+    }
+
+    function playVoice() {
+        if (!isFoundPlayed) {
+            const msg = new SpeechSynthesisUtterance("Qibla Found");
+            msg.lang = 'en-US';
+            window.speechSynthesis.speak(msg);
+            isFoundPlayed = true;
+        }
+    }
+
+    function update(e) {
+        let heading = e.webkitCompassHeading || (360 - e.alpha);
+        if (heading) {
+            let roundedHeading = Math.round(heading);
+            let dialRotation = -roundedHeading;
+            
+            // Pointer is at the top (0 deg). 
+            // We want the Qibla angle to align with the pointer.
+            document.getElementById('dial').style.transform = `rotate(${dialRotation + qiblaAngle}deg)`;
+            document.getElementById('degText').innerText = roundedHeading + "°";
+
+            // CHECK ACCURACY (Range of 3 degrees)
+            const diff = Math.abs(roundedHeading - qiblaAngle);
+            const degInfo = document.getElementById('degText');
+            const kaaba = document.getElementById('kaabaIcon');
+
+            if (diff < 3 || diff > 357) {
+                degInfo.classList.add('correct');
+                kaaba.classList.add('correct');
+                playVoice();
+            } else {
+                degInfo.classList.remove('correct');
+                kaaba.classList.remove('correct');
+                isFoundPlayed = false; // Reset so it can play again if they move away
+            }
+        }
+    }
+</script>
+</body>
+</html>

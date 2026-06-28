@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tibb-e-Nabwi - Deeni Rehbar</title>
+    <style>
+        :root { --dark-green: #004d40; --light-bg: #f0f7f4; --gold: #c5a059; --white: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background: var(--light-bg); color: #333; }
+        .header { background: var(--dark-green); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .search-container { padding: 15px; background: var(--white); }
+        #searchInput { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 25px; outline: none; font-size: 1rem; box-sizing: border-box; }
+        .container { padding: 15px; max-width: 800px; margin: auto; }
+        .shifa-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .shifa-card { background: var(--white); border-radius: 15px; padding: 15px; border-left: 5px solid var(--gold); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .shifa-no { background: var(--dark-green); color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; float: right; }
+        .shifa-title { font-size: 1.1rem; font-weight: bold; color: var(--dark-green); display: block; margin-bottom: 8px; }
+        .shifa-desc { font-size: 0.9rem; color: #555; line-height: 1.5; }
+        .shifa-benefit { margin-top: 10px; font-size: 0.85rem; color: #d32f2f; font-weight: 600; font-style: italic; }
+        .back-btn { position: fixed; bottom: 20px; right: 20px; background: var(--gold); color: white; padding: 15px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1000; }
+        
+        /* RTL Support */
+        .rtl-layout { direction: rtl; text-align: right; }
+        .rtl-layout .shifa-card { border-left: none; border-right: 5px solid var(--gold); }
+        .rtl-layout .shifa-no { float: left; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 id="pageMainTitle">🌿 तिब्बे नबवी: 120+ इलाज़</h1>
+    <p id="pageSubTitle" style="font-size: 0.8rem; margin: 5px 0 0; opacity: 0.8;">सुन्नत और कुदरती जड़ी-बूटियों से शिफा</p>
+</div>
+
+<div class="search-container">
+    <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="बीमारी या दवा का नाम लिखें...">
+</div>
+
+<div class="container">
+    <div class="shifa-grid" id="shifaList"></div>
+</div>
+
+<a href="index.html" class="back-btn" id="homeBtn">🏠 होम</a>
+
+<script>
+    // यह Object आपकी चारों भाषाओं को संभालेगा
+    const curesData = {
+        hi: {
+            mainTitle: "🌿 तिब्बे नबवी: 120+ इलाज़",
+            subTitle: "सुन्नत और कुदरती जड़ी-बूटियों से शिफा",
+            searchPlace: "बीमारी या दवा का नाम लिखें...",
+            homeTxt: "🏠 होम",
+            benefitLabel: "फायदा: ",
+            noResult: "कोई परिणाम नहीं मिला।",
+            list: [
+                { id: 1, title: "बुखार का इलाज", desc: "बुखार को सादा पानी की पट्टियों से कम करें। यह जहन्नुम की भाप का हिस्सा है जिसे पानी से ठंडा करो।", benefit: "जिस्मानी गर्मी कम करना" },
+                { id: 2, title: "नज़ला और जुकाम", desc: "अदरक का जोशांदा पिएं और कलौंजी के तेल की एक बूंद नाक में डालें।", benefit: "सांस की नली साफ़ होना" },
+                { id: 3, title: "खांसी का इलाज", desc: "असली शहद में थोड़ी काली मिर्च मिलाकर सुबह-शाम चाटें।", benefit: "सीने की जकड़न में राहत" },
+                { id: 4, title: "बदन दर्द और थकावट", desc: "जैतून के तेल (Olive Oil) की मालिश करें।", benefit: "पठ्ठों की मजबूती" },
+                { id: 5, title: "हाजमा और पेट दर्द", desc: "पुदीने की चाय या गुनगुने पानी में शहद मिलाकर पिएं।", benefit: "गैस और अफारा दूर करना" },
+                { id: 6, title: "कलौंजी (Black Seed)", desc: "रोजाना सुबह खाली पेट 7 दाने खाएं। मौत के अलावा हर बीमारी की शिफा है।", benefit: "इम्युनिटी बढ़ाना" },
+                { id: 7, title: "शहद का इस्तेमाल", desc: "गुनगुने पानी में शहद मिलाकर पीना आंतों की सफाई करता है।", benefit: "अंदरूनी ताकत" },
+                { id: 8, title: "अजवा खजूर", desc: "निहार मुँह 7 अजवा खजूर खाने से जादू और ज़हर का असर नहीं होता।", benefit: "दिल की सेहत" },
+                { id: 9, title: "तलबीना (जौ का दलिया)", desc: "जौ के दलिए को दूध और शहद में पकाकर खाएं। यह गम (Depression) दूर करता।", benefit: "मानसिक शांति" },
+                { id: 10, title: "आंखों की रोशनी", desc: "रात को सोते समय असली 'इस्मिद' सुरमा लगाएं।", benefit: "नज़र तेज़ करना" },
+                { id: 11, title: "ज़ख्म का इलाज", desc: "पिसी हुई मेंहदी का लेप ज़ख्म पर लगाएं।", benefit: "जल्दी सुधार" },
+                { id: 12, title: "पेट के कीड़े", desc: "कलौंजी को सिरके में मिलाकर पीने से कीड़े मर जाते हैं।", benefit: "पेट की सफाई" },
+                { id: 13, title: "लिवर/पीलिया", desc: "ऊंटनी का दूध लिवर की बीमारियों के लिए शिफा है।", benefit: "लिवर ठीक करना" },
+                { id: 14, title: "माइग्रेन", desc: "नाक में कुस्त-अल-हिंदी के तेल की बूंदें डालना फायदेमंद है।", benefit: "सिर दर्द में राहत" },
+                { id: 15, title: "जोड़ों का दर्द", desc: "अंजीर का सेवन करें। यह जोड़ों के दर्द में मुफीद है।", benefit: "हड्डियों की ताकत" },
+                { id: 16, title: "कब्ज (Constipation)", desc: "सना मक्की का कहवा पिएं।", benefit: "पेट हल्का होना" },
+                { id: 17, title: "गुर्दे की पथरी", desc: "खरबूजे के बीज और शहद का शरबत पिएं।", benefit: "पथरी गलाकर निकालना" },
+                { id: 18, title: "दांत और मसूड़े", desc: "मिस्वाक (पीलू या नीम) का नियमित इस्तेमाल करें।", benefit: "पायरिया से बचाव" },
+                { id: 19, title: "बाल झड़ना", desc: "जैतून के तेल में कलौंजी पकाकर मालिश करें।", benefit: "घने बाल" },
+                { id: 20, title: "डिप्रेशन/तनाव", desc: "कद्दू (लौकी) का सेवन करें, यह दिल को सुकून देता है।", benefit: "दिमागी ठंडक" },
+                { id: 21, title: "याददाश्त बढ़ाना", desc: "सुबह 21 दाने किशमिश और बादाम खाएं।", benefit: "दिमाग तेज़ करना" },
+                { id: 22, title: "खून की कमी", desc: "खजूर और अनार का जूस पिएं।", benefit: "नया खून बनाना" },
+                { id: 23, title: "शुगर (Diabetes)", desc: "मेथी दाना रात को भिगोकर सुबह पानी पिएं।", benefit: "शुगर कंट्रोल" },
+                { id: 24, title: "मोटापा कम करना", desc: "गर्म पानी में नींबू और शहद मिलाकर पिएं।", benefit: "वजन घटाना" },
+                { id: 25, title: "नींद न आना", desc: "सोने से पहले वज़ू करें और पैर के तलवों पर तेल मलें।", benefit: "गहरी नींद" },
+                { id: 26, title: "प्यास की अधिकता", desc: "मिट्टी के बर्तन का पानी बैठकर तीन सांस में पिएं।", benefit: "जिगर की ठंडक" },
+                { id: 27, title: "चेहरे के दाग", desc: "बेसन, शहद और दूध का लेप लगाएं।", benefit: "कुदरती निखार" },
+                { id: 28, title: "सांस फूलना", desc: "मुनक्का और अंजीर का सेवन करें।", benefit: "फेफड़ों की ताकत" },
+                { id: 29, title: "कमजोरी", desc: "दूध के साथ खजूर उबालकर खाएं।", benefit: "ताकत बढ़ाना" },
+                { id: 30, title: "मुँह के छाले", desc: "शहद छालों पर लगाएं और मिस्वाक करें।", benefit: "जलन में आराम" },
+                { id: 31, title: "मिर्गी (Epilepsy)", desc: "अजवा खजूर की गुठली का पाउडर शहद के साथ लें।", benefit: "दौरे कम करना" },
+                { id: 32, title: "कोलेस्ट्रॉल", desc: "लहसुन और सिरके का इस्तेमाल खानों में बढ़ाएं।", benefit: "खून साफ़ करना" },
+                { id: 33, title: "गर्दन का दर्द", desc: "कलौंजी तेल और जैतून तेल को मिलाकर गर्दन के पीछे मालिश करें।", benefit: "नस को आराम" },
+                { id: 34, title: "पेशाब की जलन", desc: "गन्ने का रस या ककड़ी का इस्तेमाल करें।", benefit: "गर्मी दूर करना" },
+                { id: 35, title: "कमर दर्द", desc: "मेथी दाने को जैतून के तेल में जलाकर मालिश करें।", benefit: "रीढ़ की हड्डी में आराम" },
+                { id: 36, title: "दिल की घबराहट", desc: "सेब का मुरब्बा या ताज़ा सेब खाएं।", benefit: "दिल को ताकत" },
+                { id: 37, title: "गले की खराश", desc: "नमक वाले गुनगुने पानी से गरारे करें।", benefit: "सूजन कम करना" },
+                { id: 38, title: "एसिडिटी (जलन)", desc: "ठंडा दूध घूँट-घूँट पिएं और अजवाइन चबाएं।", benefit: "तेज़ाबियत खत्म करना" },
+                { id: 39, title: "बवासीर (Piles)", desc: "अंजीर को पानी में भिगोकर सुबह खाएं।", benefit: "मस्सों में आराम" },
+                { id: 40, title: "सफ़ेद बाल", desc: "मेंहदी और वस्मा (नील) का इस्तेमाल करें, काले रंगों से बचें।", benefit: "कुदरती खिज़ाब" },
+                { id: 41, title: "पैर की मोच", desc: "मेंहदी का लेप बांधें और जैतून तेल से धीरे-धीरे मालिश करें।", benefit: "सूजन कम करना" },
+                { id: 42, title: "कान का दर्द", desc: "कलौंजी का तेल हल्का गुनगुना करके एक बूंद डालें।", benefit: "इन्फेक्शन खत्म करना" },
+                { id: 43, title: "पथरी का दर्द", desc: "कुल्थी की दाल का पानी पिएं।", benefit: "दर्द में तुरंत राहत" },
+                { id: 44, title: "मानसिक थकान", desc: "खुशबू (इत्र) का इस्तेमाल करें, यह रूह को ताकत देती है।", benefit: "दिमागी फ्रेशनेस" },
+                { id: 45, title: "हाथ-पैर सुन्न होना", desc: "शहद और सिरके का लेप मालिश के रूप में करें।", benefit: "सर्कुलेशन सुधारना" },
+                { id: 46, title: "हिचकी आना", desc: "एक चम्मच शहद लें या पानी को रोककर पिएं।", benefit: "डायाफ्राम को आराम" },
+                { id: 47, title: "बिच्छू या कीड़े का काटना", desc: "नमक वाले पानी से धोएं और खजूर का पेस्ट लगाएं।", benefit: "ज़हर का असर कम करना" },
+                { id: 48, title: "त्वचा की खुजली", desc: "नारियल तेल में कलौंजी का अर्क मिलाकर लगाएं।", benefit: "इन्फेक्शन से बचाव" },
+                { id: 49, title: "बच्चों का सूखा रोग", desc: "जैतून के तेल की धूप में बैठकर मालिश करें।", benefit: "हड्डियां मजबूत करना" },
+                { id: 50, title: "भूख न लगना", desc: "काली मिर्च और सेंधा नमक के साथ अदरक का टुकड़ा खाएं।", benefit: "पाचन शक्ति बढ़ाना" },
+                { id: 51, title: "पुरानी खांसी", desc: "दमक (Asthma) या पुरानी खांसी में खजूर को पानी में उबालकर उसका पानी पिएं।", benefit: "फेफड़ों की सफाई" },
+                { id: 52, title: "हाथ-पांव का फटना", desc: "सर्दियों में बिवाइयों या फटी त्वचा पर जैतून का तेल और मोम मिलाकर लगाएं।", benefit: "त्वचा की कोमलता" },
+                { id: 53, title: "दिल की नसों की ब्लॉकेज", desc: "अजवा खजूर की गुठली का बारीक पाउडर रोजाना आधा चम्मच पानी के साथ लें।", benefit: "बेहतर ब्लड सर्कुलेशन" },
+                { id: 54, title: "आँखों का इन्फेक्शन", desc: "आँख आने पर शहद को साफ पानी में मिलाकर पलकों पर लगाएं।", benefit: "जलन और लाली कम करना" },
+                { id: 55, title: "हिस्टीरिया/घबराहट", desc: "नारंगी (संतरा) या नींबू की खुशबू सूंघें, यह दिमाग को शांत करती है।", benefit: "नसों को आराम" },
+                { id: 56, title: "हड्डियों की कमजोरी", desc: "दूध के साथ सफेद तिल या अंजीर का सेवन करें, यह कैल्शियम का खजाना है।", benefit: "मजबूत ढांचा" },
+                { id: 57, title: "पुरानी कब्ज", desc: "रात को सोते समय एक चम्मच जैतून का तेल गुनगुने दूध में डालकर पिएं।", benefit: "आंतों की चिकनाई" },
+                { id: 58, title: "साइनस (Sinus)", desc: "कलौंजी के तेल की धुनी (भाप) लें और नाक के पास हल्का तेल मलें।", benefit: "बंद नाक खुलना" },
+                { id: 59, title: "दांत का कीड़ा", desc: "सिरके में कुल्ला करें और लौंग का तेल प्रभावित दांत पर लगाएं।", benefit: "कीटाणु खत्म करना" },
+                { id: 60, title: "गर्मी के दाने", desc: "बेरी के पत्तों (सिद्र) को पानी में उबालकर उस पानी से नहाएं।", benefit: "त्वचा की ठंडक" },
+                { id: 61, title: "पसीने की बदबू", desc: "नहाने के पानी में थोड़ा सा सिरका या नींबू का रस मिलाएं।", benefit: "ताजगी का अहساس" },
+                { id: 62, title: "गठिया (Arthritis)", desc: "कुस्त-अल-हिंदी को जैतून के तेल में मिलाकर जोड़ों पर मालिश करें।", benefit: "सूजन में कमी" },
+                { id: 63, title: "आवाज का बैठना", desc: "नमक और हल्दी के पानी से गरारे करें और अदरक का रस चाटें।", benefit: "गला साफ होना" },
+                { id: 64, title: "मानसिक तनाव", desc: "कद्दू के बीज खाएं और ठंडे पानी से वज़ू करें।", benefit: "दिमागी सुकून" },
+                { id: 65, title: "खून का गाढ़ापन", desc: "लहसुन की एक कली सुबह खाली पेट पानी के साथ निगलें।", benefit: "हार्ट अटैक से बचाव" },
+                { id: 66, title: "चेहरे की झुर्रियां", desc: "सोते समय जैतून के तेल से चेहरे की हल्की मसाज करें।", benefit: "जवान त्वचा" },
+                { id: 67, title: "यूरिक एसिड", desc: "जौ का पानी (Barley Water) उबालकर दिन में दो बार पिएं।", benefit: "विषैले पदार्थ बाहर निकालना" },
+                { id: 68, title: "कमजोर याददाश्त", desc: "7 बादाम रात को भिगोकर सुबह छिलका उतार कर खाएं।", benefit: "तेज दिमाग" },
+                { id: 69, title: "नाखूनों का टूटना", desc: "नाखूनों पर जैतून के तेल की मालिश करें।", benefit: "मजबूत नाखून" },
+                { id: 70, title: "पेट की गैस", desc: "खाना खाने के बाद एक चुटकी काला नमक और अजवाइन लें।", benefit: "हल्का पेट" },
+                { id: 71, title: "सिर की खुश्की", desc: "मेहंदी में दही मिलाकर बालों की जड़ों में लगाएं।", benefit: "डैंड्रफ से छुटकारा" },
+                { id: 72, title: "मांसपेशियों का खिंचाव", desc: "कलौंजी के तेल को गर्म करके प्रभावित जगह पर सेक करें।", benefit: "लचक और आराम" },
+                { id: 73, title: "दुबलापन", desc: "खजूर के साथ ककड़ी या खीरा मिलाकर खाएं, यह वजन बढ़ाने में सहायक है।", benefit: "स्वस्थ शरीर" },
+                { id: 74, title: "मुँह की दुर्गंध", desc: "मिस्वाक करें और इलायची के दाने चबाएं।", benefit: "साफ सांसें" },
+                { id: 75, title: "एलर्जी", desc: "शहद में कलौंजी का पाउडर मिलाकर सुबह-शाम लें।", benefit: "रिएक्शन कम करना" },
+                { id: 76, title: "गर्दे की सफाई", desc: "तरबूज का सेवन करें, यह गुर्दे की गंदगी साफ करने के लिए बेहतरीन है।", benefit: "नेचुरल डिटॉक्स" },
+                { id: 77, title: "एनीमिया (खून की कमी)", desc: "काले चने का शोरबा पिएं और किशमिश खाएं।", benefit: "हीमोग्लोबिन बढ़ाना" },
+                { id: 78, title: "छाती की जलन", desc: "ठंडा पानी घूँट-घूँट पिएं और कच्ची लस्सी का इस्तेमाल करें।", benefit: "तेजाबियत में कमी" },
+                { id: 79, title: "आँखों के नीचे काले घेरे", desc: "दूध की मलाई में थोड़ा शहद मिलाकर आँखों के पास लगाएं।", benefit: "साफ रंगत" },
+                { id: 80, title: "थायराइड", desc: "गले पर जैतून तेल की मालिश करें और कुस्त-अल-हिंदी का सेवन करें।", benefit: "हार्मोन बैलेंस" },
+                { id: 81, title: "कान में सांय-सांय", desc: "सरसों के तेल में लहसुन जलाकर उसकी एक बूंद कान में डालें।", benefit: "शोर कम होना" },
+                { id: 82, title: "फटी एड़ियाँ", desc: "मेंहदी का लेप एड़ियों पर लगाएं, यह दरارें भरने में मदद करता है।", benefit: "चिकने पैर" },
+                { id: 83, title: "चिड़चिड़ापन", desc: "इत्र या गुलाब के अर्क का छिड़काव कमरे में करें।", benefit: "खुشमिजाजी" },
+                { id: 84, title: "पेशाब का रुकना", desc: "ककड़ी के बीज का चूर्ण पानी के साथ लें।", benefit: "रुकावट दूर होना" },
+                { id: 85, title: "ल्यूकोरिया", desc: "भुنے ہوئے چنے اور किशमिश کا सेवन सुबह के समय करें।", benefit: "अंदरूनी मजबूती" },
+                { id: 86, title: "सफेद दाग", desc: "कलौंजी का तेल और सिरका मिलाकर दागों पर नियमित लगाएं।", benefit: "त्वचा का रंग सुधारना" },
+                { id: 87, title: "बालों की सफेदी", desc: "कलौंजी के तेल में नारियल तेल मिलाकर लगाएं।", benefit: "नेचुरल ब्लैकनेस" },
+                { id: 88, title: "जहरीले कीड़े", desc: "नमक और पानी का घोल बनाकर उस जगह को धोएं।", benefit: "जहर का असर कम करना" },
+                { id: 89, title: "पसली का दर्द", desc: "कुस्त-अल-हिंदी का काढ़ा पिएं और गर्म कपड़े से सेक करें।", benefit: "सांस लेने में आसानी" },
+                { id: 90, title: "अनिद्रा (Insomnia)", desc: "रात को दूध में खसखस डालकर पिएं और सुरमा लगाएं।", benefit: "गहरी नींद" },
+                { id: 91, title: "डिलीवरी के बाद कमजोरी", desc: "तलबीना और खजूर का हलवा बनाकर खाएं।", benefit: "नई ताकत" },
+                { id: 92, title: "नकसीर (नाक से खून)", desc: "सिर पर ठंडा पानी डालें और धनिया का रस नाक में सूंघें।", benefit: "खून रुकना" },
+                { id: 93, title: "मसूड़ों की सूजन", desc: "फिटकरी के पानी से गरारे करें और शहद मलें।", benefit: "मजबूत मसूड़े" },
+                { id: 94, title: "हाथों का कांपना", desc: "अखरोट और शहद का सेवन करें, यह नसों को ताकत देता है।", benefit: "पकड़ मजबूत होना" },
+                { id: 95, title: "पुरानी खुजली", desc: "नीम के पत्तों का पेस्ट बनाकर शरीर पर मलें।", benefit: "कीटाणु नाशक" },
+                { id: 96, title: "जलन (Burn)", desc: "ताजी मेंहदी पीसकर लगाएं, यह फफोले नहीं पड़ने देती।", benefit: "ठंडक पहुँचाना" },
+                { id: 97, title: "एकाग्रता (Focus)", desc: "मिसवाक करें और शहद का शरबत सुबह पिएं।", benefit: "मानसिक स्पष्टता" },
+                { id: 98, title: "शरीर की गाँठें", desc: "कलौंजी और जैतून तेल का लेप गर्म करके लगाएं।", benefit: "गाँठें पिघलाना" },
+                { id: 99, title: "पैरों की जलन", desc: "मेहंदी का लेप तलवों पर लगाएं।", benefit: "गर्मी का अहसास कम करना" },
+                { id: 100, title: "पूर्ण स्वास्थ्य (General Health)", desc: "हमेशा भूख रखकर खाना खाएं और पानी बैठकर पिएं।", benefit: "लंबी आयु" },
+                { id: 101, title: "पुरानी पेचिश", desc: "बेल का फल खाएं या उसका शर्बत पिएं, यह आंतों के लिए शिफा है।", benefit: "पेट की मरोड़ में आराम" },
+                { id: 102, title: "दिमागी खुश्की", desc: "नाक में गाय का घी या बादाम का तेल दो बूंद डालें।", benefit: "बेहतर याददाश्त" },
+                { id: 103, title: "हाथ-पैर की सूजन", desc: "पानी में नमक और सिरका डालकर पैरों को उसमें रखें।", benefit: "सूजन कम करना" },
+                { id: 104, title: "आंखों का फड़कना", desc: "शहद का शरबत पिएं और आंखों को ठंडे पानी से धोएं।", benefit: "नसों को सुकून" },
+                { id: 105, title: "शरीर की गर्मी", desc: "सत्तू का शरबत पिएं और लौकी का ज्यादा इस्तेमाल करें।", benefit: "ठंडक का अहसास" },
+                { id: 106, title: "दांतों का पीलापन", desc: "नमक और सरसों के तेल से दांतों को साफ करें।", benefit: "चमकदार दांत" },
+                { id: 107, title: "बार-बार प्यास लगना", desc: "खीरा खाएं और पानी में पुदीना डालकर पिएं।", benefit: "डिहाइड्रेशन से बचाव" },
+                { id: 108, title: "गर्मी के सिरदर्द", desc: "चंदन का लेप माथे पर लगाएं या कद्दू का गुदा मलें।", benefit: "तुरंत ठंडक" },
+                { id: 109, title: "पुरानी चोट का दर्द", desc: "जैतून के तेल में हल्दी पकाकर मालिश करें।", benefit: "अंदरूनी सूजन कम करना" },
+                { id: 110, title: "मसूड़ों से खून आना", desc: "जामुन के पत्तों को चباएं या उसके काढ़े से कुल्ला करें।", benefit: "मजबूत मसूड़े" },
+                { id: 111, title: "जहनी कमजोरी", desc: "दूध के साथ अखरोट और शहद का सेवन करें।", benefit: "दिमागी ताकत" },
+                { id: 112, title: "चेहरे की जलन", desc: "गुलाब जल (Arka Gulab) का स्प्रे चेहरे पर करें।", benefit: "ताजगी और आराम" },
+                { id: 113, title: "पसलियों का खिंचाव", desc: "कलौंजी के तेल की हल्की गर्म मालिश सीने पर करें।", benefit: "दर्द से राहत" },
+                { id: 114, title: "नाखूनों का फंगल", desc: "सिरके में थोड़ा नमक मिलाकर नाखूनों को भिगोएं।", benefit: "इन्फेक्शन खत्म करना" },
+                { id: 115, title: "वजन बढ़ाना", desc: "दूध, केला और खजूर का शेक बनाकर पिएं।", benefit: "दुबलापन दूर करना" },
+                { id: 116, title: "मिर्गी के दौरे", desc: "कुस्त-अल-हिंदी की धुनी (धुआं) सुंघाना मुफीद है।", benefit: "दिमागी संतुलन" },
+                { id: 117, title: "सांस की बदबू", desc: "भोजन के बाद थोड़ी सी सौंफ और मिश्री चباएं।", benefit: "मुंह की ताजगी" },
+                { id: 118, title: "तलवों की जलन", desc: "मेहंदी में थोड़ा सा सिरका मिलाकर तलवों पर लगाएं।", benefit: "गर्मी से निजात" },
+                { id: 119, title: "हर्निया (Hernia)", desc: "भारी वजन उठाने से बचें और जैतून तेल की मालिश करें।", benefit: "सहारा और राहत" },
+                { id: 120, title: "मुकम्मल सेहत", desc: "दवा से पहले 'बिस्मिल्लाह' कहें और शिफा की नीयत से सदका दें।", benefit: "रूहानी और जिस्मानी शिफा" }
+            ]
+        },
+        // बाकी भाषाओं (en, ur, ar) का खाली ढांचा तैयार है
+        en: {
+            mainTitle: "🌿 Tibb-e-Nabwi: 120+ Cures",
+            subTitle: "Healing through Sunnah and Natural Herbs",
+            searchPlace: "Type disease or medicine name...",
+            homeTxt: "🏠 Home",
+            benefitLabel: "Benefit: ",
+            noResult: "No results found.",
+            list: [
+                { id: 1, title: "Fever Treatment", desc: "Reduce fever with plain water compresses. It is a part of Hell's heat, so cool it with water.", benefit: "Reducing body heat" },
+                { id: 2, title: "Cold and Flu", desc: "Drink ginger decoction and put a drop of black seed oil in the nose.", benefit: "Clearing respiratory tract" },
+                { id: 3, title: "Cough Cure", desc: "Mix a little black pepper in pure honey and lick it morning and evening.", benefit: "Relief from chest congestion" },
+                { id: 4, title: "Body Pain and Fatigue", desc: "Massage with Olive Oil.", benefit: "Strengthening muscles" },
+                { id: 5, title: "Digestion and Stomach Pain", desc: "Drink peppermint tea or honey mixed with lukewarm water.", benefit: "Relieving gas and bloating" },
+                { id: 6, title: "Black Seed (Kalonji)", desc: "Eat 7 seeds daily on an empty stomach. It is a cure for every disease except death.", benefit: "Boosting immunity" },
+                { id: 7, title: "Use of Honey", desc: "Drinking honey mixed with lukewarm water cleanses the intestines.", benefit: "Internal strength" },
+                { id: 8, title: "Ajwa Dates", desc: "Eating 7 Ajwa dates on an empty stomach protects from magic and poison.", benefit: "Heart health" },
+                { id: 9, title: "Talbina (Barley Porridge)", desc: "Cook barley porridge in milk and honey. It relieves grief (depression).", benefit: "Mental peace" },
+                { id: 10, title: "Eyesight", desc: "Apply pure 'Ismid' Kohl (Surma) before sleeping at night.", benefit: "Sharpening vision" },
+                { id: 11, title: "Wound Healing", desc: "Apply a paste of ground Henna (Mehendi) on the wound.", benefit: "Rapid recovery" },
+                { id: 12, title: "Stomach Worms", desc: "Drinking Black Seed mixed with vinegar kills worms.", benefit: "Stomach cleansing" },
+                { id: 13, title: "Liver/Jaundice", desc: "Camel milk is a cure for liver diseases.", benefit: "Liver recovery" },
+                { id: 14, title: "Migraine", desc: "Putting drops of Qust-al-Hindi oil in the nose is beneficial.", benefit: "Relief from headache" },
+                { id: 15, title: "Joint Pain", desc: "Consume Figs (Anjeer). It is beneficial for joint pain.", benefit: "Bone strength" },
+                { id: 16, title: "Constipation", desc: "Drink Sana Makki tea.", benefit: "Lightening the stomach" },
+                { id: 17, title: "Kidney Stones", desc: "Drink a syrup made of melon seeds and honey.", benefit: "Dissolving and removing stones" },
+                { id: 18, title: "Teeth and Gums", desc: "Use Miswak (Peelu or Neem) regularly.", benefit: "Protection from Pyorrhea" },
+                { id: 19, title: "Hair Fall", desc: "Massage with Black Seed cooked in Olive Oil.", benefit: "Thick hair" },
+                { id: 20, title: "Depression/Stress", desc: "Consume Pumpkin (Lauki), it gives peace to the heart.", benefit: "Mental cooling" },
+                { id: 21, title: "Improve Memory", desc: "Eat 21 raisins (Kishmish) and almonds in the morning.", benefit: "Sharpening the brain" },
+                { id: 22, title: "Anemia", desc: "Drink dates and pomegranate juice.", benefit: "Creating new blood" },
+                { id: 23, title: "Diabetes", desc: "Soak Fenugreek (Methi) seeds overnight and drink the water in the morning.", benefit: "Sugar control" },
+                { id: 24, title: "Weight Loss", desc: "Drink lemon and honey mixed in warm water.", benefit: "Reducing weight" },
+                { id: 25, title: "Insomnia", desc: "Perform Wudu before sleeping and rub oil on the soles of feet.", benefit: "Deep sleep" },
+                { id: 26, title: "Excessive Thirst", desc: "Drink water from a clay pot while sitting in three breaths.", benefit: "Liver cooling" },
+                { id: 27, title: "Facial Spots", desc: "Apply a paste of Gram flour (Besan), honey, and milk.", benefit: "Natural glow" },
+                { id: 28, title: "Shortness of Breath", desc: "Consume Munakka (Large Raisins) and Figs.", benefit: "Lung strength" },
+                { id: 29, title: "Weakness", desc: "Eat dates boiled with milk.", benefit: "Increasing strength" },
+                { id: 30, title: "Mouth Ulcers", desc: "Apply honey to ulcers and use Miswak.", benefit: "Relief from burning" },
+                { id: 31, title: "Epilepsy", desc: "Take Ajwa date seed powder with honey.", benefit: "Reducing seizures" },
+                { id: 32, title: "Cholesterol", desc: "Increase the use of garlic and vinegar in meals.", benefit: "Purifying blood" },
+                { id: 33, title: "Neck Pain", desc: "Massage the back of the neck with a mixture of Black Seed and Olive Oil.", benefit: "Nerve relief" },
+                { id: 34, title: "Urinary Burning", desc: "Use sugarcane juice or cucumber.", benefit: "Removing heat" },
+                { id: 35, title: "Back Pain", desc: "Massage with Fenugreek seeds burnt in Olive Oil.", benefit: "Spine relief" },
+                { id: 36, title: "Heart Palpitations", desc: "Eat Apple preserve (Murabba) or fresh apples.", benefit: "Strengthening the heart" },
+                { id: 37, title: "Sore Throat", desc: "Gargle with warm salt water.", benefit: "Reducing inflammation" },
+                { id: 38, title: "Acidity (Burning)", desc: "Drink cold milk sip by sip and chew carom seeds (Ajwain).", benefit: "Eliminating acidity" },
+                { id: 39, title: "Piles (Bawasir)", desc: "Soak Figs in water and eat them in the morning.", benefit: "Relief in piles" },
+                { id: 40, title: "White Hair", desc: "Use Henna and Indigo (Wasma), avoid black dyes.", benefit: "Natural hair dye" },
+                { id: 41, title: "Foot Sprain", desc: "Apply Henna paste and massage slowly with Olive Oil.", benefit: "Reducing swelling" },
+                { id: 42, title: "Ear Pain", desc: "Put one drop of lukewarm Black Seed oil.", benefit: "Clearing infection" },
+                { id: 43, title: "Stone Pain", desc: "Drink Horse gram (Kulthi) water.", benefit: "Immediate relief from pain" },
+                { id: 44, title: "Mental Fatigue", desc: "Use fragrance (Attar), it gives strength to the soul.", benefit: "Mental freshness" },
+                { id: 45, title: "Numbness of Hands/Feet", desc: "Apply honey and vinegar as a massage.", benefit: "Improving circulation" },
+                { id: 46, title: "Hiccups", desc: "Take a spoonful of honey or drink water while holding breath.", benefit: "Relaxing the diaphragm" },
+                { id: 47, title: "Scorpion/Insect Bite", desc: "Wash with salt water and apply date paste.", benefit: "Reducing poison effect" },
+                { id: 48, title: "Skin Itching", desc: "Apply coconut oil mixed with Black Seed extract.", benefit: "Protection from infection" },
+                { id: 49, title: "Rickets in Children", desc: "Massage with Olive Oil while sitting in the sun.", benefit: "Strengthening bones" },
+                { id: 50, title: "Loss of Appetite", desc: "Eat a piece of ginger with black pepper and rock salt.", benefit: "Increasing digestive power" },
+                { id: 51, title: "Chronic Cough", desc: "Boil dates in water and drink that water for Asthma or old cough.", benefit: "Lung cleansing" },
+                { id: 52, title: "Cracked Hands/Feet", desc: "In winter, apply Olive Oil and wax on cracked skin.", benefit: "Skin softness" },
+                { id: 53, title: "Heart Blockage", desc: "Take half a teaspoon of Ajwa date seed powder with water daily.", benefit: "Better blood circulation" },
+                { id: 54, title: "Eye Infection", desc: "Mix honey in clean water and apply on eyelids.", benefit: "Reducing burning and redness" },
+                { id: 55, title: "Hysteria/Anxiety", desc: "Smell orange or lemon fragrance, it calms the brain.", benefit: "Relaxing nerves" },
+                { id: 56, title: "Weak Bones", desc: "Consume white sesame or figs with milk; it is a treasure of calcium.", benefit: "Strong skeleton" },
+                { id: 57, title: "Chronic Constipation", desc: "Drink a spoonful of Olive Oil in lukewarm milk before sleeping.", benefit: "Intestinal lubrication" },
+                { id: 58, title: "Sinus", desc: "Inhale steam of Black Seed oil and rub a little oil near the nose.", benefit: "Clearing blocked nose" },
+                { id: 59, title: "Tooth Decay", desc: "Rinse with vinegar and apply Clove oil on the affected tooth.", benefit: "Killing germs" },
+                { id: 60, title: "Heat Rashes", desc: "Boil Sidr (Jujube) leaves in water and bathe with it.", benefit: "Skin cooling" },
+                { id: 61, title: "Sweat Odor", desc: "Mix a little vinegar or lemon juice in bath water.", benefit: "Feeling of freshness" },
+                { id: 62, title: "Arthritis", desc: "Mix Qust-al-Hindi in Olive Oil and massage on joints.", benefit: "Reducing swelling" },
+                { id: 63, title: "Hoarseness of Voice", desc: "Gargle with salt and turmeric water and lick ginger juice.", benefit: "Clearing the throat" },
+                { id: 64, title: "Mental Stress", desc: "Eat pumpkin seeds and perform Wudu with cold water.", benefit: "Mental peace" },
+                { id: 65, title: "Blood Thickness", desc: "Swallow a clove of garlic with water in the morning on an empty stomach.", benefit: "Preventing heart attack" },
+                { id: 66, title: "Facial Wrinkles", desc: "Lightly massage the face with Olive Oil before sleeping.", benefit: "Youthful skin" },
+                { id: 67, title: "Uric Acid", desc: "Boil Barley Water and drink it twice a day.", benefit: "Removing toxins" },
+                { id: 68, title: "Weak Memory", desc: "Soak 7 almonds at night and eat them in the morning after peeling.", benefit: "Sharp brain" },
+                { id: 69, title: "Brittle Nails", desc: "Massage nails with Olive Oil.", benefit: "Strong nails" },
+                { id: 70, title: "Stomach Gas", desc: "Take a pinch of black salt and carom seeds after meals.", benefit: "Light stomach" },
+                { id: 71, title: "Dandruff", desc: "Mix yogurt in Henna and apply to the hair roots.", benefit: "Getting rid of dandruff" },
+                { id: 72, title: "Muscle Strain", desc: "Heat Black Seed oil and apply a compress on the affected area.", benefit: "Flexibility and comfort" },
+                { id: 73, title: "Underweight", desc: "Eat cucumber with dates; it helps in weight gain.", benefit: "Healthy body" },
+                { id: 74, title: "Bad Breath", desc: "Use Miswak and chew cardamom seeds.", benefit: "Clean breath" },
+                { id: 75, title: "Allergy", desc: "Mix Black Seed powder in honey and take it morning and evening.", benefit: "Reducing reaction" },
+                { id: 76, title: "Kidney Cleansing", desc: "Consume watermelon; it is excellent for clearing kidney impurities.", benefit: "Natural detox" },
+                { id: 77, title: "Anemia", desc: "Drink black gram soup and eat raisins.", benefit: "Increasing hemoglobin" },
+                { id: 78, title: "Heartburn", desc: "Drink cold water sip by sip or use diluted buttermilk.", benefit: "Reducing acidity" },
+                { id: 79, title: "Dark Circles", desc: "Mix a little honey in milk cream and apply around the eyes.", benefit: "Clear complexion" },
+                { id: 80, title: "Thyroid", desc: "Massage the neck with Olive Oil and consume Qust-al-Hindi.", benefit: "Hormone balance" },
+                { id: 81, title: "Tinnitus (Ringing Ears)", desc: "Burn garlic in mustard oil and put one drop in the ear.", benefit: "Reducing noise" },
+                { id: 82, title: "Cracked Heels", desc: "Apply Henna paste on heels; it helps fill cracks.", benefit: "Smooth feet" },
+                { id: 83, title: "Irritability", desc: "Spray perfume or rose water in the room.", benefit: "Good mood" },
+                { id: 84, title: "Urinary Retention", desc: "Take cucumber seed powder with water.", benefit: "Clearing blockage" },
+                { id: 85, title: "Leucorrhea", desc: "Eat roasted grams and raisins in the morning.", benefit: "Internal strength" },
+                { id: 86, title: "Vitiligo (White Spots)", desc: "Mix Black Seed oil and vinegar and apply regularly on spots.", benefit: "Improving skin color" },
+                { id: 87, title: "Premature Graying", desc: "Mix Black Seed oil with coconut oil and apply.", benefit: "Natural blackness" },
+                { id: 88, title: "Poisonous Insects", desc: "Wash with a salt-water solution.", benefit: "Reducing poison effect" },
+                { id: 89, title: "Pleurisy (Rib Pain)", desc: "Drink Qust-al-Hindi decoction and apply warm compress.", benefit: "Easier breathing" },
+                { id: 90, title: "Insomnia", desc: "Drink milk with poppy seeds at night and apply Kohl.", benefit: "Deep sleep" },
+                { id: 91, title: "Post-delivery Weakness", desc: "Eat Talbina and date halwa.", benefit: "New strength" },
+                { id: 92, title: "Nosebleed", desc: "Pour cold water on head and inhale coriander juice.", benefit: "Stopping blood" },
+                { id: 93, title: "Gum Swelling", desc: "Gargle with alum (Fitkari) water and rub honey.", benefit: "Strong gums" },
+                { id: 94, title: "Trembling Hands", desc: "Consume walnuts and honey; it strengthens nerves.", benefit: "Stronger grip" },
+                { id: 95, title: "Chronic Itching", desc: "Apply Neem leaf paste on the body.", benefit: "Antiseptic" },
+                { id: 96, title: "Burns", desc: "Apply fresh ground Henna; it prevents blisters.", benefit: "Providing cooling" },
+                { id: 97, title: "Concentration (Focus)", desc: "Use Miswak and drink honey water in the morning.", benefit: "Mental clarity" },
+                { id: 98, title: "Body Lumps", desc: "Apply a warm paste of Black Seed and Olive Oil.", benefit: "Dissolving lumps" },
+                { id: 99, title: "Burning Soles", desc: "Apply Henna paste on the soles.", benefit: "Reducing heat sensation" },
+                { id: 100, title: "General Health", desc: "Always eat with some hunger left and drink water while sitting.", benefit: "Long life" },
+                { id: 101, title: "Chronic Dysentery", desc: "Eat Wood apple (Bel) or drink its syrup for intestinal healing.", benefit: "Relief from stomach cramps" },
+                { id: 102, title: "Brain Dryness", desc: "Put two drops of cow ghee or almond oil in the nose.", benefit: "Better memory" },
+                { id: 103, title: "Hand/Foot Swelling", desc: "Soak feet in water mixed with salt and vinegar.", benefit: "Reducing swelling" },
+                { id: 104, title: "Eye Twitching", desc: "Drink honey syrup and wash eyes with cold water.", benefit: "Soothing nerves" },
+                { id: 105, title: "Body Heat", desc: "Drink Sattu syrup and increase use of Bottle Gourd.", benefit: "Cooling sensation" },
+                { id: 106, title: "Yellow Teeth", desc: "Clean teeth with salt and mustard oil.", benefit: "Shiny teeth" },
+                { id: 107, title: "Frequent Thirst", desc: "Eat cucumber and drink peppermint water.", benefit: "Avoiding dehydration" },
+                { id: 108, title: "Heat Headache", desc: "Apply sandalwood paste on forehead or rub pumpkin pulp.", benefit: "Instant cooling" },
+                { id: 109, title: "Old Injury Pain", desc: "Massage with turmeric cooked in Olive Oil.", benefit: "Reducing internal swelling" },
+                { id: 110, title: "Bleeding Gums", desc: "Chew Jamun leaves or rinse with its decoction.", benefit: "Strong gums" },
+                { id: 111, title: "Mental Weakness", desc: "Consume walnuts and honey with milk.", benefit: "Brain power" },
+                { id: 112, title: "Facial Burning", desc: "Spray Rose Water on the face.", benefit: "Freshness and relief" },
+                { id: 113, title: "Rib Strain", desc: "Massage chest with light warm Black Seed oil.", benefit: "Pain relief" },
+                { id: 114, title: "Nail Fungus", desc: "Soak nails in vinegar mixed with a little salt.", benefit: "Ending infection" },
+                { id: 115, title: "Weight Gain", desc: "Drink a shake made of milk, banana, and dates.", benefit: "Ending thinness" },
+                { id: 116, title: "Epileptic Fits", desc: "Inhaling smoke of Qust-al-Hindi is beneficial.", benefit: "Mental balance" },
+                { id: 117, title: "Bad Breath", desc: "Chew some Fennel seeds and rock candy after meals.", benefit: "Mouth freshness" },
+                { id: 118, title: "Burning of Soles", desc: "Apply Henna mixed with a little vinegar on soles.", benefit: "Relief from heat" },
+                { id: 119, title: "Hernia", desc: "Avoid heavy lifting and massage with Olive Oil.", benefit: "Support and relief" },
+                { id: 120, title: "Complete Health", desc: "Say 'Bismillah' before medicine and give charity for healing.", benefit: "Spiritual and physical cure" }
+            ]
+        },
+ 
+                ur: {
+            mainTitle: "🌿 طب نبوی: 120+ علاج",
+            subTitle: "سنت اور قدرتی جڑی بوٹیوں سے شفا",
+            searchPlace: "بیماری یا دوا کا نام لکھیں...",
+            homeTxt: "🏠 ہوم",
+            benefitLabel: "فائدہ: ",
+            noResult: "کوئی نتیجہ نہیں ملا۔",
+            list: [
+                { id: 1, title: "بخار کا علاج", desc: "بخار کو سادہ پانی کی پٹیوں سے کم کریں۔ یہ جہنم کی بھاپ کا حصہ ہے جسے پانی سے ٹھنڈا کرو۔", benefit: "جسمانی گرمی کم کرنا" },
+                { id: 2, title: "نزلہ اور زکام", desc: "ادرک کا جوشاندہ پیئیں اور کلونجی کے تیل کا ایک قطرہ ناک میں ڈالیں۔", benefit: "سانس کی نالی صاف ہونا" },
+                { id: 3, title: "کھانسی کا علاج", desc: "اصلی شہد میں تھوڑی کالی مرچ ملا کر صبح شام چاٹیں۔", benefit: "سینے کی جکڑن میں راحت" },
+                { id: 4, title: "بدن درد اور تھکاوٹ", desc: "زیتون کے تیل (Olive Oil) کی مالش کریں۔", benefit: "پٹھوں کی مضبوطی" },
+                { id: 5, title: "ہاضمہ اور پیٹ درد", desc: "پودینے کی چائے یا نیم گرم پانی میں شہد ملا کر پیئیں۔", benefit: "گیس اور افارہ دور کرنا" },
+                { id: 6, title: "کلونجی (Black Seed)", desc: "روزانہ صبح خالی پیٹ 7 دانے کھائیں۔ موت کے علاوہ ہر بیماری کی شفا ہے۔", benefit: "امیونٹی بڑھانا" },
+                { id: 7, title: "شہد کا استعمال", desc: "نیم گرم پانی میں شہد ملا کر پینا آنتوں کی صفائی کرتا ہے۔", benefit: "اندرونی طاقت" },
+                { id: 8, title: "عجوہ کھجور", desc: "نہار منہ 7 عجوہ کھجور کھانے سے جادو اور زہر کا اثر نہیں ہوتا۔", benefit: "دل کی صحت" },
+                { id: 9, title: "تلبینہ (جو کا دلیا)", desc: "جو کے دلیے کو دودھ اور شہد میں پکا کر کھائیں۔ یہ غم (Depression) دور کرتا ہے۔", benefit: "ذہنی سکون" },
+                { id: 10, title: "آنکھوں کی روشنی", desc: "رات کو سوتے وقت اصلی 'اثمد' سرمہ لگائیں۔", benefit: "نظر تیز کرنا" },
+                { id: 11, title: "زخم کا علاج", desc: "پیسی ہوئی مہندی کا لیپ زخم پر لگائیں۔", benefit: "جلدی بہتری" },
+                { id: 12, title: "پیٹ کے کیڑے", desc: "کلونجی کو سرکے میں ملا کر پینے سے کیڑے مر جاتے ہیں۔", benefit: "پیٹ کی صفائی" },
+                { id: 13, title: "جگر/یرقان", desc: "اونٹنی کا دودھ جگر کی بیماریوں کے لیے شفا ہے۔", benefit: "جگر کی درستی" },
+                { id: 14, title: "مائگرین (آدھا سر درد)", desc: "ناک میں قسط الہندی کے تیل کے قطرے ڈالنا فائدہ مند ہے۔", benefit: "سر درد میں راحت" },
+                { id: 15, title: "جوڑوں کا درد", desc: "انجیر کا استعمال کریں۔ یہ جوڑوں کے درد میں مفید ہے۔", benefit: "ہڈیوں کی طاقت" },
+                { id: 16, title: "قبض (Constipation)", desc: "سنا مکی کا قہوہ پیئیں۔", benefit: "پیٹ ہلکا ہونا" },
+                { id: 17, title: "گردے کی پتھری", desc: "خربوزے کے بیج اور شہد کا شربت پیئیں۔", benefit: "پتھری گلا کر نکالنا" },
+                { id: 18, title: "دانت اور مسوڑھے", desc: "مسواک (پیلو یا نیم) کا مستقل استعمال کریں۔", benefit: "پائیریا سے بچاؤ" },
+                { id: 19, title: "بال جھڑنا", desc: "زیتون کے تیل میں کلونجی پکا کر مالش کریں۔", benefit: "گھنے بال" },
+                { id: 20, title: "ڈپریشن/تناؤ", desc: "کدو (لوکی) کا استعمال کریں، یہ دل کو سکون دیتا ہے۔", benefit: "ذہنی ٹھنڈک" },
+                { id: 21, title: "یادداشت بڑھانا", desc: "صبح 21 دانے کشمش اور بادام کھائیں۔", benefit: "دماغ تیز کرنا" },
+                { id: 22, title: "خون کی کمی", desc: "کھجور اور انار کا جوس پیئیں۔", benefit: "نیا خون بنانا" },
+                { id: 23, title: "شوگر (Diabetes)", desc: "میتھی دانہ رات کو بھگو کر صبح پانی پیئیں۔", benefit: "شوگر کنٹرول" },
+                { id: 24, title: "موٹاپا کم کرنا", desc: "گرم پانی میں لیموں اور شہد ملا کر پیئیں۔", benefit: "وزن گھٹانا" },
+                { id: 25, title: "نیند نہ آنا", desc: "سونے سے پہلے وضو کریں اور پیر کے تلووں پر تیل ملیں۔", benefit: "گہری نیند" },
+                { id: 26, title: "پیاس کی زیادتی", desc: "مٹی کے برتن کا پانی بیٹھ کر تین سانس میں پیئیں۔", benefit: "جگر کی ٹھنڈک" },
+                { id: 27, title: "چہرے کے داغ", desc: "بیسن، شہد اور دودھ کا لیپ لگائیں۔", benefit: "قدرتی نکھار" },
+                { id: 28, title: "سانس پھولنا", desc: "منقہ اور انجیر کا استعمال کریں۔", benefit: "پھیپھڑوں کی طاقت" },
+                { id: 29, title: "کمزوری", desc: "دودھ کے ساتھ کھجور ابال کر کھائیں۔", benefit: "طاقت بڑھانا" },
+                { id: 30, title: "منہ کے چھالے", desc: "شہد چھالوں پر لگائیں اور مسواک کریں۔", benefit: "جلن میں آرام" },
+                { id: 31, title: "مرگی (Epilepsy)", desc: "عجوہ کھجور کی گٹھلی کا پاؤڈر شہد کے ساتھ لیں۔", benefit: "دورے کم کرنا" },
+                { id: 32, title: "کولیسٹرول", desc: "لہسن اور سرکے کا استعمال کھانوں میں بڑھائیں۔", benefit: "خون صاف کرنا" },
+                { id: 33, title: "گردن کا درد", desc: "کلونجی تیل اور زیتون تیل کو ملا کر گردن کے پیچھے مالش کریں۔", benefit: "نصب کو آرام" },
+                { id: 34, title: "پیشاب کی جلن", desc: "گنے کا رس یا ککڑی کا استعمال کریں۔", benefit: "گرمی دور کرنا" },
+                { id: 35, title: "کمر درد", desc: "میتھی دانے کو زیتون کے تیل میں جلا کر مالش کریں۔", benefit: "ریڑھ کی ہڈی میں آرام" },
+                { id: 36, title: "دل کی گھبراہٹ", desc: "سیب کا مربہ یا تازہ سیب کھائیں۔", benefit: "دل کو طاقت" },
+                { id: 37, title: "گلے کی خراش", desc: "نمک والے نیم گرم پانی سے غرارے کریں۔", benefit: "سوجن کم کرنا" },
+                { id: 38, title: "ایسڈٹی (جلن)", desc: "ٹھنڈا دودھ گھونٹ گھونٹ پیئیں اور اجوائن چبائیں۔", benefit: "تیزابیت ختم کرنا" },
+                { id: 39, title: "بواسیر (Piles)", desc: "انجیر کو پانی میں بھگو کر صبح کھائیں۔", benefit: "مسوں میں آرام" },
+                { id: 40, title: "سفید بال", desc: "مہندی اور وسمہ (نیل) کا استعمال کریں، کالے رنگوں سے بچیں۔", benefit: "قدرتی خضاب" },
+                { id: 41, title: "پیر کی موچ", desc: "مہندی کا لیپ باندھیں اور زیتون تیل سے آہستہ آہستہ مالش کریں۔", benefit: "سوجن کم کرنا" },
+                { id: 42, title: "کان کا درد", desc: "کلونجی کا تیل ہلکا نیم گرم کر کے ایک قطرہ ڈالیں۔", benefit: "انفیکشن ختم کرنا" },
+                { id: 43, title: "پتھری کا درد", desc: "کلتھی کی دال کا پانی پیئیں۔", benefit: "درد میں فوراً راحت" },
+                { id: 44, title: "ذہنی تھکان", desc: "خوشبو (عطر) کا استعمال کریں، یہ روح کو طاقت دیتی ہے۔", benefit: "ذہنی فریشنیس" },
+                { id: 45, title: "ہاتھ پیر سن ہونا", desc: "شہد اور سرکے کا لیپ مالش کے طور پر کریں۔", benefit: "سرکولیشن بہتر بنانا" },
+                { id: 46, title: "ہچکی آنا", desc: "ایک چمچ شہد لیں یا پانی کو روک کر پیئیں۔", benefit: "ڈایافرام کو آرام" },
+                { id: 47, title: "بچھو یا کیڑے کا کاٹنا", desc: "نمک والے پانی سے دھوئیں اور کھجور کا پیسٹ لگائیں۔", benefit: "زہر کا اثر کم کرنا" },
+                { id: 48, title: "جلد کی کھجلی", desc: "ناریل تیل میں کلونجی کا عرق ملا کر لگائیں۔", benefit: "انفیکشن سے بچاؤ" },
+                { id: 49, title: "بچوں کا سوکھا روگ", desc: "زیتون کے تیل کی دھوپ میں بیٹھ کر مالش کریں۔", benefit: "ہڈیاں مضبوط کرنا" },
+                { id: 50, title: "بھوک نہ لگنا", desc: "کالی مرچ اور سیندھا نمک کے ساتھ ادرک کا ٹکڑا کھائیں۔", benefit: "ہاضمہ کی طاقت بڑھانا" },
+                { id: 51, title: "پرانی کھانسی", desc: "دمہ یا پرانی کھانسی میں کھجور کو پانی میں ابال کر اس کا پانی پیئیں۔", benefit: "پھیپھڑوں کی صفائی" },
+                { id: 52, title: "ہاتھ پاؤں کا پھٹنا", desc: "سردیوں میں پھٹی جلد پر زیتون کا تیل اور موم ملا کر لگائیں۔", benefit: "جلد کی نرمی" },
+                { id: 53, title: "دل کی نسوں کی بلاکیج", desc: "عجوہ کھجور کی گٹھلی کا باریک پاؤڈر روزانہ آدھا چمچ پانی کے ساتھ لیں۔", benefit: "بہتر بلڈ سرکولیشن" },
+                { id: 54, title: "آنکھوں کا انفیکشن", desc: "آنکھ آنے پر شہد کو صاف پانی میں ملا کر پلکوں پر لگائیں۔", benefit: "جلن اور لالی کم کرنا" },
+                { id: 55, title: "گھبراہٹ/پریشانی", desc: "نارنگی یا لیموں کی خوشبو سونگھیں، یہ دماغ کو پرسکون کرتی ہے۔", benefit: "نسوں کو آرام" },
+                { id: 56, title: "ہڈیوں کی کمزوری", desc: "دودھ کے ساتھ سفید تل یا انجیر کا استعمال کریں، یہ کیلشیم کا خزانہ ہے۔", benefit: "مضبوط ڈھانچہ" },
+                { id: 57, title: "پرانی قبض", desc: "رات کو سوتے وقت ایک چمچ زیتون کا تیل نیم گرم دودھ میں ڈال کر پیئیں۔", benefit: "آنتوں کی چکنائی" },
+                { id: 58, title: "سائنس (Sinus)", desc: "کلونجی کے تیل کی دھونی (بھاپ) لیں اور ناک کے پاس ہلکا تیل ملیں۔", benefit: "بند ناک کھلنا" },
+                { id: 59, title: "دانت کا کیڑا", desc: "سرکے سے کلی کریں اور لونگ کا تیل متاثرہ دانت پر لگائیں۔", benefit: "جراثیم ختم کرنا" },
+                { id: 60, title: "گرمی کے دانے", desc: "بیری کے پتوں (سدر) کو پانی میں ابال کر اس پانی سے نہائیں۔", benefit: "جلد کی ٹھنڈک" },
+                { id: 61, title: "پسینے کی بدبو", desc: "نہانے کے پانی میں تھوڑا سا سرکہ یا لیموں کا رس ملائیں۔", benefit: "تازی کا احساس" },
+                { id: 62, title: "گٹھیا (Arthritis)", desc: "قسط الہندی کو زیتون کے تیل میں ملا کر جوڑوں پر مالش کریں۔", benefit: "سوجن میں کمی" },
+                { id: 63, title: "آواز کا بیٹھنا", desc: "نمک اور ہلدی کے پانی سے غرارے کریں اور ادرک کا رس چاٹیں۔", benefit: "گلا صاف ہونا" },
+                { id: 64, title: "ذہنی تناؤ", desc: "کدو کے بیج کھائیں اور ٹھنڈے پانی سے وضو کریں۔", benefit: "ذہنی سکون" },
+                { id: 65, title: "خون کا گاڑھا پن", desc: "لہسن کی ایک کلی صبح خالی پیٹ پانی کے ساتھ نگلیں۔", benefit: "ہارٹ اٹیک سے بچاؤ" },
+                { id: 66, title: "چہرے کی جھریاں", desc: "سوتے وقت زیتون کے تیل سے چہرے کی ہلکی مساج کریں۔", benefit: "جوان جلد" },
+                { id: 67, title: "یورک ایسڈ", desc: "جو کا پانی (Barley Water) ابال کر دن میں دو بار پیئیں۔", benefit: "زہریلے مادے باہر نکالنا" },
+                { id: 68, title: "کمزور یادداشت", desc: "7 بادام رات کو بھگو کر صبح چھلکا اتار کر کھائیں۔", benefit: "تیز دماغ" },
+                { id: 69, title: "ناخنوں کا ٹوٹنا", desc: "ناخنوں پر زیتون کے تیل کی مالش کریں۔", benefit: "مضبوط ناخن" },
+                { id: 70, title: "پیٹ کی گیس", desc: "کھانا کھانے کے بعد ایک چٹکی کالا نمک اور اجوائن لیں۔", benefit: "ہلکا پیٹ" },
+                { id: 71, title: "سر کی خشکی", desc: "مہندی میں دہی ملا کر بالوں کی جڑوں میں لگائیں۔", benefit: "ڈینڈرف سے چھٹکارا" },
+                { id: 72, title: "پٹھوں کا کھچاؤ", desc: "کلونجی کے تیل کو گرم کر کے متاثرہ جگہ پر سینک کریں۔", benefit: "لچک اور آرام" },
+                { id: 73, title: "دبلا پن", desc: "کھجور کے ساتھ ککڑی یا کھیرا ملا کر کھائیں، یہ وزن بڑھانے میں مددگار ہے۔", benefit: "صحت مند جسم" },
+                { id: 74, title: "منہ کی بدبو", desc: "مسواک کریں اور الائچی کے دانے چبائیں۔", benefit: "صاف سانسیں" },
+                { id: 75, title: "الرجی", desc: "شہد میں کلونجی کا پاؤڈر ملا کر صبح شام لیں۔", benefit: "ری ایکشن کم کرنا" },
+                { id: 76, title: "گردے کی صفائی", desc: "تربوز کا استعمال کریں، یہ گردے کی گندگی صاف کرنے کے لیے بہترین ہے۔", benefit: "نیچرل ڈیٹاکس" },
+                { id: 77, title: "اینیمیا (خون کی کمی)", desc: "کالے چنے کا شوربہ پیئیں اور کشمش کھائیں۔", benefit: "ہیموگلوبن بڑھانا" },
+                { id: 78, title: "سینے کی جلن", desc: "ٹھنڈا پانی گھونٹ گھونٹ پیئیں اور کچی لسی کا استعمال کریں۔", benefit: "تیزابیت میں کمی" },
+                { id: 79, title: "آنکھوں کے حلقے", desc: "دودھ کی ملائی میں تھوڑا شہد ملا کر آنکھوں کے گرد لگائیں۔", benefit: "صاف رنگت" },
+                { id: 80, title: "تھائیرائڈ", desc: "گلے پر زیتون تیل کی مالش کریں اور قسط الہندی کا استعمال کریں۔", benefit: "ہارمون بیلنس" },
+                { id: 81, title: "کان میں سائیں سائیں", desc: "سرسوں کے تیل میں لہسن جلا کر اس کا ایک قطرہ کان میں ڈالیں۔", benefit: "شور کم ہونا" },
+                { id: 82, title: "پھٹی ایڑیاں", desc: "مہندی کا لیپ ایڑیوں پر لگائیں، یہ دراڑیں بھرنے میں مدد کرتا ہے۔", benefit: "چکن پیر" },
+                { id: 83, title: "چڑچڑاپن", desc: "عطر یا گلاب کے عرق کا چھڑکاؤ کمرے میں کریں۔", benefit: "خوش مزاجی" },
+                { id: 84, title: "پیشاب کا رکنا", desc: "ککڑی کے بیج کا سفوف پانی کے ساتھ لیں۔", benefit: "رکاوٹ دور ہونا" },
+                { id: 85, title: "لیکوریا", desc: "بھنے ہوئے چنے اور کشمش کا استعمال صبح کے وقت کریں۔", benefit: "اندرونی مضبوطی" },
+                { id: 86, title: "سفید داغ", desc: "کلونجی کا تیل اور سرکہ ملا کر داغوں پر مستقل لگائیں۔", benefit: "جلد کا رنگ ٹھیک کرنا" },
+                { id: 87, title: "بالوں کی سفیدی", desc: "کلونجی کے تیل میں ناریل تیل ملا کر لگائیں۔", benefit: "قدرتی سیاہی" },
+                { id: 88, title: "زہریلے کیڑے", desc: "نمک اور پانی کا محلول بنا کر اس جگہ کو دھو لیں۔", benefit: "زہر کا اثر کم کرنا" },
+                { id: 89, title: "پسلی کا درد", desc: "قسط الہندی کا قہوہ پیئیں اور گرم کپڑے سے سینک کریں۔", benefit: "سانس لینے میں آسانی" },
+                { id: 90, title: "بے خوابی", desc: "رات کو دودھ میں خشخاش ڈال کر پیئیں اور سرمہ لگائیں۔", benefit: "گہری نیند" },
+                { id: 91, title: "زچگی کے بعد کمزوری", desc: "تلبینہ اور کھجور کا حلوا بنا کر کھائیں۔", benefit: "نئی طاقت" },
+                { id: 92, title: "نکسیر", desc: "سر پر ٹھنڈا پانی ڈالیں اور دھنیا کا رس ناک میں سونگھیں۔", benefit: "خون رکنا" },
+                { id: 93, title: "مسوڑھوں کی سوجن", desc: "پھٹکری کے پانی سے غرارے کریں اور شہد ملیں۔", benefit: "مضبوط مسوڑھے" },
+                { id: 94, title: "ہاتھوں کا کانپنا", desc: "اخروٹ اور شہد کا استعمال کریں، یہ نسوں کو طاقت دیتا ہے۔", benefit: "پکڑ مضبوط ہونا" },
+                { id: 95, title: "پرانی کھجلی", desc: "نیم کے پتوں کا پیسٹ بنا کر جسم پر ملیں۔", benefit: "جراثیم کش" },
+                { id: 96, title: "جلنا (Burn)", desc: "تازہ مہندی پیس کر لگائیں، یہ چھالے نہیں پڑنے دیتی۔", benefit: "ٹھنڈک پہنچانا" },
+                { id: 97, title: "توجہ (Focus)", desc: "مسواک کریں اور شہد کا شربت صبح پیئیں۔", benefit: "ذہنی صفائی" },
+                { id: 98, title: "جسم کی گلٹیاں", desc: "کلونجی اور زیتون تیل کا لیپ گرم کر کے لگائیں۔", benefit: "گلٹیاں پگھلانا" },
+                { id: 99, title: "پیروں کی جلن", desc: "مہندی کا لیپ تلووں پر لگائیں۔", benefit: "گرمی کا احساس کم کرنا" },
+                { id: 100, title: "مکمل صحت", desc: "ہمیشہ بھوک رکھ کر کھانا کھائیں اور پانی بیٹھ کر پیئیں۔", benefit: "لمبی عمر" },
+                { id: 101, title: "پرانی پیچش", desc: "بیل کا پھل کھائیں یا اس کا شربت پیئیں، یہ آنتوں کے لیے شفا ہے۔", benefit: "پیٹ کے مروڑ میں آرام" },
+                { id: 102, title: "ذہنی خشکی", desc: "ناک میں گائے کا گھی یا بادام کا تیل دو قطرے ڈالیں۔", benefit: "بہتر یادداشت" },
+                { id: 103, title: "ہاتھ پیر کی سوجن", desc: "پانی میں نمک اور سرکہ ڈال کر پیروں کو اس میں رکھیں۔", benefit: "سوجن کم کرنا" },
+                { id: 104, title: "آنکھوں کا پھڑکنا", desc: "شہد کا شربت پیئیں اور آنکھوں کو ٹھنڈے پانی سے دھو لیں۔", benefit: "نسوں کو سکون" },
+                { id: 105, title: "جسم کی گرمی", desc: "ستو کا شربت پیئیں اور لوکی کا زیادہ استعمال کریں۔", benefit: "ٹھنڈک کا احساس" },
+                { id: 106, title: "دانتوں کا پیلا پن", desc: "نمک اور سرسوں کے تیل سے دانتوں کو صاف کریں۔", benefit: "چمکدار دانت" },
+                { id: 107, title: "بار بار پیاس لگنا", desc: "کھیرا کھائیں اور پانی میں پودینہ ڈال کر پیئیں۔", benefit: "ڈی ہائیڈریشن سے بچاؤ" },
+                { id: 108, title: "گرمی کا سر درد", desc: "صندل کا لیپ ماتھے پر لگائیں یا کدو کا گودا ملیں۔", benefit: "فوری ٹھنڈک" },
+                { id: 109, title: "پرانی چوٹ کا درد", desc: "زیتون کے تیل میں ہلدی پکا کر مالش کریں۔", benefit: "اندرونی سوجن کم کرنا" },
+                { id: 110, title: "مسوڑھوں سے خون آنا", desc: "جامن کے پتوں کو چبائیں یا اس کے قہوے سے کلی کریں۔", benefit: "مضبوط مسوڑھے" },
+                { id: 111, title: "ذہنی کمزوری", desc: "دودھ کے ساتھ اخروٹ اور شہد کا استعمال کریں۔", benefit: "ذہنی طاقت" },
+                { id: 112, title: "چہرے کی جلن", desc: "عرق گلاب کا سپرے چہرے پر کریں۔", benefit: "تازگی اور آرام" },
+                { id: 113, title: "پسلیوں کا کھچاؤ", desc: "کلونجی کے تیل کی ہلکی گرم مالش سینے پر کریں۔", benefit: "درد سے راحت" },
+                { id: 114, title: "ناخنوں کا فنگس", desc: "سرکے میں تھوڑا نمک ملا کر ناخنوں کو بھگوئیں۔", benefit: "انفیکشن ختم کرنا" },
+                { id: 115, title: "وزن بڑھانا", desc: "دودھ، کیلا اور کھجور کا شیک بنا کر پیئیں۔", benefit: "دبلا پن دور کرنا" },
+                { id: 116, title: "مرگی کے دورے", desc: "قسط الہندی کی دھونی (دھواں) سونگھانا مفید ہے۔", benefit: "ذہنی توازن" },
+                { id: 117, title: "سانس کی بدبو", desc: "کھانے کے بعد تھوڑی سی سونف اور مصری چبائیں۔", benefit: "منہ کی تازگی" },
+                { id: 118, title: "تلووں کی جلن", desc: "مہندی میں تھوڑا سا سرکہ ملا کر تلووں پر لگائیں۔", benefit: "گرمی سے نجات" },
+                { id: 119, title: "ہرنیا (Hernia)", desc: "بھاری وزن اٹھانے سے بچیں اور زیتون تیل کی مالش کریں۔", benefit: "سہارا اور راحت" },
+                { id: 120, title: "مکمل صحت", desc: "دوا سے پہلے 'بسم اللہ' کہیں اور شفا کی نیت سے صدقہ دیں۔", benefit: "روحانی اور جسمانی شفا" }
+            ]
+        },
+
+                ar: {
+            mainTitle: "🌿 الطب النبوي: ١٢٠+ علاج",
+            subTitle: "الشفاء بالسنة النبوية والأعشاب الطبيعية",
+            searchPlace: "اكتب اسم المرض أو الدواء...",
+            homeTxt: "🏠 الرئيسية",
+            benefitLabel: "الفائدة: ",
+            noResult: "لم يتم العثور على نتائج.",
+            list: [
+                { id: 1, title: "علاج الحمى", desc: "بردوا الحمى بالماء، فإنها من فيح جهنم.", benefit: "خفض حرارة الجسم" },
+                { id: 2, title: "الزكام والبرد", desc: "اشرب مغلي الزنجبيل وضع قطرة من زيت الحبة السوداء في الأنف.", benefit: "تنظيف المجاري التنفسية" },
+                { id: 3, title: "علاج السعال", desc: "اخلط القليل من الفلفل الأسود مع العسل الأصلي ولعقه صباحاً ومساءً.", benefit: "راحة من ضيق الصدر" },
+                { id: 4, title: "آلام الجسم والتعب", desc: "ادهن بزيت الزيتون (كلوا الزيت وادهنوا به).", benefit: "تقوية العضلات" },
+                { id: 5, title: "الهضم وآلام المعدة", desc: "اشرب شاي النعناع أو العسل الممزوج بالماء الفاتر.", benefit: "طرد الغازات والانتفاخ" },
+                { id: 6, title: "الحبة السوداء", desc: "تناول 7 حبات يومياً على الريق، فهي شفاء من كل داء إلا السام.", benefit: "تعزيز المناعة" },
+                { id: 7, title: "استخدام العسل", desc: "شرب العسل مع الماء الفاتر ينظف الأمعاء.", benefit: "القوة الداخلية" },
+                { id: 8, title: "تمر العجوة", desc: "من تصبح بسبع تمرات عجوة لم يضره سم ولا سحر.", benefit: "صحة القلب" },
+                { id: 9, title: "التلبينة (حساء الشعير)", desc: "التلبينة مجمة لفؤاد المريض، تذهب ببعض الحزن.", benefit: "الراحة النفسية" },
+                { id: 10, title: "نور العين", desc: "اكتحلوا بالإثمد قبل النوم، فإنه يجلو البصر.", benefit: "تقوية النظر" },
+                { id: 11, title: "علاج الجروح", desc: "ضع الحناء المطحونة على الجرح.", benefit: "سرعة الالتئام" },
+                { id: 12, title: "ديدان البطن", desc: "شرب الحبة السوداء مع الخل يقتل الديدان.", benefit: "تنظيف المعدة" },
+                { id: 13, title: "الكبد/اليرقان", desc: "ألبان الإبل شفاء لأمراض الكبد والاستسقاء.", benefit: "إصلاح الكبد" },
+                { id: 14, title: "الصداع النصفي", desc: "التقطير في الأنف بزيت القسط الهندي مفيد.", benefit: "تخفيف الصداع" },
+                { id: 15, title: "آلام المفاصل", desc: "تناول التين، فإنه ينفع في آلام المفاصل والنقرس.", benefit: "قوة العظام" },
+                { id: 16, title: "الإمساك", desc: "عليكم بالسنا والسنوت، فإن فيهما شفاء.", benefit: "تليين الأمعاء" },
+                { id: 17, title: "حصوات الكلى", desc: "اشرب شراب بذور البطيخ مع العسل.", benefit: "تفتيت وإخراج الحصى" },
+                { id: 18, title: "الأسنان واللثة", desc: "استخدم السواك بانتظام (مطهرة للفم مرضاة للرب).", benefit: "الوقاية من التسوس" },
+                { id: 19, title: "تساقط الشعر", desc: "ادهن بزيت الزيتون المطبوخ مع الحبة السوداء.", benefit: "كثافة الشعر" },
+                { id: 20, title: "الاكتئاب/التوتر", desc: "تناول اليقطين (الدباء)، فإنه يشد القلب الحزين.", benefit: "تبريد الأعصاب" },
+                { id: 21, title: "تقوية الذاكرة", desc: "تناول 21 حبة زبيب واللوز في الصباح.", benefit: "تنشيط الدماغ" },
+                { id: 22, title: "فقر الدم", desc: "اشرب عصير التمر والرمان.", benefit: "تكوين دم جديد" },
+                { id: 23, title: "السكري", desc: "انقع بذور الحلبة ليلاً واشرب الماء صباحاً.", benefit: "ضبط السكر" },
+                { id: 24, title: "تخفيف الوزن", desc: "اشرب الماء الدافئ مع الليمون والعسل.", benefit: "تقليل الوزن" },
+                { id: 25, title: "الأرق (قلة النوم)", desc: "توضأ قبل النوم وادهن باطن القدمين بالزيت.", benefit: "نوم عميق" },
+                { id: 26, title: "كثرة العطش", desc: "اشرب الماء من وعاء فخاري جالساً على ثلاث دفعات.", benefit: "تبريد الكبد" },
+                { id: 27, title: "بقع الوجه", desc: "ضع قناعاً من دقيق الحمص والعسل والحليب.", benefit: "نضارة طبيعية" },
+                { id: 28, title: "ضيق التنفس", desc: "تناول الزبيب (المنقى) والتين.", benefit: "قوة الرئتين" },
+                { id: 29, title: "الضعف العام", desc: "تناول التمر المغلي مع الحليب.", benefit: "زيادة القوة" },
+                { id: 30, title: "قروح الفم", desc: "ضع العسل على القروح واستخدم السواك.", benefit: "تخفيف الحرقان" },
+                { id: 31, title: "الصرع", desc: "تناول مسحوق نواة تمر العجوة مع العسل.", benefit: "تقليل النوبات" },
+                { id: 32, title: "الكوليسترول", desc: "زد من استخدام الثوم والخل في الطعام.", benefit: "تصفية الدم" },
+                { id: 33, title: "آلام الرقبة", desc: "ادهن خلف الرقبة بمزيج من زيت الحبة السوداء وزيت الزيتون.", benefit: "راحة الأعصاب" },
+                { id: 34, title: "حرقان البول", desc: "استخدم عصير قصب السكر أو الخيار.", benefit: "طرد الحرارة" },
+                { id: 35, title: "ألم الظهر", desc: "ادهن بزيت الزيتون المحروق فيه بذور الحلبة.", benefit: "راحة العمود الفقري" },
+                { id: 36, title: "خفقان القلب", desc: "تناول مربى التفاح أو التفاح الطازج.", benefit: "تقوية القلب" },
+                { id: 37, title: "التهاب الحلق", desc: "تغرغر بالماء الدافئ والملح.", benefit: "تقليل التورم" },
+                { id: 38, title: "الحموضة", desc: "اشرب الحليب البارد رشفة رشفة وامضغ الكمون.", benefit: "القضاء على الحموضة" },
+                { id: 39, title: "البواسير", desc: "انقع التين في الماء وتناوله صباحاً.", benefit: "تخفيف الآلام" },
+                { id: 40, title: "الشعر الأبيض", desc: "استخدم الحناء والكتم، وتجنب السواد.", benefit: "خضاب طبيعي" },
+                { id: 41, title: "التواء القدم", desc: "اربط بضماد الحناء وادهن بلطف بزيت الزيتون.", benefit: "تقليل التورم" },
+                { id: 42, title: "ألم الأذن", desc: "ضع قطرة واحدة من زيت الحبة السوداء الفاتر.", benefit: "القضاء على العدوى" },
+                { id: 43, title: "ألم الحصى", desc: "اشرب ماء العدس الأحمر (الكلثي).", benefit: "راحة فورية من الألم" },
+                { id: 44, title: "التعب الذهني", desc: "استخدم الطيب (العطر)، فإنه يقوي الروح.", benefit: "انتعاش ذهني" },
+                { id: 45, title: "تنميل الأطراف", desc: "استخدم العسل والخل كطلاء مع التدليك.", benefit: "تحسين الدورة الدموية" },
+                { id: 46, title: "الفواق (الحازوقة)", desc: "تناول ملعقة عسل أو احبس أنفاسك واشرب الماء.", benefit: "راحة الحجاب الحاجز" },
+                { id: 47, title: "لدغة العقرب", desc: "اغسل بالماء والملح وضع معجون التمر.", benefit: "تقليل أثر السم" },
+                { id: 48, title: "حكة الجلد", desc: "ادهن بزيت جوز الهند الممزوج بخلاصة الحبة السوداء.", benefit: "الوقاية من العدوى" },
+                { id: 49, title: "كساح الأطفال", desc: "ادهن بزيت الزيتون مع الجلوس في الشمس.", benefit: "تقوية العظام" },
+                { id: 50, title: "فقدان الشهية", desc: "تناول قطعة زنجبيل مع الفلفل الأسود والملح الصخري.", benefit: "زيادة قوة الهضم" },
+                { id: 51, title: "السعال المزمن", desc: "اغلي التمر في الماء واشرب ماءه للربو.", benefit: "تنظيف الرئتين" },
+                { id: 52, title: "تشقق الأطراف", desc: "في الشتاء، ضع زيت الزيتون مع الشمع على الشقوق.", benefit: "نعومة الجلد" },
+                { id: 53, title: "انسداد الشرايين", desc: "تناول نصف ملعقة من مسحوق نواة العجوة يومياً.", benefit: "تحسين الدورة الدموية" },
+                { id: 54, title: "رمد العين", desc: "اخلط العسل بالماء الصافي وضعه على الأجفان.", benefit: "تقليل الاحمرار" },
+                { id: 55, title: "الهستيريا/القلق", desc: "شم رائحة البرتقال أو الليمون، فهي تهدئ الدماغ.", benefit: "راحة الأعصاب" },
+                { id: 56, title: "هشاشة العظام", desc: "تناول السمسم الأبيض أو التين مع الحليب.", benefit: "هيكل عظمي قوي" },
+                { id: 57, title: "الإمساك المزمن", desc: "ملعقة زيت زيتون في حليب دافئ قبل النوم.", benefit: "تليين الأمعاء" },
+                { id: 58, title: "الجيوب الأنفية", desc: "استنشاق بخار زيت الحبة السوداء ودهن حول الأنف.", benefit: "فتح الأنف المسدود" },
+                { id: 59, title: "سوس الأسنان", desc: "تمضمض بالخل وضع زيت القرنفل على السن المصاب.", benefit: "قتل الجراثيم" },
+                { id: 60, title: "حمو النيل", desc: "اغلي ورق السدر في الماء واغتسل به.", benefit: "تبريد الجلد" },
+                { id: 61, title: "رائحة العرق", desc: "أضف القليل من الخل أو الليمون إلى ماء الاستحمام.", benefit: "شعور بالانتعاش" },
+                { id: 62, title: "الروماتيزم", desc: "اخلط القسط الهندي بزيت الزيتون وادهن المفاصل.", benefit: "تقليل التورم" },
+                { id: 63, title: "بحة الصوت", desc: "تغرغر بماء الملح والكركم والعق لعوق الزنجبيل.", benefit: "تنظيف الحلق" },
+                { id: 64, title: "الإجهاد الذهني", desc: "تناول بذور اليقطين وتوضأ بماء بارد.", benefit: "هدوء ذهني" },
+                { id: 65, title: "لزوجة الدم", desc: "ابلع فص ثوم مع الماء صباحاً على الريق.", benefit: "الوقاية من الجلطات" },
+                { id: 66, title: "تجاعيد الوجه", desc: "دلك الوجه بزيت الزيتون بلطف قبل النوم.", benefit: "بشرة شابة" },
+                { id: 67, title: "حمض اليوريك", desc: "اشرب ماء الشعير المغلي مرتين يومياً.", benefit: "إخراج السموم" },
+                { id: 68, title: "ضعف الذاكرة", desc: "انقع 7 حبات لوز ليلاً وتناولها صباحاً بعد التقشير.", benefit: "ذكاء حاد" },
+                { id: 69, title: "تكسر الأظافر", desc: "ادهن الأظافر بزيت الزيتون.", benefit: "أظافر قوية" },
+                { id: 70, title: "غازات المعدة", desc: "تناول رشة من الملح الأسود والكمون بعد الأكل.", benefit: "معدة خفيفة" },
+                { id: 71, title: "قشرة الرأس", desc: "اخلط الزبادي مع الحناء وضعه على جذور الشعر.", benefit: "التخلص من القشرة" },
+                { id: 72, title: "شد العضلات", desc: "سخن زيت الحبة السوداء وكمد به المكان المصاب.", benefit: "مرونة وراحة" },
+                { id: 73, title: "النحافة", desc: "تناول القثاء مع الرطب (التمر)، فإنه يسمن.", benefit: "جسم صحي" },
+                { id: 74, title: "بخر الفم", desc: "استخدم السواك وامضغ حب الهال.", benefit: "أنفاس طيبة" },
+                { id: 75, title: "الحساسية", desc: "اخلط مسحوق الحبة السوداء بالعسل وتناوله.", benefit: "تقليل الحساسية" },
+                { id: 76, title: "تنظيف الكلى", desc: "تناول البطيخ، فإنه يغسل المثانة غسلاً.", benefit: "ديتوكس طبيعي" },
+                { id: 77, title: "الأنيميا", desc: "اشرب مرق الحمص الأسود وتناول الزبيب.", benefit: "زيادة الهيموجلوبين" },
+                { id: 78, title: "حرقة الصدر", desc: "اشرب الماء البارد رشفاً أو استخدم اللبن المخفف.", benefit: "تقليل الحموضة" },
+                { id: 79, title: "الهالات السوداء", desc: "اخلط القليل من العسل مع قشدة الحليب حول العين.", benefit: "تفتيح البشرة" },
+                { id: 80, title: "الغدة الدرقية", desc: "دلك الرقبة بزيت الزيتون وتناول القسط الهندي.", benefit: "توازن الهرمونات" },
+                { id: 81, title: "طنين الأذن", desc: "احرق الثوم في زيت الخردل وضع قطرة في الأذن.", benefit: "تقليل الضجيج" },
+                { id: 82, title: "تشقق القدمين", desc: "ضع الحناء على الكعبين، فهي تساعد في التئام الشقوق.", benefit: "قدم ناعمة" },
+                { id: 83, title: "العصبية", desc: "رش العطر أو ماء الورد في الغرفة.", benefit: "تحسين المزاج" },
+                { id: 84, title: "احتباس البول", desc: "تناول مسحوق بذور الخيار مع الماء.", benefit: "فتح الانسداد" },
+                { id: 85, title: "الإفرازات النسائية", desc: "تناول الحمص المحمص والزبيب في الصباح.", benefit: "قوة داخلية" },
+                { id: 86, title: "البهاق (بقع بيضاء)", desc: "اخلط زيت الحبة السوداء مع الخل وادهن بانتظام.", benefit: "تحسين لون الجلد" },
+                { id: 87, title: "شيب الرأس", desc: "اخلط زيت الحبة السوداء مع زيت جوز الهند وادهن به.", benefit: "سواد طبيعي" },
+                { id: 88, title: "الحشرات السامة", desc: "اغسل بمحلول الماء والملح.", benefit: "تقليل أثر السم" },
+                { id: 89, title: "ذات الجنب (ألم الضلع)", desc: "اشرب مغلي القسط الهندي واستخدم كمادات دافئة.", benefit: "سهولة التنفس" },
+                { id: 90, title: "الأرق الشديد", desc: "اشرب الحليب مع الخشخاش ليلاً واكتحل.", benefit: "نوم عميق" },
+                { id: 91, title: "ضعف ما بعد الولادة", desc: "تناول التلبينة وحلوى التمر.", benefit: "قوة جديدة" },
+                { id: 92, title: "الرعاف (نزيف الأنف)", desc: "صب الماء البارد على الرأس واستنشق عصارة الكزبرة.", benefit: "وقف النزيف" },
+                { id: 93, title: "تورم اللثة", desc: "تمضمض بماء الشبة (الفتكري) وادهن بالعسل.", benefit: "لثة قوية" },
+                { id: 94, title: "رعشة اليدين", desc: "تناول الجوز والعسل، فإنه يقوي الأعصاب.", benefit: "ثبات القبضة" },
+                { id: 95, title: "الحكة المزمنة", desc: "ضع عجينة ورق النيم على الجسم.", benefit: "مضاد للجراثيم" },
+                { id: 96, title: "الحروق", desc: "ضع الحناء الطازجة المطحونة، تمنع ظهور البثور.", benefit: "تبريد الحرق" },
+                { id: 97, title: "التركيز", desc: "استخدم السواك واشرب شراب العسل صباحاً.", benefit: "صفاء ذهني" },
+                { id: 98, title: "عقد الجسم", desc: "ضع طلاء من الحبة السوداء وزيت الزيتون دافئاً.", benefit: "إذابة العقد" },
+                { id: 99, title: "حرقان القدمين", desc: "ضع طلاء الحناء على باطن القدمين.", benefit: "تقليل الإحساس بالحرارة" },
+                { id: 100, title: "الصحة العامة", desc: "نحن قوم لا نأكل حتى نجوع وإذا أكلنا لا نشبع.", benefit: "عمر مديد" },
+                { id: 101, title: "الدوسنتاريا المزمنة", desc: "تناول السفرجل أو شراب السفرجل، فهو شفاء للأمعاء.", benefit: "راحة مغص البطن" },
+                { id: 102, title: "جفاف الدماغ", desc: "قطر في الأنف نقطتين من سمن البقر أو زيت اللوز.", benefit: "تحسين الذاكرة" },
+                { id: 103, title: "تورم اليدين والقدمين", desc: "ضع القدمين في ماء ممزوج بالملح والخل.", benefit: "تقليل التورم" },
+                { id: 104, title: "اختلاج العين", desc: "اشرب شراب العسل واغسل العين بالماء البارد.", benefit: "هدوء الأعصاب" },
+                { id: 105, title: "حرارة الجسم", desc: "اشرب شراب السويق وأكثر من تناول اليقطين.", benefit: "شعور بالبرودة" },
+                { id: 106, title: "اصفرار الأسنان", desc: "نظف الأسنان بالملح وزيت الخردل.", benefit: "أسنان لامعة" },
+                { id: 107, title: "العطش المتكرر", desc: "تناول الخيار واشرب الماء بالنعناع.", benefit: "الوقاية من الجفاف" },
+                { id: 108, title: "صداع الحرارة", desc: "ضع طلاء الصندل على الجبهة أو دلك بلب اليقطين.", benefit: "تبريد فوري" },
+                { id: 109, title: "ألم الإصابات القديمة", desc: "دلك بالكركم المطبوخ في زيت الزيتون.", benefit: "تقليل التورم الداخلي" },
+                { id: 110, title: "نزيف اللثة", desc: "امضغ ورق الجميز أو تمضمض بمغليه.", benefit: "لثة قوية" },
+                { id: 111, title: "الضعف الذهني", desc: "تناول الجوز والعسل مع الحليب.", benefit: "قوة الدماغ" },
+                { id: 112, title: "حرقان الوجه", desc: "رش ماء الورد على الوجه.", benefit: "نضارة وراحة" },
+                { id: 113, title: "شد الضلوع", desc: "دلك الصدر بزيت الحبة السوداء دافئاً.", benefit: "تخفيف الألم" },
+                { id: 114, title: "فطريات الأظافر", desc: "انقع الأظافر في خل ممزوج بقليل من الملح.", benefit: "القضاء على العدوى" },
+                { id: 115, title: "زيادة الوزن", desc: "اشرب مخفوق الحليب والموز والتمر.", benefit: "علاج النحافة" },
+                { id: 116, title: "نوبات الصرع", desc: "تبخير المريض بالقسط الهندي مفيد جداً.", benefit: "توازن ذهني" },
+                { id: 117, title: "بخر التنفس", desc: "امضغ القليل من الشمر وسكر النبات بعد الأكل.", benefit: "انتعاش الفم" },
+                { id: 118, title: "حرقان باطن القدم", desc: "ضع الحناء الممزوجة بالقليل من الخل على الباطن.", benefit: "خلاص من الحرارة" },
+                { id: 119, title: "الفتق (Hernia)", desc: "تجنب الأوزان الثقيلة وادهن بزيت الزيتون.", benefit: "دعم وراحة" },
+                { id: 120, title: "الشفاء التام", desc: "قل 'بسم الله' قبل الدواء وتصدق بنية الشفاء.", benefit: "شفاء روحي وجسدي" }
+            ]
+        }
+    }; // یہاں curesData object بند ہو رہا ہے
+
+    // باقی سارا پرانا کوڈ (applySettings، displayCures، وغیرہ) یہ(اں سے شروع ہوگا
+
+
+    const list = document.getElementById('shifaList');
+
+    function applySettings() {
+        const lang = localStorage.getItem('pref_lang') || 'hi';
+        const data = curesData[lang] || curesData['hi'];
+        
+                // UI Text Update के नीचे का कोड:
+        
+        document.getElementById('pageMainTitle').innerText = data.mainTitle || "🌿 Tibb-e-Nabwi";
+        document.getElementById('pageSubTitle').innerText = data.subTitle || "";
+        document.getElementById('searchInput').placeholder = data.searchPlace || "Search...";
+        document.getElementById('homeBtn').innerText = data.homeTxt || "🏠 Home";
+        
+        // RTL Logic (Urdu اور Arabic کے لیے ترتیب دائیں سے بائیں کرنا)
+        if(lang === 'ur' || lang === 'ar') {
+            document.body.classList.add('rtl-layout');
+        } else {
+            document.body.classList.remove('rtl-layout');
+        }
+        
+        // पेज लोड होते ही लिस्ट दिखाना
+        displayCures(data.list, data.benefitLabel, data.noResult);
+    }
+
+    // डेटा को HTML में दिखाने वाला फ़ंक्शन
+    function displayCures(items, label, noResMsg) {
+        const list = document.getElementById('shifaList');
+        list.innerHTML = items.length > 0 ? "" : `<p style='text-align:center;'>${noResMsg}</p>`;
+        
+        items.forEach(item => {
+            list.innerHTML += `
+                <div class="shifa-card">
+                    <span class="shifa-no">#${item.id}</span>
+                    <span class="shifa-title">${item.title}</span>
+                    <p class="shifa-desc">${item.desc}</p>
+                    <div class="shifa-benefit">${label}${item.benefit}</div>
+                </div>`;
+        });
+    }
+
+    // सर्च (Search) करने वाला फ़ंक्शन
+    function searchFunction() {
+        const lang = localStorage.getItem('pref_lang') || 'hi';
+        const data = curesData[lang] || curesData['hi'];
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        
+        let filtered = data.list.filter(item => 
+            item.title.toLowerCase().includes(input) || 
+            item.desc.toLowerCase().includes(input)
+        );
+        displayCures(filtered, data.benefitLabel, data.noResult);
+    }
+
+    // पेज खुलने पर सबसे पहले settings लोड करें
+    window.onload = applySettings;
+</script>
+</body>
+</html>

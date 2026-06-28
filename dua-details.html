@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dua Details</title>
+    <style>
+        :root { 
+            --p-green: #004d40; 
+            --light-bg: #f1f5f9; 
+            --gold: #b58900;
+        }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--light-bg); 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        /* Header & Navigation */
+        .header { 
+            background: var(--p-green); 
+            color: white; 
+            padding: 15px 20px; 
+            display: flex;
+            align-items: center;
+            font-size: 19px; 
+            font-weight: bold; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            margin-right: 15px;
+            padding: 0;
+        }
+
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        
+        /* Card UI */
+        .dua-card {
+            background: white;
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            margin-top: 10px;
+        }
+        .dua-title {
+            color: var(--p-green);
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0f2f1;
+            padding-bottom: 10px;
+        }
+
+        /* Script styles */
+        .arabic-text {
+            font-family: 'Traditional Arabic', 'Amiri', serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.6;
+            margin: 25px 0;
+            direction: rtl;
+        }
+        .section-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .transliteration {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.5;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        .translation {
+            font-size: 16px;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        /* RTL Layout Adjustment for Urdu and Arabic */
+        .rtl { direction: rtl; text-align: right; }
+        .rtl .back-btn { margin-left: 15px; margin-right: 0; transform: rotate(180deg); }
+        .error-msg { text-align: center; padding: 40px; color: #64748b; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">➔</button>
+        <span id="headerTitle">Dua Detail</span>
+    </div>
+
+    <div class="container">
+        <div id="duaContent"></div>
+    </div>
+
+<script>
+// 4 भाषाओं में शुरुआती 5 दुआओं का पूरा डेटाबेस
+const duaDatabase = {
+    // ---- HINDI DATABASE ----
+    hi: {
+        "back": "वापस",
+        "labels": { ar: "अरबी", tl: "लिप्यंतरण (Transliteration)", tr: "अनुवाद" },
+        "duas": {
+            "सोकर उठने की दुआ": {
+                title: "सोकर उठने की दुआ",
+                arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+                translit: "अल्हम्दु लिल्लाहिल्लज़ी अह्याना बअ'दा मा अमातना व इलैहिन्नुशूर।",
+                translation: "तमाम तारीफ़ें अल्लाह के लिए हैं जिसने हमें मारने (सुलाने) के बाद ज़िंदा किया (जगाया) और उसी की तरफ़ लौट कर जाना है।"
+            },
+            "आसमान देखने की दुआ": {
+                title: "आसमान देखने की दुआ (सूरह आल-इमरान: 190)",
+                arabic: "رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ",
+                translit: "रब्बना मा ख़लक़्त हाज़ा बातिला, सुब्हानका फ़क़िना अज़ाबन्नार।",
+                translation: "ऐ हमारे रब! तूने यह सब बेक़ायदा (बेकार) पैदा नहीं किया, तू पाक है, बस हमें आग् (जहन्नम) के अज़ाब से बचा ले।"
+            },
+            "बाथरूम जाने की दुआ": {
+                title: "बाथरूम (बैतुल ख़ला) जाने की दुआ",
+                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ",
+                translit: "अल्लाहुम्मा इन्नी अऊज़ु बिका मिनल ख़ुबुसि वल ख़बाइसि।",
+                translation: "ऐ अल्लाह! मैं नापाक जिन्नों (नर और मादा दोनों) की बुराई से तेरी पनाह मांगता हूँ।"
+            },
+            "बाथरूम से निकलने की दुआ": {
+                title: "बाथरूम से निकलने की दुआ",
+                arabic: "غُفْرَانَكَ الْحَمْدُ لِلَّهِ الَّذِي أَذْهَبَ عَنِّي الْأَذَىٰ وَعَافَانِي",
+                translit: "ग़ुफ़्रानका, अल्हम्दु लिल्लाहिल्लज़ी अज़हबा अन्निल अज़ा व आफ़ानी।",
+                translation: "ऐ अल्लाह! मैं तेरी माफ़ी चाहता हूँ। तमाम तारीफ़ें अल्लाह के लिए हैं जिसने मुझसे तक़लीफ़देह चीज़ को दूर किया और मुझे आफ़ियत (सुकून) दी।"
+            },
+            "वुज़ू शुरू करने की दुआ": {
+                title: "वुज़ू शुरू करने की दुआ",
+                arabic: "بِسْمِ اللَّهِ وَالْحَمْدُ لِلَّهِ",
+                translit: "बिस्मिल्लाही वलहम्दु लिल्लाह।",
+                translation: "अल्लाह के नाम से (शुरू करता हूँ) और तमाम तारीफ़ें अल्लाह ही के लिए हैं।"
+            }
+        }
+    },
+    // ---- ENGLISH DATABASE ----
+    en: {
+        "back": "Back",
+        "labels": { ar: "Arabic", tl: "Transliteration", tr: "Translation" },
+        "duas": {
+            "Waking up": {
+                title: "Dua Upon Waking Up",
+                arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+                translit: "Alhamdu lillahil-ladhi ahyana ba'da ma amatana wa ilaihin-nushur.",
+                translation: "All praise is due to Allah who gave us life after giving us death (sleep) and to Him is the final return."
+            },
+            "Looking at the sky": {
+                title: "Dua When Looking at the Sky",
+                arabic: "رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ",
+                translit: "Rabbana ma khalaqta hadha batila, subhanaka faqina 'adhaban-nar.",
+                translation: "Our Lord, You did not create this aimlessly; exalted are You [above such a thing]; then protect us from the punishment of the Fire."
+            },
+            "Entering bathroom": {
+                title: "Dua Before Entering the Bathroom",
+                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ",
+                translit: "Allahumma inni a'udhu bika minal-khubuthi wal-khaba'ith.",
+                translation: "O Allah, I seek refuge with You from all evil entities and wicked spirits (both male and female)."
+            },
+            "Leaving bathroom": {
+                title: "Dua After Leaving the Bathroom",
+                arabic: "غُفْرَانَكَ الْحَمْدُ لِلَّهِ الَّذِي أَذْهَبَ عَنِّي الْأَذَىٰ وَعَافَانِي",
+                translit: "Ghufranaka, Alhamdu lillahil-ladhi adhhaba 'annil-adha wa 'afani.",
+                translation: "I ask You for Your forgiveness. All praise is due to Allah who removed hardship from me and granted me relief."
+            },
+            "Starting Wudu": {
+                title: "Dua Before Starting Wudu",
+                arabic: "بِسْمِ اللَّهِ وَالْحَمْدُ لِلَّهِ",
+                translit: "Bismillahi wal-hamdu lillah.",
+                translation: "In the name of Allah, and all praise is due to Allah."
+            }
+        }
+    },
+    // ---- URDU DATABASE ----
+    ur: {
+        "back": "پیچھے",
+        "labels": { ar: "عربی", tl: "تلفظ (Transliteration)", tr: "ترجمہ" },
+        "duas": {
+            "سو کر اٹھنے کی دعا": {
+                title: "سو کر اٹھنے کی دعا",
+                arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+                translit: "الحمد للہ الذی احیانا بعد ما اماتنا والیہ النشور۔",
+                translation: "تمام تعریفیں اللہ کے لیے ہیں جس نے ہمیں مارنے (سلانے) کے بعد زندہ کیا (جگایا) اور اسی کی طرف لوٹ کر جانا ہے۔"
+            },
+            "آسمان دیکھنے کی دعا": {
+                title: "آسمان دیکھتے وقت کی دعا",
+                arabic: "رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ",
+                translit: "ربنا ما خلقت ھذا باطلا سبحنک فقنا عذاب النار۔",
+                translation: "اے ہمارے رب! تو نے یہ سب بے مقصد پیدا نہیں کیا، تو پاک ہے، پس ہمیں آگ کے عذاب سے بچا لے۔"
+            },
+            "بیت الخلا جانے کی دعا": {
+                title: "بیت الخلا (باثروم) میں داخل ہونے کی دعا",
+                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ",
+                translit: "اللہم انی اعوذ بک من الخبث والخبائث۔",
+                translation: "اے اللہ! میں ناپاک جنوں (نر اور مادہ دونوں) کی برائی سے تیری پناہ مانگتا ہوں۔"
+            },
+            "بیت الخلا سے نکلنے کی دعا": {
+                title: "بیت الخلا سے نکلنے کی دعا",
+                arabic: "غُفْرَانَكَ الْحَمْدُ لِلَّهِ الَّذِي أَذْهَبَ عَنِّي الْأَذَىٰ وَعَافَانِي",
+                translit: "غفرانک، الحمد للہ الذی اذہب عنی الاذی وعافانی۔",
+                translation: "اے اللہ! میں تیری بخشش چاہتا ہوں۔ تمام تعریفیں اللہ کے لیے ہیں جس نے مجھ سے تکلیف دہ چیز کو دور کیا اور مجھے عافیت دی۔"
+            },
+            "وضو شروع کرنے کی دعا": {
+                title: "وضو شروع کرنے کی دعا",
+                arabic: "بِسْمِ اللَّهِ وَالْحَمْدُ لِلَّهِ",
+                translit: "بسم اللہ والحمد للہ۔",
+                translation: "اللہ کے نام سے (شुरू کرتا ہوں) اور تمام تعریفیں اللہ ہی کے لیے ہیں۔"
+            }
+        }
+    },
+    // ---- ARABIC DATABASE ----
+    ar: {
+        "back": "رجوع",
+        "labels": { ar: "الدعاء المأثور", tl: "التلفظ", tr: "المعنى" },
+        "duas": {
+            "دعاء الاستيقاظ": {
+                title: "دعاء الاستيقاظ من النوم",
+                arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+                translit: "Al-hamdu lillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur.",
+                translation: "الحمد والثناء لله وحده الذي أعاد إلينا اليقظة والحياة بعد النوم الذي هو كالموت، وإليه وحده البعث والنشور يوم القيامة."
+            },
+            "النظر إلى السماء": {
+                title: "الدعاء عند النظر إلى السماء",
+                arabic: "رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ",
+                translit: "Rabbana ma khalaqta hadha batila, subhanaka faqina 'adhaban-nar.",
+                translation: "يا رب أوزعنا شكر نعمك، فما خلقت هذا الكون العظيم عبثاً، تنزهت عن كل نقص، فاحمنا برحمتك من عذاب جهنم."
+            },
+            "دخول الخلاء": {
+                title: "دعاء دخول الخلاء",
+                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ",
+                translit: "Allahumma inni a'udhu bika minal-khubuthi wal-khaba'ith.",
+                translation: "اللهم إني أستجير بك وأحتمي بجنابك من شرور الشياطين وجنودهم من ذكور وإناث."
+            },
+            "الخروج من الخلاء": {
+                title: "دعاء الخروج من الخلاء",
+                arabic: "غُفْرَانَكَ الْحَمْدُ لِلَّهِ الَّذِي أَذْهَبَ عَنِّي الْأَذَىٰ وَعَافَانِي",
+                translit: "Ghufranaka, Alhamdu lillahil-ladhi adhhaba 'annil-adha wa 'afani.",
+                translation: "أسألك مغفرتك يا الله، والحمد لله الذي أزاح عن جسدي الأذى والفضلات والسموم ومنّ علي بالصحة والشفاء."
+            },
+            "بدء الوضوء": {
+                title: "التسمية عند بدء الوضوء",
+                arabic: "بِسْمِ اللَّهِ وَالْحَمْدُ لِلَّهِ",
+                translit: "Bismillahi wal-hamdu lillah.",
+                translation: "أبدأ طهارتي مستعيناً باسم الله تبركاً، والحمد لله على نعمة الإسلام والطهور."
+            }
+        }
+    }
+};
+
+function getQueryParams() {
+    const params = {};
+    window.location.search.substring(1).split("&").forEach(pair => {
+        const keyValue = pair.split("=");
+        if (keyValue[0]) params[keyValue[0]] = decodeURIComponent(keyValue[1]);
+    });
+    return params;
+}
+
+function displayDuaDetail() {
+    const lang = localStorage.getItem('pref_lang') || 'hi';
+    const params = getQueryParams();
+    const duaName = params['dua'];
+
+    // LTR/RTL Layout Handling
+    if(lang === 'ur' || lang === 'ar') {
+        document.body.classList.add('rtl');
+    } else {
+        document.body.classList.remove('rtl');
+    }
+
+    const currentLangData = duaDatabase[lang] || duaDatabase['hi'];
+    document.getElementById('headerTitle').innerText = currentLangData.back || "Back";
+
+    const contentContainer = document.getElementById('duaContent');
+
+    if (!duaName || !currentLangData.duas[duaName]) {
+        let errorMsg = "दुआ का डेटा उपलब्ध नहीं है।";
+        if(lang === 'en') errorMsg = "Dua data not found.";
+        if(lang === 'ur') errorMsg = "دعا کا ڈیٹا دستیاب نہیں ہے۔";
+        if(lang === 'ar') errorMsg = "بيانات الدعاء غير متوفرة.";
+        
+        contentContainer.innerHTML = `<div class="error-msg">${errorMsg}</div>`;
+        return;
+    }
+
+    const dua = currentLangData.duas[duaName];
+    const lbl = currentLangData.labels;
+
+    let html = `
+        <div class="dua-card">
+            <div class="dua-title">${dua.title}</div>
+            
+            <div class="section-label">${lbl.ar}</div>
+            <div class="arabic-text">${dua.arabic}</div>
+            
+            <div class="section-label">${lbl.tl}</div>
+            <div class="transliteration">${dua.translit}</div>
+            
+            <div class="section-label">${lbl.tr}</div>
+            <div class="translation">${dua.translation}</div>
+        </div>
+    `;
+    
+    contentContainer.innerHTML = html;
+}
+
+function goBack() {
+    // इंडेक्स पेज पर वापस ले जाने के लिए
+    window.location.href = 'index.html'; 
+}
+
+window.onload = displayDuaDetail;
+</script>
+
+</body>
+</html>

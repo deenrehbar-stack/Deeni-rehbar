@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eid-ul-Fitr Namaz - Deeni Rehbar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --p-green: #2e7d32; --light-green: #e8f5e9; --white: #ffffff; --accent-gold: #c6a700; --danger: #d32f2f; }
+        body { font-family: 'Segoe UI', 'Noto Sans Devanagari', sans-serif; background-color: #f4f7f4; margin: 0; padding: 0; color: #333; }
+        
+        .header { background: var(--p-green); color: white; text-align: center; padding: 30px; border-radius: 0 0 25px 25px; border-bottom: 4px solid #1b5e20; position: relative; }
+        .back-btn { position: absolute; left: 20px; top: 35px; color: white; text-decoration: none; font-size: 20px; }
+
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px 100px; }
+        
+        .guide-text { background: #ffd54f; color: #000; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 14px; margin-bottom: -10px; position: relative; z-index: 2; display: inline-block; margin-left: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        
+        .card { background: white; border-radius: 15px; padding: 25px 20px 20px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e0e0e0; position: relative; }
+        
+        .step-title { font-size: 18px; color: var(--p-green); font-weight: bold; display: block; margin-bottom: 15px; border-bottom: 2px solid var(--light-green); padding-bottom: 5px; }
+
+        .instruction-text { font-size: 16px; line-height: 1.8; color: #333; display: block; margin-bottom: 10px; }
+        
+        /* Bullets for actions without background */
+        .action-step { display: block; padding: 5px 0; font-weight: 500; position: relative; padding-left: 20px; }
+             /* Purane .action-step wale saare rules hata kar ise paste karein */
+        .action-step { display: block; padding: 5px 0; font-weight: 500; }
+        
+        body[dir="ltr"] .action-step { padding-left: 20px; padding-right: 0; text-align: left; }
+        body[dir="ltr"] .action-step::before { content: '•'; position: absolute; left: 0; color: var(--p-green); font-size: 20px; font-weight: bold; }
+
+
+        body[dir="rtl"] .action-step { padding-right: 20px; padding-left: 0; text-align: right; position: relative; }
+        body[dir="rtl"] .action-step::before { content: '•'; position: absolute; right: 0; top: 2px; color: var(--p-green); font-size: 20px; font-weight: bold; }
+
+
+        .warning-box { color: var(--danger); font-weight: bold; padding: 10px 0; border-top: 1px solid #eee; margin-top: 10px; display: block; }
+        
+        b { color: var(--p-green); }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="namaz.html" class="back-btn">←</a>
+    <h1 id="main-title">ईदुल-फ़ित्र नमाज़</h1>
+    <p id="sub-title">6 ज़ायद तकबीरों के साथ</p>
+</div>
+
+<div class="container" id="content-area"></div>
+
+<script>
+const translationsData = {
+    hi: {
+        dir: 'ltr',
+        title: "ईदुल-फ़ित्र नमाज़ का तरीका",
+        sub: "6 ज़ायद तकबीरों का आसान तरीका",
+        g1: "1. नियत और शुरुआत",
+        c1: "सबसे पहले दिल में नियत करें: <b>'नियत की मैंने 2 रकअत नमाज़ वाजिब ईदुल-फ़ित्र की, 6 ज़ायद तकबीरों के साथ, वास्ते अल्लाह तआला के, पीछे इस इमाम के'</b>।",
+        c1_action: "अल्लाहु अकबर कहकर हाथ बांध लें और खामोशी से <b>'सना'</b> पढ़ें।",
+        
+        g2: "2. पहली रकअत की तकबीरें",
+        c2_intro: "सना पढ़ने के बाद इमाम साहब 3 बार ज़ायद तकबीर कहेंगे:",
+        c2_n1: "अल्लाहु अकबर कहें, हाथ कानों तक उठाएं और छोड़ दें।",
+        c2_n2: "अल्लाहु अकबर कहें, हाथ कानों तक उठाएं और छोड़ दें।",
+        c2_n3: "अल्लाहु अकबर कहें, हाथ कानों तक उठाएं और <b>बांध लें।</b>",
+        c2_qirat: "अब इमाम साहब <b>सूरह फ़ातिहा</b> और फिर <b>क़ुरआन की कोई भी सूरह</b> पढ़ेंगे, आप खामोशी से सुनें।",
+        c2_ruku: "इसके बाद आम नमाज़ की तरह <b>रुकू और दोनों सजदे</b> करके खड़े हो जाएं।",
+        
+        g3: "3. दूसरी रकअत की तकबीरें",
+        c3_intro: "दूसरी रकअत में इमाम साहब पहले <b>सूरह फ़ातिहा</b> और <b>क़ुरआन की कोई भी सूरह</b> पढ़ेंगे। रुकू में जाने से पहले 4 बार तकबीर होगी:",
+        c3_n1: "अल्लाहु अकबर कहें और हाथ उठाकर छोड़ दें।",
+        c3_n2: "अल्लाहु अकबर कहें और हाथ उठाकर छोड़ दें।",
+        c3_n3: "अल्लाहु अकबर कहें और हाथ उठाकर छोड़ दें।",
+        c3_n4: "⚠️ <b>अल्लाहु अकबर कहें, इस बार हाथ नहीं उठाना है, सीधे रुकू में चले जाएं।</b>",
+        
+        g4: "4. आखरी बैठक",
+        c4: "रुकू और सजदों के बाद बैठ जाएं (कादा)। अब <b>अत्तहियात</b>, <b>दुरूद शरीफ</b> और <b>दुआ</b> पढ़ें।",
+        c4_salam: "अंत में इमाम के साथ दोनों तरफ सलाम फेर कर नमाज़ पूरी करें।"
+    },
+en: {
+        dir: 'ltr',
+        title: "Method of Eid-ul-Fitr Namaz",
+        sub: "Simple Method with 6 Extra Takbeers",
+        g1: "1. Intention (Niyyat) and Start",
+        c1: "First, make the intention in your heart: <b>'I intend to pray 2 Rakat Wajib Eid-ul-Fitr, with 6 extra Takbeers, for Allah Ta'ala, behind this Imam'</b>.",
+        c1_action: "Say 'Allahu Akbar', fold your hands, and silently recite <b>'Sana'</b>.",
+        
+        g2: "2. Takbeers of the First Rakat",
+        c2_intro: "After reciting Sana, the Imam will say 3 extra Takbeers:",
+        c2_n1: "Say 'Allahu Akbar', raise hands to ears and release them.",
+        c2_n2: "Say 'Allahu Akbar', raise hands to ears and release them.",
+        c2_n3: "Say 'Allahu Akbar', raise hands to ears and <b>fold them.</b>",
+        c2_qirat: "Now the Imam will recite <b>Surah Fatiha</b> and then <b>any Surah of the Quran</b>, listen silently.",
+        c2_ruku: "After this, perform <b>Ruku and both Sajdas</b> like normal prayer and stand up for the second Rakat.",
+        
+        g3: "3. Takbeers of the Second Rakat",
+        c3_intro: "In the second Rakat, the Imam will first recite <b>Surah Fatiha</b> and <b>any Surah of the Quran</b>. Before going to Ruku, there will be 4 Takbeers:",
+        c3_n1: "Say 'Allahu Akbar' and raise hands and release them.",
+        c3_n2: "Say 'Allahu Akbar' and raise hands and release them.",
+        c3_n3: "Say 'Allahu Akbar' and raise hands and release them.",
+        c3_n4: "⚠️ <b>Say 'Allahu Akbar', this time DO NOT raise hands, go straight into Ruku.</b>",
+        
+        g4: "4. Final Sitting",
+        c4: "After Ruku and Sajdas, sit down (Qa'da). Now recite <b>Attahiyat</b>, <b>Durood Shareef</b>, and <b>Dua</b>.",
+        c4_salam: "Finally, complete the Namaz by performing Salam on both sides with the Imam."
+    },
+    ur: {
+    dir: 'rtl',
+    title: "عید الفطر کی نماز کا طریقہ",
+    sub: "٦ زائد تکبیروں کا آسان طریقہ",
+
+  g1: "١. نیت اور شروعات",
+
+    c1: "سب سے پہلے دل میں نیت کریں: <b>'نیت کی میں نے ٢ رکعت نماز واجب عید الفطر کی، ٦ زائد تکبیروں کے ساتھ، واسطے اللہ تعالیٰ کے، پیچھے اس امام کے'</b>۔",
+
+    c1_action: "اللہ اکبر کہہ کر ہاتھ باندھ لیں اور خاموشی سے <b>'ثناء'</b> پڑھیں۔",
+    
+    g2: "٢. پہلی رکعت کی تکبیریں",
+
+    c2_intro: "ثناء پڑھنے کے بعد امام صاحب ٣ بار زائد تکبیر کہیں گے:",
+
+    c2_n1: "اللہ اکبر کہیں، ہاتھ کانوں تک اٹھائیں اور چھوڑ دیں۔",
+    c2_n2: "اللہ اکبر کہیں، ہاتھ کانوں تک اٹھائیں اور چھوڑ دیں۔",
+    c2_n3: "اللہ اکبر کہیں، ہاتھ کانوں تک اٹھائیں اور <b>باندھ لیں۔</b>",
+    c2_qirat: "اب امام صاحب <b>سورہ فاتحہ</b> اور پھر <b>قرآن کی کوئی بھی سورہ</b> پڑھیں گے، آپ خاموشی سے سنیں۔",
+    c2_ruku: "اس کے بعد عام نماز کی طرح <b>رکوع اور دونوں سجدے</b> کر کے کھڑے ہو جائیں۔",
+    
+    g3: "٣. دوسری رکعت کی تکبیریں",
+
+    c3_intro: "دوسری رکعت میں امام صاحب پہلے <b>سورہ فاتحہ</b> اور <b>قرآن کی کوئی بھی سورہ</b> پڑھیں گے۔ رکوع میں جانے سے پہلے ٤ بار تکبیر ہوگی:",
+
+    c3_n1: "اللہ اکبر کہیں اور ہاتھ اٹھا کر چھوڑ دیں۔",
+    c3_n2: "اللہ اکبر کہیں اور ہاتھ اٹھا کر چھوڑ دیں۔",
+    c3_n3: "اللہ اکبر کہیں اور ہاتھ اٹھا کر چھوڑ دیں۔",
+    c3_n4: "⚠️ <b>اللہ اکبر کہیں، اس بار ہاتھ نہیں اٹھانا ہے، سیدھے رکوع میں چلے جائیں۔</b>",
+    
+    g4: "٤. آخری بیٹھک",
+
+    c4: "رکوع اور سجدوں کے بعد بیٹھ جائیں (قعدہ)۔ اب <b>التحیات</b>، <b>درود شریف</b> اور <b>دعا</b> پڑھیں۔",
+    c4_salam: "آخر میں امام کے ساتھ دونوں طرف سلام پھیر کر نماز پوری کریں۔"
+},   
+ar: {
+        dir: 'rtl',
+        title: "طريقة صلاة عيد الفطر",
+        sub: "طريقة سهلة مع ٦ تكبيرات زائدة",
+g1: "١. النية والبداية",
+
+        c1: "أولاً انوِ في قلبك: <b>'نويت أن أصلي ركعتين واجب صلاة عيد الفطر، مع ٦ تكبيرات زائدة، لله تعالى، خلف هذا الإمام'</b>.",
+
+      c1_action: "قل 'الله أكبر' واعقد يديك واقرأ <b>'الثناء'</b> بصمت.",
+      g2: "٢. تكبيرات الركعة الأولى",
+
+        c2_intro: "بعد قراءة الثناء، سيكبر الإمام ٣ تكبيرات زائدة:",
+
+        c2_n1: "قل 'الله أكبر'، ارفع يديك إلى أذنيك ثم أرسلهما.",
+        c2_n2: "قل 'الله أكبر'، ارفع يديك إلى أذنيك ثم أرسلهما.",
+        c2_n3: "قل 'الله أكبر'، ارفع يديك إلى أذنيك ثم <b>اعقدهما.</b>",
+        c2_qirat: "الآن سيقرأ الإمام <b>سورة الفاتحة</b> ثم <b>سورة من القرآن</b>، استمع بهدوء.",
+        c2_ruku: "بعد ذلك، قم بأداء <b>الركوع والسجدتين</b> كالصلاة العادية ثم قف للركعة الثانية.",
+        
+        g3: "٣. تكبيرات الركعة الثانية",
+c3_intro: "في الركعة الثانية، سيقرأ الإمام أولاً <b>سورة الفاتحة</b> و<b>سورة من القرآن</b>. قبل الذهاب للركوع، سيكون هناك ٤ تكبيرات:",
+
+        c3_n1: "قل 'الله أكبر' وارفع يديك ثم أرسلهما.",
+        c3_n2: "قل 'الله أكبر' وارفع يديك ثم أرسلهما.",
+        c3_n3: "قل 'الله أكبر' وارفع يديك ثم أرسلهما.",
+        c3_n4: "⚠️ <b>قل 'الله أكبر'، هذه المرة لا ترفع يديك، اذهب مباشرة إلى الركوع.</b>",
+        
+        g4: "٤. الجلسة الأخيرة",
+
+        c4: "بعد الركوع والسجود، اجلس (القعدة). الآن اقرأ <b>التحيات</b>، <b>والصلاة الإبراهيمية</b>، <b>والدعاء</b>.",
+        c4_salam: "في النهاية، أكمل الصلاة بتسليم الجهتين مع الإمام."
+    }
+
+
+
+    
+};
+    
+
+function changeLang(lang) {
+    const d = translationsData[lang] || translationsData['hi'];
+    
+    // Page ki title aur sub-title badlein
+    document.getElementById('main-title').innerText = d.title;
+    document.getElementById('sub-title').innerText = d.sub;
+    
+    // Direction (RTL/LTR) set karein
+    document.body.dir = d.dir; 
+    
+    // Container ki alignment theek karein
+    const container = document.getElementById('content-area');
+    container.style.textAlign = (d.dir === 'rtl') ? 'right' : 'left';
+
+    
+    container.innerHTML = `
+        <div class="guide-text">${d.g1}</div>
+        <div class="card">
+            <span class="instruction-text">${d.c1}</span>
+            <span class="action-step">${d.c1_action}</span>
+        </div>
+
+        <div class="guide-text">${d.g2}</div>
+        <div class="card">
+            <span class="step-title">${d.c2_intro}</span>
+            <span class="action-step">${d.c2_n1}</span>
+            <span class="action-step">${d.c2_n2}</span>
+            <span class="action-step">${d.c2_n3}</span>
+            <span class="instruction-text" style="margin-top:10px;">${d.c2_qirat}</span>
+            <span class="action-step">${d.c2_ruku}</span>
+        </div>
+
+        <div class="guide-text">${d.g3}</div>
+        <div class="card">
+            <span class="step-title">${d.c3_intro}</span>
+            <span class="action-step">${d.c3_n1}</span>
+            <span class="action-step">${d.c3_n2}</span>
+            <span class="action-step">${d.c3_n3}</span>
+            <span class="warning-box">${d.c3_n4}</span>
+        </div>
+
+        <div class="guide-text">${d.g4}</div>
+        <div class="card">
+            <span class="instruction-text">${d.c4}</span>
+            <span class="action-step">${d.c4_salam}</span>
+        </div>
+    `;
+}
+function init() {
+    // Home page se select ki hui language yahan se milti hai
+    const lang = localStorage.getItem('pref_lang') || 'hi'; 
+    changeLang(lang);
+}
+
+window.onload = init;
+</script>
+
+</body>
+</html>

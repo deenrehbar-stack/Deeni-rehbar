@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>रमज़ान सेक्शन - मुकम्मल जानकारी</title>
+    <style>
+        :root {
+            --p-green: #2e7d32;
+            --gold: #c6a700;
+            --white: #ffffff;
+            --light-green: #e8f5e9;
+            --red: #b71c1c;
+            --bg: #f4f4f4;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 0; line-height: 1.8; color: #222; }
+        
+        /* Premium Header */
+        .main-header { background: var(--p-green); color: white; padding: 40px 20px; text-align: center; border-bottom: 5px solid var(--gold); border-radius: 0 0 40px 40px; position: relative; }
+        .main-header h1 { margin: 0; font-size: 28px; letter-spacing: 1px; text-transform: uppercase; }
+        .main-header p { opacity: 0.9; font-size: 14px; margin-top: 5px; }
+
+        /* Audio Controls */
+        .audio-controls {
+            position: fixed; bottom: 20px; left: 0; right: 0;
+            display: flex; justify-content: center; gap: 10px; z-index: 1000;
+        }
+        .btn-float {
+            background: var(--p-green); color: white; padding: 12px 20px;
+            border-radius: 30px; border: 2px solid var(--gold); font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer;
+            display: flex; align-items: center; gap: 8px; font-size: 14px;
+        }
+        .btn-stop { background: var(--red); border-color: #ffcdd2; }
+
+        /* Timing Section */
+        .timing-strip { background: var(--white); margin: -25px 20px 30px; padding: 20px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: flex; justify-content: space-around; border: 1px solid var(--gold); }
+        .t-box { text-align: center; flex: 1; }
+        .t-box b { display: block; color: var(--gold); font-size: 12px; text-transform: uppercase; }
+        .t-box span { font-size: 18px; font-weight: 800; color: var(--p-green); }
+
+        /* Content Container */
+        .content-container { padding: 0 20px 100px; max-width: 800px; margin: 0 auto; }
+        
+        .article-card { background: var(--white); padding: 25px; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 8px solid var(--p-green); position: relative; }
+        
+        .voice-btn-small {
+            position: absolute; right: 15px; top: 15px;
+            background: var(--light-green); border: none; border-radius: 50%;
+            width: 35px; height: 35px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; font-size: 16px;
+        }
+
+        h2 { color: var(--p-green); border-bottom: 2px solid var(--light-green); padding-bottom: 10px; margin-top: 0; font-size: 22px; padding-right: 40px; }
+        h3 { color: var(--gold); font-size: 18px; margin-top: 20px; border-left: 4px solid var(--gold); padding-left: 10px; }
+
+        .dua-display { background: var(--light-green); padding: 20px; border-radius: 15px; text-align: center; margin: 15px 0; border: 1px dashed var(--p-green); }
+        .dua-arabic { font-size: 24px; font-weight: bold; color: #000; display: block; margin-bottom: 10px; direction: rtl; }
+        .translation { font-size: 14px; color: #444; font-style: italic; display: block; line-height: 1.4; }
+
+        .info-list { list-style: none; padding: 0; }
+        .info-list li { padding: 10px 0; border-bottom: 1px solid #f0f0f0; display: flex; gap: 10px; }
+        .info-list li::before { content: "🌙"; }
+
+        .warning-box { background: #fff5f5; border-left: 5px solid var(--red); padding: 15px; border-radius: 15px; margin-top: 15px; }
+        .warning-box h4 { color: var(--red); margin: 0 0 5px 0; }
+
+        .footer { text-align: center; padding: 30px; color: var(--p-green); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="main-header">
+        <h1>रमज़ान-उल-मुबारक</h1>
+        <p>रमज़ान की मुकम्मल जानकारी (A to Z)</p>
+    </div>
+
+    <div class="audio-controls">
+        <button class="btn-float" onclick="speakFullPage()">🔊 पूरा पढ़ें (Read All)</button>
+        <button class="btn-float btn-stop" onclick="stopAudio()">⏹️ बंद करें</button>
+    </div>
+
+    <div class="timing-strip">
+        <div class="t-box"><b>बरकत</b><span>रहमत</span></div>
+        <div style="width: 2px; background: #eee;"></div>
+        <div class="t-box"><b>मग़फ़िरत</b><span>निजात</span></div>
+    </div>
+
+    <div class="content-container" id="read-area">
+
+        <div class="article-card">
+            <button class="voice-btn-small" onclick="speakSection(this.parentElement)">🔊</button>
+            <h2>1. रमज़ान क्या है?</h2>
+            <p>रमज़ान इस्लामिक कैलेंडर का 9वां महीना है। इसे "माह-ए-सियाम" भी कहते हैं। यह वह मुक़द्दस महीना है जिसमें अल्लाह तआला ने कुरान शरीफ़ नाज़िल फ़रमाया था। यह महीना सब्र, इबादत और ग़रीबों की मदद करने का महीना है।</p>
+        </div>
+
+        <div class="article-card">
+            <button class="voice-btn-small" onclick="speakSection(this.parentElement)">🔊</button>
+            <h2>2. रमज़ान में रोज़ा क्यों रखते हैं?</h2>
+            <ul class="info-list">
+                <li><b>अल्लाह का हुक्म:</b> रोज़ा रखना हर बालिग मुसलमान पर फ़र्ज़ है।</li>
+                <li><b>तक़वा:</b> रोज़ा इंसान के अंदर परहेज़गारी पैदा करता है।</li>
+                <li><b>नफ़्स पर क़ाबू:</b> भूख और प्यास बर्दाश्त करके हम अपने जज़्बात पर क़ाबू पाना सीखते हैं।</li>
+                <li><b>ग़रीबों का एहसास:</b> रोज़ा हमें महसूस करवाता है कि भूख क्या होती है।</li>
+            </ul>
+        </div>
+
+        <div class="article-card">
+            <button class="voice-btn-small" onclick="speakSection(this.parentElement)">🔊</button>
+            <h2>🤲 सेहरी और इफ़्तार की दुआ</h2>
+            <h3>सेहरी की दुआ:</h3>
+            <div class="dua-display">
+                <span class="dua-arabic">وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</span>
+                <span class="translation">"मैंने रमज़ान के कल के रोज़े की नियत की।"</span>
+            </div>
+            <h3>इफ़्तार की दुआ:</h3>
+            <div class="dua-display">
+                <span class="dua-arabic">اَللّٰهُمَّ اِنِّی لَکَ صُمْتُ وَبِکَ اٰمَنْتُ وَعَلٰی رِزْقِکَ اَفْطَرْتُ</span>
+                <span class="translation">"ऐ अल्लाह! मैंने तेरे ही लिए रोज़ा रखा और तेरे ही दिए हुए रिज़्क से इफ़्तार किया।"</span>
+            </div>
+        </div>
+
+        <div class="article-card">
+            <button class="voice-btn-small" onclick="speakSection(this.parentElement)">🔊</button>
+            <h2>🚫 किन चीज़ों से रोज़े टूट जाते हैं?</h2>
+            <ul class="info-list">
+                <li>जान-बूझकर खाना या पीना (कुछ भी पेट में जाना)।</li>
+                <li>सिगरेट, बीड़ी या किसी भी तरह का धुआं अंदर लेना।</li>
+                <li>जान-बूझकर मुँह भर कर उल्टी (Vomit) करना।</li>
+                <li>मुँह के ज़रिए कोई भी दवा लेना।</li>
+                <li>ख़वातीन (Women) का मख़सूस अय्याम (Periods) शुरू होना।</li>
+            </ul>
+            <div class="warning-box">
+                <p><b>नोट:</b> भूल कर खा लेने से रोज़ा नहीं टूटता, लेकिन याद आते ही रुकना ज़रूरी है।</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            ज़ज़ाकअल्लाह खैर - दीनी शिक्षा ऐप
+        </div>
+
+    </div>
+
+    <script>
+        let synth = window.speechSynthesis;
+        let utterance;
+
+        function stopAudio() {
+            synth.cancel();
+        }
+
+        function speakSection(element) {
+            stopAudio();
+            let textToRead = "";
+            // Arabic content ko skip karne ke liye custom logic
+            let items = element.querySelectorAll('h2, h3, p, li, .translation');
+            items.forEach(item => {
+                textToRead += item.innerText.trim() + ". ";
+            });
+
+            utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.lang = 'hi-IN';
+            utterance.rate = 0.9;
+            synth.speak(utterance);
+        }
+
+        function speakFullPage() {
+            stopAudio();
+            let fullText = "";
+            let container = document.getElementById('read-area');
+            // Arabic class ko chhor kar baki sab text lena
+            let elements = container.querySelectorAll('h2, h3, p, li, .translation');
+            
+            elements.forEach(el => {
+                fullText += el.innerText.trim() + ". ";
+            });
+
+            utterance = new SpeechSynthesisUtterance(fullText);
+            utterance.lang = 'hi-IN';
+            utterance.rate = 0.9;
+            synth.speak(utterance);
+        }
+
+        window.onbeforeunload = function() {
+            stopAudio();
+        };
+    </script>
+</body>
+</html>

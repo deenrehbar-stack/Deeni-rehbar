@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html id="mainHtml" lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seerat-un-Nabi (SAW)</title>
+    <style>
+        :root { --p-green: #2e7d32; --gold: #d4a73d; --light-bg: #f0f2f5; }
+        body { font-family: 'Segoe UI', Tahoma, 'Arial', sans-serif; background-color: var(--light-bg); margin: 0; padding: 0; color: #333; transition: 0.3s; }
+        .container { max-width: 600px; margin: auto; padding-bottom: 50px; }
+        
+        .header { background-color: var(--p-green); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; }
+        .header h1 { margin: 0; font-size: 28px; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 18px; }
+
+        .stats { background: white; margin: -20px 20px 20px 20px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; justify-content: space-between; text-align: center; }
+        .stat-item { width: 50%; }
+        .label { color: var(--gold); font-weight: bold; font-size: 14px; display: block; text-transform: uppercase; }
+        .value { color: var(--p-green); font-weight: bold; font-size: 20px; }
+
+        .card { background: white; padding: 22px; margin: 0 20px 20px 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
+        .reading { border: 2px solid var(--p-green); box-shadow: 0 0 15px rgba(46, 125, 50, 0.4); }
+        h2 { color: var(--p-green); border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0; display: flex; justify-content: space-between; align-items: center; font-size: 20px; }
+        .content-text { white-space: pre-wrap; line-height: 1.8; text-align: justify; font-size: 16px; color: #444; margin-top: 15px; }
+
+        .arabic-inline { font-family: 'Amiri', serif; font-size: 22px; color: #1b5e20; direction: rtl; display: block; margin: 10px 0; text-align: center; font-weight: bold; }
+
+    
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1 id="app-title">सैरत-उन-नबी (ﷺ)</h1>
+            <p id="app-subtitle">सीरत-उन-नबी मुकम्मल जानकारी (A to Z)</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item"><span class="label" id="lbl-1">बरकत</span><span class="value" id="val-1">रहमत</span></div>
+            <div class="stat-item"><span class="label" id="lbl-2">मगफिरत</span><span class="value" id="val-2">निजात</span></div>
+        </div>
+
+        <div class="controls">
+        
+        </div>
+
+        <div id="content-area"></div>
+    </div>
+
+    <script>
+        const seeratData = {
+            hi: {
+                dir: "ltr", title: "सैरत-उन-नबी (ﷺ)", subtitle: "सीरत-उन-नबी मुकम्मल जानकारी (A to Z)",
+                
+                labels: ["बरकत", "रहमत", "मगफिरत", "निजात"],
+                sections: [
+                    { h: "1. जन्म", p: "विलादत: मक्का की उस तारीकी रात में जब आप (ﷺ) पैदा हुए, तो आपके दादा अब्दुल मुत्तलिब ने आपका नाम \"मुहम्मद\" रखा—ऐसा नाम जो तब से पहले अरब में मशहूर न था।\n\nबचपन: आपका बचपन यतीमी में गुज़रा। वालिद (अब्दुल्लाह) का साया उठ चुका था, और 6 साल की उम्र में माँ (आमिना) का भी साया सर से उठ गया। फिर दादा और चाचा अबू तालिब की सरपरस्ती रही। यह दर्द, यह अकेलापन, और दुनिया के तजरबात ही थे जिन्होंने आपको अंदर से इतना मज़बूत बनाया कि आपने कभी किसी की मोहताजी का शिकवा नहीं किया।" },
+                    { h: "2. मक्की दौर और आज़माइशें", p: "मक्का की गर्म रेत और उसके पहाड़ों के दरमियान, जब आपने पहली बार \"ला इलाहा इल्लल्लाह\" की सदा लगायी, तो पूरे शहर में एक अजीब सा भूचाल आ गया।\n\n1. रास्तों के काँटे और घर का ख़ामोश दुख: जब आप (ﷺ) नमाज़ के लिए जाते, तो रास्ते में काँटे बिछाए जाते। जब आप काबा के साये में सजदे में होते, तो दुश्मन आपकी पीठ पर ऊँट की ओझड़ी (intestines) रख देते। आपकी प्यारी बेटी हज़रत फातिमा (रज़ि.) रोते हुए उन्हें हटातीं।\n\n2. शेब-ए-अबी तालिब: जब कुरैश ने देखा कि आपका असर बढ़ रहा है, तो उन्होंने आपका और आपके खानदान का 3 साल तक सोशल बॉयकॉट किया। हालत ये थी कि सहाबा दरख्तों के पत्ते चबाकर गुज़ारा करते थे।\n\n3. आम-उल-हुज़्न (ग़म का साल): इसी दौरान आपके सबसे बड़े सहारे, चाचा अबू तालिब और वफादार शरीक-ए-हयात हज़रत ख़दीजा (रज़ि.) का इंतकाल हो गया।\n\n4. ताइफ का सफर: जब आप ताइफ गए, तो वहाँ के लोगों ने आप पर पत्थर बरसाए। आपके जूते खून से भर गए। जब फरिश्ते ने पहाड़ गिराने की इजाजत चाही, तो आपने दुआ फरमाई:\n<span class=\"arabic-inline\">اللَّهُمَّ اهْدِ قَوْمِي فَإِنَّهُمْ لَا يَعْلَمُونَ</span>\n\"ऐ अल्लाह! मेरी कौम को हिदायत दे, क्योंकि वे जानते नहीं हैं।\"" },
+                    { h: "3. जवानी और नबुव्वत", p: "आपने बकरियां चरायीं और तिजारत की। तिजारत के सफर में आपकी सच्चाई देख कर हज़रत ख़दीजा (रज़ि.) ने निकाह का पैगाम भेजा। 25 साल की उम्र में आपकी शादी हुई। यह वह दौर था जब लोग आपकी ईमानदारी की कसमें खाते थे। आपका किरदार इतना साफ था कि आपने कभी किसी की दिल-आज़ारी नहीं की।" },
+                    { h: "4. आगाज़-ए-वही", p: "40 साल की उम्र में गार-ए-हिरा में जिब्राईल (अ.स.) का आना और वह पहला कलाम \"इकरा\" (पढ़ो)। यहीं से दुनिया का निज़ाम बदलना शुरू हुआ। आपने फरमाया: \"अगर ये मेरे दाहिने हाथ पर सूरज और बाएं हाथ पर चाँद रख दें, तब भी मैं इस काम (तौहीद) से पीछे नहीं हटूंगा।\"" },
+                    { h: "5. हिजरत-ए-मदीना", p: "मक्का से मदीना का सफर एक इंक़लाब की इब्तिदा थी।\n\n1. हज़रत अली (रज़ि.) का इश्क: आपने हज़रत अली को अपने बिस्तर पर लिटाया ताकि अमानतें वापस की जा सकें।\n\n2. गार-ए-सौर: आपने हज़रत अबू बक्र (रज़ि.) के साथ गार में पनाह ली। जब दुश्मन करीब आए, तो आपने फरमाया:\n<span class=\"arabic-inline\">لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا</span>\n\"ग़म न करो, बेशक अल्लाह हमारे साथ है।\"" },
+                    { h: "6. मदीने का निज़ाम और फतह-ए-मक्का", p: "1. मस्जिद-ए-नबवी: यह सिर्फ इबादत गाह नहीं, बल्कि एक स्कूल, कोर्ट और पार्लियामेंट थी। आप (ﷺ) ने खुद मज़दूरों के साथ मिलकर इसे बनाया।\n\n2. मीसाक-ए-मदीना: आपने दुनिया का पहला लिखित संविधान (Constitution) तैयार किया।\n\n3. मवाखात (भाईचारा): आपने मक्का से आए मुहाजिरों और मदीना के अंसार के बीच ऐसा भाईचारा कायम किया जिसकी मिसाल दुनिया में नहीं मिलती।\n\n4. फतह-ए-मक्का: जब आप 10,000 के लश्कर के साथ मक्का में दाखिल हुए, तो आपने उन सब दुश्मनों को माफ कर दिया जिन्होंने आपको सताया था।" },
+                    { h: "7. वफात और आखिरी पैगाम", p: "हज्जतुल-विदा के मौके पर आपने फरमाया: \"किसी अरबी को अजमी पर और किसी काले को गोरे पर कोई फज़ीलत नहीं, सिवाय तक़वा के।\"\n\nआपकी आखिरी वसीयत थी: \"अस-सलाह, अस-सलाह\" (नमाज़ का ख्याल रखना)। आपने इख्लाक को दुनिया में ज़िंदा किया।" }
+                ]
+            },
+            ur: {
+    dir: "rtl", title: "سیرت النبی (ﷺ)", subtitle: "سیرت النبی مکمل معلومات (A to Z)",
+    
+    labels: ["برکت", "رحمت", "مغفرت", "نجات"],
+    sections: [
+        { h: "1. ولادت با سعادت", p: "ولادت: مکہ کی اس تاریک رات میں جب آپ (ﷺ) پیدا ہوئے، تو آپ کے دادا عبدالمطلب نے آپ کا نام \"محمد\" رکھا—ایسا نام جو اس سے پہلے عرب میں مشہور نہ تھا۔\n\nبچپن: آپ کا بچپن یتیمی میں گزرا۔ والد (عبداللہ) کا سایہ پہلے ہی اٹھ چکا تھا، اور 6 سال کی عمر میں والدہ (آمنہ) کا سایہ بھی سر سے اٹھ گیا۔ پھر دادا اور چچا ابو طالب کی سرپرستی رہی۔ یہ درد، یہ اکیلاپن، اور دنیا کے تجربات ہی تھے جنہوں نے آپ کو اندر سے اتنا مضبوط بنایا کہ آپ نے کبھی کسی کی محتاجی کا شکوہ نہیں کیا۔" },
+        { h: "2. مکی دور اور آزمائشیں", p: "مکہ کی گرم ریت اور اس کے پہاڑوں کے درمیان، جب آپ نے پہلی بار \"لا الہ الا اللہ\" کی صدا لگائی، تو پورے شہر میں ایک عجیب سا بھونچال آ گیا۔\n\n1. راستوں کے کانٹے اور گھر کا خاموش دکھ: جب آپ (ﷺ) نماز کے لیے جاتے، تو راستے میں کانٹے بچھائے جاتے۔ جب آپ کعبہ کے سائے میں سجدے میں ہوتے، تو دشمن آپ کی پیٹھ پر اونٹ کی اوجھڑی (intestines) رکھ دیتے۔ آپ کی پیاری بیٹی حضرت فاطمہ (رضی اللہ عنہا) روتے ہوئے انہیں ہٹاتیں۔\n\n2. شعب ابی طالب: جب قریش نے دیکھا کہ آپ کا اثر بڑھ رہا ہے، تو انہوں نے آپ کا اور آپ کے خاندان کا 3 سال تک سوشل بائیکاٹ کیا۔ حالت یہ تھی کہ صحابہ درختوں کے پتے چبا کر گزارا کرتے تھے۔\n\n3. عام الحزن (غم کا سال): اسی دوران آپ کے سب سے بڑے سہارے، چچا ابو طالب اور وفادار شریک حیات حضرت خدیجہ (رضی اللہ عنہا) کا انتقال ہو گیا۔\n\n4. طائف کا سفر: جب آپ طائف گئے، تو وہاں کے لوگوں نے آپ پر پتھر برسائے۔ آپ کے جوتے خون سے بھر گئے۔ جب فرشتے نے پہاڑ گرانے کی اجازت چاہی، تو آپ نے دعا فرمائی:\n<span class=\"arabic-inline\">اللَّهُمَّ اهْدِ قَوْمِي فَإِنَّهُمْ لَا يَعْلَمُونَ</span>\n\"اے اللہ! میری قوم کو ہدایت دے، کیونکہ وہ جانتے نہیں ہیں۔\"" },
+        { h: "3. جوانی اور نبوت", p: "آپ نے بکریاں چرائیں اور تجارت کی۔ تجارت کے سفر میں آپ کی سچائی دیکھ کر حضرت خدیجہ (رضی اللہ عنہا) نے نکاح کا پیغام بھیجا۔ 25 سال کی عمر میں آپ کی شادی ہوئی۔ یہ وہ دور تھا جب لوگ آپ کی ایمانداری کی قسمیں کھاتے تھے۔ آپ کا کردار اتنا صاف تھا کہ آپ نے کبھی کسی کی دل آزاری نہیں کی۔" },
+        { h: "4. آغاز وحی", p: "40 سال کی عمر میں غار حرا میں جبرائیل (علیہ السلام) کا آنا اور وہ پہلا کلام \"اقراء\" (پڑھو)۔ یہیں سے دنیا کا نظام بدلنا شروع ہوا۔ آپ نے فرمایا: \"اگر یہ میرے دائیں ہاتھ پر سورج اور بائیں ہاتھ پر چاند بھی رکھ دیں، تب بھی میں اس کام (توحید) سے پیچھے نہیں ہٹوں گا۔\"" },
+        { h: "5. ہجرت مدینہ", p: "مکہ سے مدینہ کا سفر ایک انقلاب کی ابتدا تھی۔\n\n1. حضرت علی (رضی اللہ عنہ) کا عشق: آپ نے حضرت علی کو اپنے بستر پر لٹایا تاکہ امانتیں واپس کی جا سکیں۔\n\n2. غار ثور: آپ نے حضرت ابو بکر (رضی اللہ عنہ) کے ساتھ غار میں پناہ لی۔ جب دشمن قریب آئے، تو آپ نے فرمایا:\n<span class=\"arabic-inline\">لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا</span>\n\"غم نہ کرو، بے شک اللہ ہمارے ساتھ ہے۔\"" },
+        { h: "6. مدینے کا نظام اور فتح مکہ", p: "1. مسجد نبوی: یہ صرف عبادت گاہ نہیں، بلکہ ایک اسکول، کورٹ اور پارلیمنٹ تھی۔ آپ (ﷺ) نے خود مزدوروں کے ساتھ مل کر اسے بنایا۔\n\n2. میثاق مدینہ: آپ نے دنیا کا پہلا تحریری آئین (Constitution) تیار کیا۔\n\n3. مواخات (بھائی چارہ): آپ نے مکہ سے آئے مہاجرین اور مدینہ کے انصار کے درمیان ایسا بھائی چارہ قائم کیا جس کی مثال دنیا میں نہیں ملتی۔\n\n4. فتح مکہ: جب آپ 10,000 کے لشکر کے ساتھ مکہ میں داخل ہوئے، تو آپ نے ان سب دشمنوں کو معاف کر دیا جنہوں نے آپ کو ستایا تھا۔" },
+        { h: "7. وفات اور آخری پیغام", p: "حجۃ الوداع کے موقع پر آپ نے فرمایا: \"کسی عربی کو عجمی پر اور کسی کالے کو گورے پر کوئی فضیلت نہیں، سوائے تقویٰ کے۔\"\n\nآپ کی آخری وصیت تھی: \"الصلاۃ، الصلاۃ\" (نماز کا خیال رکھنا)۔ آپ نے اخلاق کو دنیا میں زندہ کیا۔" }
+    ]
+},
+
+            en: {
+    dir: "ltr", title: "Seerat-un-Nabi (ﷺ)", subtitle: "Seerat-un-Nabi Complete Information (A to Z)",
+    
+    labels: ["Barkat", "Rehmat", "Magfirat", "Nijat"],
+    sections: [
+        { h: "1. Birth", p: "Wiladat: In that dark night of Makkah when you (ﷺ) were born, your grandfather Abdul Muttalib named you \"Muhammad\"—a name that was never famous in Arabia before then.\n\nChildhood: Your childhood was spent in orphanhood. The shadow of your father (Abdullah) had already departed, and at the age of 6, the shadow of your mother (Amina) also left your head. After that, you remained under the guardianship of your grandfather and uncle Abu Talib. It was this pain, this loneliness, and the experiences of the world that made you so strong from within that you never complained about being dependent on anyone." },
+        { h: "2. Meccan Era and Trials", p: "Amidst the hot sand of Makkah and its mountains, when you raised the call of \"La Ilaha Illallah\" for the first time, a strange commotion erupted throughout the city.\n\n1. Thorns on the paths and the silent grief of home: When you (ﷺ) went for prayers, thorns were scattered on your way. When you were in prostration (Sajdah) under the shadow of the Kaaba, the enemies would place the camel's intestines on your back. Your beloved daughter Hazrat Fatima (R.A.) would remove them while crying.\n\n2. Sh'ib-e-Abi Talib: When the Quraish saw that your influence was growing, they socially boycotted you and your family for 3 years. The condition was such that the Companions (Sahaba) survived by chewing leaves of trees.\n\n3. Aam-ul-Huzn (The Year of Sorrow): During this time, your greatest supports, uncle Abu Talib and faithful life partner Hazrat Khadija (R.A.), passed away.\n\n4. Journey to Taif: When you went to Taif, the people there pelted you with stones. Your shoes bled. When the angel asked for permission to crush the city between the mountains, you prayed:\n<span class=\"arabic-inline\">اللَّهُمَّ اهْدِ قَوْمِي فَإِنَّهُمْ لَا يَعْلَمُونَ</span>\n\"O Allah! Guide my nation, for they do not know.\"" },
+        { h: "3. Youth and Prophethood", p: "You grazed sheep and did trade. Seeing your honesty during a trade journey, Hazrat Khadija (R.A.) sent a marriage proposal. You got married at the age of 25. This was the era when people used to swear by your honesty. Your character was so clean that you never hurt anyone's feelings." },
+        { h: "4. Beginning of Revelation", p: "At the age of 40, the arrival of Jibrail (A.S.) in the Cave of Hira and that first word \"Iqra\" (Read). From here, the system of the world began to change. You said: \"Even if they place the sun in my right hand and the moon in my left hand, I will still not step back from this work (Tawheed).\"" },
+        { h: "5. Migration to Medina", "p": "The journey from Makkah to Medina was the beginning of a revolution.\n\n1. The love of Hazrat Ali (R.A.): You made Hazrat Ali sleep on your bed so that the trusts (Amanat) could be returned.\n\n2. Cave of Thawr: You took refuge in the cave with Hazrat Abu Bakr (R.A.). When the enemies came close, you said:\n<span class=\"arabic-inline\">لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا</span>\n\"Do not grieve, indeed Allah is with us.\"" },
+        { h: "6. Medina's System and the Conquest of Makkah", p: "1. Masjid-e-Nabawi: This was not just a place of worship, but a school, a court, and a parliament. You (ﷺ) built it yourself along with the laborers.\n\n2. Mithaq-e-Medina: You prepared the world's first written constitution.\n\n3. Mawakhat (Brotherhood): You established such brotherhood between the Muhajireen (migrants) from Makkah and the Ansar of Medina, an example of which cannot be found in the world.\n\n4. Conquest of Makkah: When you entered Makkah with an army of 10,000, you forgave all those enemies who had persecuted you." },
+        { h: "7. Demise and Final Message", p: "On the occasion of Hajjat-ul-Wida, you said: \"An Arab has no superiority over a non-Arab, nor a black person over a white person, except by piety (Taqwa).\"\n\nYour last will was: \"As-Salah, As-Salah\" (Take care of the prayers). You kept ethics alive in the world." }
+    ]
+},
+
+                
+            ar: {
+    dir: "rtl", title: "سيرة النبي (ﷺ)", subtitle: "معلومات كاملة عن سيرة النبي (من الألف إلى الياء)",
+    
+    labels: ["بركة", "رحمة", "مغفرة", "نجاة"],
+    sections: [
+        { h: "1. المولد والنشأة", p: "الولادة: في تلك الليلة المظلمة من مكة التي وُلدت فيها (ﷺ)، سماك جدك عبد المطلب \"محمدًا\"—وهو اسم لم يكن مشهورًا في بلاد العرب من قبل.\n\nالطفولة: قضيت طفولتك في اليتم. فقد رحل ظل والدك (عبد الله) قبل ولادتك، وفي سن السادسة رحل ظل والدتك (آمنة) أيضًا عن رأسك. بعد ذلك، كنت تحت رعاية جدك وعمك أبي طالب. إن هذا الألم، وهذا السواد، وتجارب العالم هي التي جعلتك قويًا جدًا من الداخل لدرجة أنك لم تشكُ أبدًا من حاجتك لأحد." },
+        { h: "2. العهد المكي والابتلاءات", p: "وسط رمال مكة الحارة وجبالها، عندما رفعت نداء \"لا إله إلا الله\" لأول مرة، حدثت ضجة غريبة في جميع أنحاء المدينة.\n\n1. أشواك الطرق وحزن البيت الصامت: عندما كنت تذهب (ﷺ) للصلاة، كانت الأشواك تُبسط في طريقك. وعندما كنت في السجود تحت ظل الكعبة، كان الأعداء يضعون سلا الجزور (أمعاء الإبل) على ظهرك. وكانت ابنتك الحبيبة فاطمة (رضي الله عنها) تزيلها وهي تبكي.\n\n2. شعب أبي طالب: عندما رأى قريش أن تأثيرك يزداد، قاطعوك أنت وعائلتك اجتماعيًا لمدة 3 سنوات. وكانت الحالة لدرجة أن الصحابة كانوا يعيشون على مضغ أوراق الشجر.\n\n3. عام الحزن: في هذه الأثناء، توفي أكبر داعميك، عمك أبو طالب وشريكة حياتك الوفية خديجة (رضي الله عنها).\n\n4. رحلة الطائف: عندما ذهبت إلى الطائف، رماك أهلها بالحجارة حتى دميت قدماك. وعندما طلب الملك الإذن بإطباق الجبال على المدينة، دعوت قائلًا:\n<span class=\"arabic-inline\">اللَّهُمَّ اهْدِ قَوْمِي فَإِنَّهُمْ لَا يَعْلَمُونَ</span>\n\"اللهم اهدِ قومي فإنهم لا يعلمون.\"" },
+        { h: "3. الشباب والنبؤة", p: "لقد رعيت الغنم وعملت في التجارة. ورأت خديجة (رضي الله عنها) صدقك وأمانتك خلال رحلة تجارية، فأرسلت إليك طلب الزواج. وتزوجت في سن الـ 25. كان هذا العصر الذي كان الناس يحلفون فيه بأمانتك. كانت أخلاقك طاهرة لدرجة أنك لم تجرح مشاعر أحد أبدًا." },
+        { h: "4. بدء الوحي", p: "في سن الأربعين، جاء جبريل (عليه السلام) في غار حراء وكانت تلك الكلمة الأولى \"اقرأ\". ومن هنا، بدأ نظام العالم يتغير. وقلت: \"والله لو وضعوا الشمس في يميني والقمر في يساري على أن أترك هذا الأمر (التوحيد) ما تركته\"." },
+        { h: "5. الهجرة إلى المدينة", p: "كانت الرحلة من مكة إلى المدينة بداية الثورة.\n\n1. عشق علي (رضي الله عنه): جعلت عليًا ينام في فراشك حتى تُرد الأمانات إلى أهلها.\n\n2. غار ثور: لجأت إلى الغار مع أبي بكر (رضي الله عنه). وعندما اقترب الأعداء، قلت:\n<span class=\"arabic-inline\">لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا</span>\n\"لا تحزن، إن الله معنا.\"" },
+        { h: "6. نظام المدينة وفتح مكة", p: "1. المسجد النبوي: لم يكن هذا مجرد مكان للعبادة، بل كان مدرسة، ومحكمة، وبرلمانًا. وقد بنيته (ﷺ) بنفسك مع العمال.\n\n2. ميثاق المدينة: لقد أعددت أول دستور مكتوب في العالم.\n\n3. المؤاخاة: لقد أقمت أخوة بين المهاجرين القادمين من مكة والأنصار في المدينة، وهي أخوة لا يوجد لها مثيل في العالم.\n\n4. فتح مكة: عندما دخلت مكة بجيش قوامه 10,000 مقاتل، عفوت عن كل أولئك الأعداء الذين عذبوك واضطهدوك." },
+        { h: "7. الوفاة والرسالة الأخيرة", p: "في حجة الوداع، قلت: \"لا فضل لعربي على أعجمي، ولا لأسود على أبيض إلا بالتقوى\".\n\nوكانت وصيتك الأخيرة: \"الصلاة، الصلاة\" (حافظوا على الصلاة). لقد أحييت الأخلاق في العالم." }
+    ]
+}
+
+        };
+
+        function applyLang() {
+            const lang = localStorage.getItem('pref_lang') || 'hi'; 
+            const data = seeratData[lang] || seeratData['hi'];
+            
+            document.getElementById('mainHtml').dir = data.dir;
+            document.getElementById('app-title').innerText = data.title;
+            document.getElementById('app-subtitle').innerText = data.subtitle;
+            
+            document.getElementById('lbl-1').innerText = data.labels[0];
+            document.getElementById('val-1').innerText = data.labels[1];
+            document.getElementById('lbl-2').innerText = data.labels[2];
+            document.getElementById('val-2').innerText = data.labels[3];
+
+            const area = document.getElementById('content-area');
+            area.innerHTML = '';
+            data.sections.forEach((s, i) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.id = 'sec-' + i;
+                card.innerHTML = `<h2>${s.h}</h2><div class="content-text">${s.p}</div>`;
+
+                area.appendChild(card);
+            });
+            stopVoice();
+        }
+
+        function speak(id, lang) {
+            stopVoice();
+            const card = document.getElementById(id);
+            const text = card.querySelector('.content-text').innerText;
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voices = { hi: 'hi-IN', ur: 'ur-PK', en: 'en-US', ar: 'ar-SA' };
+            utterance.lang = voices[lang] || 'hi-IN';
+            utterance.onstart = () => card.classList.add('reading');
+            utterance.onend = () => card.classList.remove('reading');
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopVoice() {
+            window.speechSynthesis.cancel();
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('reading'));
+        }
+
+        window.onload = applyLang;
+    </script>
+</body>
+</html>

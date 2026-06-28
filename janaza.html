@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namaz-e-Janaza Guide - Deeni Rehbar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
+    <style>
+        :root { --p-green: #2e7d32; --light-green: #e8f5e9; --white: #ffffff; --accent-gold: #ffd54f; }
+        body { font-family: 'Segoe UI', 'Noto Sans Devanagari', sans-serif; background-color: #f4f7f4; margin: 0; padding: 0; color: #333; transition: all 0.3s; }
+        
+        .header { background: var(--p-green); color: white; text-align: center; padding: 30px; border-radius: 0 0 25px 25px; border-bottom: 5px solid #1b5e20; position: relative; }
+        .back-btn { position: absolute; left: 20px; top: 35px; color: white; text-decoration: none; font-size: 20px; }
+
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; padding-bottom: 100px; }
+        
+        .guide-text { background: #ffd54f; color: #000; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 14px; margin-bottom: -10px; position: relative; z-index: 2; display: inline-block; margin-left: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        
+        .card { background: white; border-radius: 15px; padding: 25px 20px 20px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e0e0e0; position: relative; }
+        
+        .arabic { font-family: 'Amiri', serif; font-size: 28px; direction: rtl; display: block; text-align: right; margin: 15px 0; line-height: 2.2; color: #000; font-weight: 400; }
+        
+        .translation { background: #fff8f8; padding: 12px; border-radius: 8px; color: #b71c1c; font-size: 15px; border-left: 4px solid #d32f2f; display: block; margin-top: 10px; line-height: 1.6; }
+        
+        .action-note { background: #e8f5e9; padding: 10px; border-radius: 8px; border: 1px dashed #2e7d32; font-weight: bold; font-size: 14px; margin: 10px 0; color: #1b5e20; text-align: center; }
+        
+        .step-title { font-size: 18px; color: var(--p-green); font-weight: bold; display: block; margin-bottom: 10px; border-bottom: 2px solid var(--light-green); padding-bottom: 5px; padding-right: 45px; }
+
+     
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="namaz.html" class="back-btn">←</a>
+    <h1 id="main-title">नमाज़-ए-जनाज़ा का तरीका</h1>
+    <p id="sub-title">मुकम्मल दुआओं के साथ</p>
+</div>
+
+
+<div class="container" id="content-area"></div>
+
+<script>
+const translationsData = {
+    hi: {
+        voice: 'hi-IN', dir: 'ltr', title: "नमाज़-ए-जनाज़ा का तरीका", sub: "मुकम्मल दुआओं के साथ", listen: "सुनिए (Listen All)", stop: "बंद करें",
+        g1: "नियत (Niyyat)",
+        c1_p: "नियत की मैंने नमाज़-ए-जनाज़ा की, 4 तकबीरों के साथ, सना वास्ते अल्लाह तआला के, दुरूद वास्ते रसूलुल्लाह (स.अ.व.) के, दुआ वास्ते इस मय्यित के, पीछे इस इमाम के, मुँह मेरा काबा शरीफ़ की तरफ।",
+        g2: "पहली तकबीर",
+        c2_n: "इमाम के 'अल्लाहु अकबर' कहने पर हाथ बांध लें और 'सना' पढ़ें:",
+        tr_sana: "तर्जुमा: ऐ अल्लाह! मैं तेरी पाकी बयान करता हूँ, तेरी ही तारीफ करता हूँ, तेरा नाम बरकत वाला है, तेरी शान बहुत ऊँची है, तेरी तारीफ बहुत बड़ी है और तेरे सिवा कोई इबादत के लायक नहीं।",
+        g3: "दूसरी तकबीर",
+        c3_n: "अब बिना हाथ उठाए 'अल्लाहु अकबर' कहें और 'दुरूद-ए-इब्राहिम' पढ़ें:",
+        tr_dur: "तर्जुमा: ऐ अल्लाह! रहमत भेज मोहम्मद (स.अ.व.) पर और मोहम्मद (स.अ.व.) की आल पर, जैसे तूने रहमत भेजी इब्राहिम (अ.स.) पर और इब्राहिम (अ.स.) की आल पर, बेशक तू तारीफ के लायक और बड़ी शान वाला है। ऐ अल्लाह! बरकत भेज मोहम्मद (स.अ.व.) पर और मोहम्मद (स.अ.व.) की आल पर, जैसे तूने बरकत भेजी इब्राहिम (अ.स.) पर और इब्राहिम (अ.स.) की आल पर, बेशक तू तारीफ के लायक और बड़ी शान वाला है।",
+        g4: "तीसरी तकबीर",
+        c4_n: "अब बिना हाथ उठाए 'अल्लाहु अकबर' कहें और 'जनाज़ा की दुआ' पढ़ें:",
+        st_dua: "बालिग़ मर्द या औरत के लिए दुआ:",
+        tr_dua: "तर्जुमा: ऐ अल्लाह! तू हमारे हर ज़िन्दा, मुर्दा, हाज़िर, गायब, छोटे, बड़े, मर्द और औरत को माफ़ फ़रमा। ऐ अल्लाह! तू हम में से जिसे ज़िन्दा रखे उसे इस्लाम पर ज़िन्दा रख और जिसे मौत दे उसे ईमान पर मौत दे।",
+        g5: "चौथी तकबीर",
+        c5_n: "चौथी बार 'अल्लाहु अकबर' कहें और फिर दोनों तरफ सलाम फेर दें।",
+        tr_last: "तर्जुमा: तुम पर अल्लाह की सलामती और उसकी रहमत हो।"
+    },
+    en: {
+        voice: 'en-US', dir: 'ltr', title: "Method of Namaz-e-Janaza", sub: "With Complete Supplications", listen: "Listen All", stop: "Stop",
+        g1: "Niyyat (Intention)",
+        c1_p: "(niyat) I intend to offer Namaz-e-Janaza with 4 Takbeers, praise for Allah, blessings for the Prophet (PBUH), and Dua for the deceased, behind this Imam, facing the Kaaba.",
+        g2: "1st Takbeer",
+        c2_n: "Fold your hands after the Imam says 'Allahu Akbar' and recite 'Sana':",
+        tr_sana: "Translation: Glory be to You O Allah, and all praise is Yours, Your name is blessed, Your majesty is exalted, and there is no God besides You.",
+        g3: "2nd Takbeer",
+        c3_n: "Say 'Allahu Akbar' without raising hands and recite 'Durood-e-Ibrahim':",
+        tr_dur: "Translation: O Allah, send blessings upon Muhammad and the family of Muhammad, as You sent blessings upon Ibrahim...",
+        g4: "3rd Takbeer",
+        c4_n: "Say 'Allahu Akbar' without raising hands and recite the 'Janaza Dua':",
+        st_dua: "Dua for Adult Male or Female:",
+        tr_dua: "Translation: O Allah! Forgive our living and our dead, those present and those absent, our young and our old, our males and our females...",
+        g5: "4th Takbeer",
+        c5_n: "Say 'Allahu Akbar' for the 4th time and then perform Salam to both sides.",
+        tr_last: "Translation: Peace be upon you and the mercy of Allah."
+    },
+    ur: {
+        voice: 'ur-PK', dir: 'rtl', title: "نمازِ جنازہ کا طریقہ", sub: "مکمل دعاؤں کے ساتھ", listen: "مکمل سنیں", stop: "بند کریں",
+        g1: "نیت (Niyyat)",
+        c1_p: "نیت کی میں نے نمازِ جنازہ کی، 4 تکبیروں کے ساتھ، ثناء واسطے اللہ تعالیٰ کے، درود واسطے رسول اللہ ﷺ کے، دعا واسطے اس میت کے، پیچھے اس امام کے، منہ میرا کعبہ شریف کی طرف۔",
+        g2: "پہلی تکبیر",
+        c2_n: "امام کے 'اللہ اکبر' کہنے پر ہاتھ باندھ لیں اور 'ثناء' پڑھیں:",
+        tr_sana: "ترجمہ: اے اللہ! میں تیری پاکی بیان کرتا ہوں، تیری ہی تعریف کرتا ہوں، تیرا نام برکت والا ہے، تیری شان بہت اونچی ہے، اور تیرے سوا کوئی عبادت کے لائق نہیں۔",
+        g3: "دوسری تکبیر",
+        c3_n: "اب بغیر ہاتھ اٹھائے 'اللہ اکبر' کہیں اور 'درودِ ابراہیمی' پڑھیں:",
+        tr_dur: "ترجمہ: اے اللہ! رحمت اور برکت بھیج محمد ﷺ پر اور ان کی آل پر، جیسے تو نے ابراہیم علیہ السلام پر بھیجی...",
+        g4: "تیسری تکبیر",
+        c4_n: "اب بغیر ہاتھ اٹھائے 'اللہ اکبر' کہیں اور 'جنازہ کی دعا' پڑھیں:",
+        st_dua: "بالغ مرد یا عورت کے لیے دعا:",
+        tr_dua: "ترجمہ: اے اللہ! تو ہمارے ہر زندہ، مردہ، حاضر، غائب، چھوٹے، بڑے، مرد اور عورت کو معاف فرما۔",
+        g5: "چوتھی تکبیر",
+        c5_n: "چوتھی بار 'اللہ اکبر' کہیں اور پھر دونوں طرف سلام پھیر دیں۔",
+        tr_last: "ترجمہ: تم پر اللہ کی سلامتی اور اس کی رحمت ہو۔"
+    },
+    ar: {
+        voice: 'ar-SA', dir: 'rtl', title: "طريقة صلاة الجنازة", sub: "مع الأدعية الكاملة", listen: "استمع للكل", stop: "إيقاف",
+        g1: "النية",
+        c1_p: "نويت أن أصلي صلاة الجنازة بأربع تكبيرات، الثناء لله تعالى، والصلاة على النبي ﷺ، والدعاء لهذا الميت، خلف هذا الإمام، متوجهاً إلى الكعبة.",
+        g2: "التكبيرة الأولى",
+        c2_n: "اعقد يديك بعد تكبيرة الإمام واقرأ 'الثناء':",
+        tr_sana: "التفسير: سبحانك اللهم وبحمدك وتبارك اسمك وتعالى جدك وجل ثناؤك ولا إله غيرك.",
+        g3: "التكبيرة الثانية",
+        c3_n: "قل 'الله أكبر' دون رفع اليدين واقرأ 'الصلاة الإبراهيمية':",
+        tr_dur: "التفسير: اللهم صل على محمد وعلى آل محمد كما صليت على إبراهيم...",
+        g4: "التكبيرة الثالثة",
+        c4_n: "قل 'الله أكبر' دون رفع اليدين واقرأ 'دعاء الجنازة':",
+        st_dua: "دعاء للرجل أو المرأة البالغين:",
+        tr_dua: "التفسير: اللهم اغفر لحينا وميتنا وشاهدنا وغائبنا وصغيرنا وكبيرنا وذكرنا وأنثانا...",
+        g5: "التكبيرة الرابعة",
+        c5_n: "قل 'الله أكبر' للمرة الرابعة ثم سلم عن اليمين واليسار.",
+        tr_last: "التفسير: السلام عليكم ورحمة الله وبركاته."
+    }
+};
+
+
+
+function changeLang(lang) {
+    const d = translationsData[lang] || translationsData['hi'];
+    document.getElementById('main-title').innerText = d.title;
+    document.getElementById('sub-title').innerText = d.sub;
+    
+    
+    const isRtl = d.dir === 'rtl';
+    const container = document.getElementById('content-area');
+    container.className = "container" + (isRtl ? " rtl" : "");
+
+    container.innerHTML = `
+        <div class="guide-text">${d.g1}</div>
+        <div class="card">
+     
+            <p><b>${isRtl ? 'النية' : 'नियत'}:</b> ${d.c1_p}</p>
+        </div>
+
+        <div class="guide-text">${d.g2}</div>
+        <div class="card">
+      
+            <div class="action-note">${d.c2_n}</div>
+    
+<span class="arabic-text">سُبْحٰنَكَ اللَّٰهُمَّ وَبِحَمْدِكَ وَتَبٰرَكَ اسْمُكَ وَتَعٰلٰى جَدُّكَ وَجَلَّ ثَنَاوُكَ وَلَآ اِلٰهَ غَيْرُكَ</span>
+
+            <span class="translation"><b>${d.tr_sana}</b></span>
+        </div>
+
+   <div class="guide-text">${d.g3}</div>
+        <div class="card">
+      
+            <div class="action-note">${d.c3_n}</div>
+    <p style="font-size: 25px;">   <span class="arabic-text">اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَىٰ إِبْرَٰهِيمَ وَعَلَىٰ آلِ إِبْرَٰهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَىٰ إِبْرَٰهِيمَ وَعَلَىٰ آلِ إِبْرَٰهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ</span>
+
+<span class="translation">${d.tr_dur}</span></p>
+<span style="font-size: 40px;"></span>
+   
+
+<p style="font-size: 25px;">.</p>
+<span style="font-size: 40px;"></span>
+        <div class="guide-text">${d.g4}</div>
+        <div class="card">  
+
+      
+            <div class="action-note">${d.c4_n}</div>
+            <span class="step-title">${d.st_dua}</span>
+          <span class="arabic-text">اللَّهُمَّ اغْفِرْ لِحَيِّنَا وَمَيِّتِنَا وَشَاهِدِنَا وَغَآئِبِنَا وَصَغِيرِنَا وَكَبِيرِنَا وَذَكَرِنَا وَأُنثٰانَا اللَّهُمَّ مَنْ أَحْيَيْتَهُ مِنَّا فَأَحْيِهِ عَلَى الْإِسْلَامِ وَمَنْ تَوَفَّيْتَهُ مِنَّا فَتَوَفَّهُ عَلَى الْإِيمَانِ</span>
+
+            <span class="translation"><b>${d.tr_dua}</b></span>
+        </div>
+
+        <div class="guide-text">${d.g5}</div>
+        <div class="card">
+     
+            <div class="action-note">${d.c5_n}</div>
+         <span class="arabic-text">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّٰهِ</span>
+
+            <span class="translation">${d.tr_last}</span>
+        </div>
+    `;
+}
+
+function init() {
+    const lang = localStorage.getItem('pref_lang') || 'hi';
+    changeLang(lang);
+}
+
+window.onload = init;
+window.onbeforeunload = () => stopAudio();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wudu Guide - Deeni Rehbar</title>
+    <style>
+        :root {
+            --p-green: #2e7d32;
+            --light-green: #e8f5e9;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --accent-gold: #c6a700;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f4f0;
+            color: var(--text-dark);
+            margin: 0; padding: 0;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--p-green);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header h1 { margin: 0; font-size: 26px; }
+        .back-btn { position: absolute; left: 20px; top: 40px; color: white; text-decoration: none; font-size: 20px; }
+
+        .container {
+            max-width: 600px;
+            margin: -20px auto 40px;
+            padding: 0 15px;
+        }
+
+        .info-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--p-green);
+            position: relative;
+        }
+
+        h3 { color: var(--p-green); margin-top: 0; font-size: 19px; border-bottom: 1px solid #eee; padding-bottom: 10px; padding-right: 40px; }
+        p { font-size: 15px; color: #555; white-space: pre-line; }
+
+        .faraiz-card {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white; border-radius: 20px; padding: 25px; margin-bottom: 20px; position: relative;
+        }
+
+        .faraiz-card h3 { color: white; border-color: rgba(255,255,255,0.2); }
+
+        .voice-btn {
+            position: absolute; right: 15px; top: 20px;
+            background: var(--light-green); border: none; border-radius: 50%;
+            width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+
+        .faraiz-card .voice-btn { background: rgba(255,255,255,0.2); color: white; }
+
+        .floating-audio {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--accent-gold); color: white;
+            padding: 12px 20px; border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 10px; font-weight: bold; z-index: 1000; border: none; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+  
+
+    <div class="header">
+        <a href="namaz.html" class="back-btn">←</a>
+        <h1 id="pageTitle">वुज़ू की मुकम्मल जानकारी</h1>
+        <p id="pageSub">Wudu: A to Z Full Guide</p>
+    </div>
+
+    <div class="container" id="content-to-read">
+        <div id="dynamic-content"></div>
+    </div>
+
+    <div class="footer" id="footerInfo" style="text-align:center; padding: 20px; color: #888;">
+        Deeni Rehbar - सही इल्म, सही अमल
+    </div>
+<script>
+    const contentData = {
+        hi: {
+            title: "वुज़ू की मुकम्मल जानकारी",
+            sub: "वुज़ू A to Z जानकारी",
+            listen: "सुनिए (Listen All)",
+            footer: "Deeni Rehbar - सही इल्म, सही अमल",
+            voice: "hi-IN",
+            html: `
+                <div class="info-card">
+                   
+                    <h3>वज़ू का बयान</h3>
+                    <p>वज़ू नमाज़ के लिए पाकी हासिल करने का एक तरीका है।</p>
+                </div>
+
+                <div class="faraiz-card">
+                
+                    <h3>वज़ू के फ़राइज़</h3>
+                    <p style="color:white;">वज़ू में चार चीज़ें फ़र्ज़ हैं:
+                    1. पेशानी के बालों से ठोड़ी के नीचे तक और एक कान की लौ से दूसरे कान की लौ तक मुँह धोना।
+                    2. दोनों हाथ कोहनियों समेत धोना।
+                    3. चौथाई सर का मसह करना।
+                    4. दोनों पाँव टखनों समेत धोना।
+                    (आलमगीरी ज: 1, स: 2)</p>
+                </div>
+
+                <div class="info-card">
+                  
+                    <h3>वज़ू की सुन्नतें</h3>
+                    <p>वज़ू में तेरह सुन्नतें हैं:
+                    1. नियत करना।
+                    2. बिस्मिल्लाह पढ़ना।
+                    3. पहले तीन बार दोनों हाथ गट्टों तक धोना।
+                    4. मिसवाक करना।
+                    5. तीन बार कुल्ली करना।
+                    6. तीन बार नाक में पानी डालना।
+                    7. दाढ़ी का ख़िलाल करना।
+                    8. हाथ पाँव की उंगलियों का ख़िलाल करना।
+                    9. हर उज़्व (अंग) को तीन बार धोना।
+                    10. एक बार तमाम सर का मसह करना।
+                    11. दोनों कानों का मसह करना।
+                    12. तरतीब से वज़ू करना।
+                    13. पै-दर-पै वज़ू करना कि एक उज़्व खुश्क न होने पाए दूसरा धो ले।
+                    (आलमगीरी ज: 1, स: 2)</p>
+                </div>
+
+                <div class="info-card">
+                 
+                    <h3>वज़ू के मुस्तहबात</h3>
+                    <p>वज़ू में पाँच चीज़ें मुस्तहब हैं:
+                    1. दाईं तरफ से शुरू करना।
+                    2. गर्दन का मसह करना।
+                    3. वज़ू के काम को खुद करना।
+                    4. क़िबला की तरफ मुँह करके बैठना।
+                    5. पाक और ऊँची जगह बैठकर वज़ू करना।</p>
+                </div>
+
+                <div class="info-card">
+                   
+                    <h3>वज़ू के मकरूहात</h3>
+                    <p>वज़ू में चार चीज़ें मकरूह हैं:
+                    1. नापाक जगह पर वज़ू करना।
+                    2. सीधे हाथ से नाक साफ़ करना।
+                    3. वज़ू करने में दुनिया की बातें करना।
+                    4. सुन्नत के ख़िलाफ़ वज़ू करना।
+                    (आलमगीरी ज: 1, स: 9)</p>
+                </div>
+
+                <div class="info-card" style="border-left: 5px solid #c62828;">
+                  
+                    <h3>नवाकि़ज़-ए-वज़ू (वज़ू तोड़ने वाली चीज़ें)</h3>
+                    <p>आठ चीज़ों से वज़ू टूट जाता है:
+                    1. पाखाना-पेशाब करना या इन दोनों रास्तों से किसी और चीज़ का निकलना।
+                    2. रीह यानी हवा का पीछे से निकलना।
+                    3. बदन के किसी मकाम से खून या पीप का निकलकर बह जाना।
+                    4. मुँह भरकर कै (उल्टी) करना।
+                    5. लेटकर या सहारा लगाकर सो जाना।
+                    6. बीमारी या किसी और वजह से बेहोश हो जाना।
+                    7. मजनून यानी दीवाना हो जाना।
+                    8. नमाज़ में क़हक़हा मारकर हँसना।
+                    (नूरुल ईज़ाह, स: 3)</p>
+                </div>
+
+                <div class="info-card">
+                 
+                    <h3>वज़ू करने का तरीका</h3>
+                    <p>साफ़ बर्तन में पाक पानी लेकर पाक व साफ़ और ऊँची जगह पर बैठकर क़िबला की तरफ मुँह कर लो, फिर बिस्मिल्लाह पढ़ो, और तीन बार गट्टों तक दोनों हाथ धोओ, फिर तीन बार कुल्ली करो, मिसवाक करो, मिसवाक न हो तो उंगली से दाँत मल लो, फिर तीन बार नाक में पानी डाल कर बाएँ हाथ की छोटी उंगली से नाक साफ़ करो। फिर तीन बार मुँह धोओ। मुँह पर पानी ज़ोर से न मारो बल्कि आहिस्ता से पेशानी पर पानी डाल कर धोओ, पेशानी के बालों से ठोड़ी नीचे तक और एक कान की लौ से दूसरे कान की लौ तक मुँह धोओ, फिर कोहनियों समेत दोनों हाथ धोओ। पहले दाहिना हाथ तीन बार फिर बायां हाथ तीन बार धोओ, फिर नया पानी लेकर सर का मसह करो, फिर कानों का मसह करो, फिर गर्दन का मसह करो। मसह सिर्फ एक-एक मर्तबा करो। फिर तीन-तीन मर्तबा दोनों पाँव टखनों समेत धोओ, पहले दायां पाँव फिर बायां पाँव धोओ और बाद फ़रागत कलमा-ए-शहादत और यह दुआ पढ़ो:
+                    <br><br>
+                    <b>اَللّٰهُمَّ اجْعَلْنِيْ مِنَ التَّوَّابِيْنَ وَاجْعَلْنِيْ مِنَ الْمُتَطَهِّرِيْنَ</b>
+                    <br><br>
+                    हिंदी तर्जुमा (अनुवाद):
+                    "ए अल्लाह! मुझे तौबा करने वालों में बना दे और मुझे (गुनाहों और नापाकियों से) पाक रहने वालों में शामिल कर दे।"</p>
+                </div>`
+        },
+               
+        en: {
+            title: "Complete Guide to Wudu",
+            sub: "Wudu: A to Z Full Guide",
+            listen: "Listen All",
+            footer: "Deeni Rehbar - Right Knowledge, Right Action",
+            voice: "en-US",
+            html: `
+                <div class="info-card">
+                    <h3>Definition of Wudu</h3>
+                    <p>Wudu is a method of attaining purity (Paaki) for performing Namaz.</p>
+                </div>
+
+                <div class="faraiz-card">
+                    <h3>Faraiz (Obligatory Acts) of Wudu</h3>
+                    <p style="color:white;">There are four obligatory acts in Wudu:
+                    1. Washing the face from the hairline of the forehead to below the chin and from one earlobe to the other.
+                    2. Washing both hands up to and including the elbows.
+                    3. Performing Masah (wiping) of one-fourth of the head.
+                    4. Washing both feet up to and including the ankles.
+                    (Alamgiri Vol: 1, P: 2)</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Sunnah of Wudu</h3>
+                    <p>There are thirteen Sunnahs in Wudu:
+                    1. Making the intention (Niyyah).
+                    2. Reciting Bismillah.
+                    3. Washing both hands up to the wrists three times first.
+                    4. Using Miswak.
+                    5. Rinsing the mouth three times.
+                    6. Putting water into the nose three times.
+                    7. Performing Khilal of the beard.
+                    8. Performing Khilal of the fingers and toes.
+                    9. Washing each part three times.
+                    10. Performing Masah of the entire head once.
+                    11. Performing Masah of both ears.
+                    12. Performing Wudu in the correct sequence (Tartib).
+                    13. Performing Wudu continuously so that one part does not dry before the next is washed.
+                    (Alamgiri Vol: 1, P: 2)</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Mustahabbat of Wudu</h3>
+                    <p>There are five Mustahab (recommended) acts in Wudu:
+                    1. Starting from the right side.
+                    2. Performing Masah of the neck.
+                    3. Performing the acts of Wudu oneself.
+                    4. Sitting while facing the Qibla.
+                    5. Sitting in a clean and elevated place to perform Wudu.</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Makruhat (Disliked Acts) of Wudu</h3>
+                    <p>There are four things that are Makruh in Wudu:
+                    1. Performing Wudu in an impure place.
+                    2. Cleaning the nose with the right hand.
+                    3. Talking about worldly matters while performing Wudu.
+                    4. Performing Wudu against the Sunnah.
+                    (Alamgiri Vol: 1, P: 9)</p>
+                </div>
+
+                <div class="info-card" style="border-left: 5px solid #c62828;">
+                    <h3>Nawaqiz-e-Wudu (Things that Break Wudu)</h3>
+                    <p>Eight things break the Wudu:
+                    1. Relieving oneself (urine/stool) or anything exiting from those two paths.
+                    2. Passing gas (wind).
+                    3. Blood or pus exiting from any part of the body and flowing.
+                    4. Vomiting a mouthful.
+                    5. Sleeping while lying down or leaning against something.
+                    6. Becoming unconscious due to illness or any other reason.
+                    7. Becoming insane (Majnoon).
+                    8. Laughing loudly (Qahqaha) during Namaz.
+                    (Nur-ul-Idah, P: 3)</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Method of Performing Wudu</h3>
+                    <p>Take clean water in a clean vessel, sit in a clean and elevated place facing the Qibla, then recite Bismillah and wash both hands up to the wrists three times. Then rinse your mouth three times, use Miswak (if unavailable, rub teeth with a finger), then put water in the nose three times and clean it with the little finger of the left hand. Then wash your face three times. Do not splash water forcefully on the face; instead, pour it gently starting from the forehead. Wash from the hairline to below the chin and from one earlobe to the other. Then wash both hands including the elbows—the right hand first three times, then the left hand three times. Then take fresh water and perform Masah of the head, then the ears, and then the neck. Perform Masah only once. Then wash both feet including the ankles three times—the right foot first, then the left. After finishing, recite Kalima-e-Shahadat and this Dua:
+                    <br><br>
+                    <b>اَللّٰهُمَّ اجْعَلْنِيْ مِنَ التَّوَّابِيْنَ وَاجْعَلْنِيْ مِنَ الْمُتَطَهِّرِيْنَ</b>
+                    <br><br>
+                    Translation:
+                    "O Allah! Make me among those who repent and make me among those who keep themselves pure."</p>
+                </div>`
+        },
+
+                ur: {
+            title: "وضو کی مکمل معلومات",
+            sub: "وضو کا بیان",
+            listen: "سنیے (Listen All)",
+            footer: "Deeni Rehbar - صحیح علم، صحیح عمل",
+            voice: "ur-PK",
+            dir: "rtl",
+            html: `
+                <div class="info-card">
+                    <h3>وضو کا بیان</h3>
+                    <p>وضو نماز کے لیے پاکی حاصل کرنے کا ایک طریقہ ہے۔</p>
+                </div>
+
+                <div class="faraiz-card">
+                    <h3>وضو کے فرائض</h3>
+                    <p style="color:white;">وضو میں چار چیزیں فرض ہیں:
+                    1. پیشانی کے بالوں سے ٹھوڑی کے نیچے تک اور ایک کان کی لو سے دوسرے کان کی لو تک منہ دھونا۔
+                    2. دونوں ہاتھ کہنیوں سمیت دھونا۔
+                    3. چوتھائی سر کا مسح کرنا۔
+                    4. دونوں پاؤں ٹخنوں سمیت دھونا۔
+                    (عالمگیری ج: 1، ص: 2)</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>وضو کی سنتیں</h3>
+                    <p>وضو میں تیرہ سنتیں ہیں:
+                    1. نیت کرنا۔
+                    2. بسم اللہ پڑھنا۔
+                    3. پہلے تین بار دونوں ہاتھ گٹوں تک دھونا۔
+                    4. مسواک کرنا۔
+                    5. تین بار کلی کرنا۔
+                    6. تین بار ناک میں پانی ڈالنا۔
+                    7. داڑھی کا خلال کرنا۔
+                    8. ہاتھ پاؤں کی انگلیوں کا خلال کرنا۔
+                    9. ہر عضو کو تین بار دھونا۔
+                    10. ایک بار تمام سر کا مسح کرنا۔
+                    11. دونوں کانوں کا مسح کرنا۔
+                    12. ترتیب سے وضو کرنا۔
+                    13. پے در پے وضو کرنا کہ ایک عضو خشک نہ ہونے پائے دوسرا دھو لے۔
+                    (عالمگیری ج: 1، ص: 2)</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>وضو کے مستحبات</h3>
+                    <p>وضو میں پانچ چیزیں مستحب ہیں:
+                    1. دائیں طرف سے شروع کرنا۔
+                    2. گردن کا مسح کرنا۔
+                    3. وضو کے کام کو خود کرنا۔
+                    4. قبلہ کی طرف منہ کر کے بیٹھنا۔
+                    5. پاک اور اونچی جگہ بیٹھ کر وضو کرنا۔</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>وضو کے مکروہات</h3>
+                    <p>وضو میں چار چیزیں مکروہ ہیں:
+                    1. ناپاک جگہ پر وضو کرنا۔
+                    2. سیدھے ہاتھ سے ناک صاف کرنا۔
+                    3. وضو کرنے میں دنیا کی باتیں کرنا۔
+                    4. سنت کے خلاف وضو کرنا۔
+                    (عالمگیری ج: 1، ص: 9)</p>
+                </div>
+
+                <div class="info-card" style="border-right: 5px solid #c62828;">
+                    <h3>نواقضِ وضو (وضو توڑنے والی چیزیں)</h3>
+                    <p>آٹھ چیزوں سے وضو ٹوٹ جاتا ہے:
+                    1. پاخانہ پیشاب کرنا یا ان دونوں راستوں سے کسی اور چیز کا نکلنا۔
+                    2. ریح یعنی ہوا کا پیچھے سے نکلنا۔
+                    3. بدن کے کسی مقام سے خون یا پیپ کا نکل کر بہہ جانا۔
+                    4. منہ بھر کر قے (الٹی) کرنا۔
+                    5. لیٹ کر یا سہارا لگا کر سو جانا۔
+                    6. بیماری یا کسی اور وجہ سے بے ہوش ہو جانا۔
+                    7. مجنون یعنی دیوانہ ہو جانا۔
+                    8. نماز میں قہقہہ مار کر ہنسنا۔
+                    (نور الایضاح، ص: 3)</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>وضو کرنے کا طریقہ</h3>
+                    <p>صاف برتن میں پاک پانی لے کر پاک و صاف اور اونچی جگہ پر بیٹھ کر قبلہ کی طرف منہ کر لو، پھر بسم اللہ پڑھو، اور تین بار گٹوں تک دونوں ہاتھ دھوؤ، پھر تین بار کلی کرو، مسواک کرو، مسواک نہ ہو تو انگلی سے دانت مل لو، پھر تین بار ناک میں پانی ڈال کر بائیں ہاتھ کی چھوٹی انگلی سے ناک صاف کرو۔ پھر تین بار منہ دھوؤ۔ منہ پر پانی زور سے نہ مارو بلکہ آہستہ سے پیشانی پر پانی ڈال کر دھوؤ، پیشانی کے بالوں سے ٹھوڑی نیچے تک اور ایک کان کی لو سے دوسرے کان کی لو تک منہ دھوؤ، پھر کہنیوں سمیت دونوں ہاتھ دھوؤ۔ پہلے داہنا ہاتھ تین بار پھر بایاں ہاتھ تین بار دھوؤ، پھر نیا پانی لے کر سر کا مسح کرو، پھر کانوں کا مسح کرو، پھر گردن کا مسح کرو۔ مسح صرف ایک ایک مرتبہ کرو۔ پھر تین تین مرتبہ دونوں پاؤں ٹخنوں سمیت دھوؤ، پہلے دایاں پاؤں پھر بایاں پاؤں دھوؤ اور بعد فراغت کلمہ شہادت اور یہ دعا پڑھو:
+                    <br><br>
+                    <b>اَللّٰهُمَّ اجْعَلْنِيْ مِنَ التَّوَّابِيْنَ وَاجْعَلْنِيْ مِنَ الْمُتَطَهِّرِيْنَ</b>
+                    <br><br>
+                    اردو ترجمہ:
+                    "اے اللہ! مجھے توبہ کرنے والوں میں بنا دے اور مجھے (گناہوں اور ناپاکیوں سے) پاک رہنے والوں میں شامل کر دے۔"</p>
+                </div>`
+        },
+
+              ar: {
+    title: "معلومات كاملة عن الوضوء",
+    sub:"بيان الوضوء",
+    listen: "استمع للكل",
+    footer: "ديني رهبر - علم صحيح، عمل صحيح",
+    voice: "ar-SA",
+    dir: "rtl",
+    html: `
+        <div class="info-card">
+            <h3>بيان الوضوء</h3>
+            <p>الوضوء هو وسيلة شرعية لتحصيل الطهارة من أجل الصلاة.</p>
+        </div>
+
+        <div class="faraiz-card">
+            <h3>فرائض الوضوء</h3>
+            <p style="color:white;">فرائض الوضوء أربعة:
+            ١. غسل الوجه من منابت شعر الرأس إلى أسفل الذقن، ومن شحمة الأذن إلى شحمة الأذن الأخرى.
+            ٢. غسل اليدين مع المرفقين.
+            ٣. مسح ربع الرأس.
+            ٤. غسل الرجلين مع الكعبين.
+            (الفتاوى الهندية، ج: ١، ص: ٢)</p>
+        </div>
+
+        <div class="info-card">
+            <h3>سنن الوضوء</h3>
+            <p>سنن الوضوء ثلاث عشرة سنة:
+            ١. النية.
+            ٢. التسمية (قول بسم الله).
+            ٣. غسل اليدين إلى الرسغين ثلاثاً في البداية.
+            ٤. السواك.
+            ٥. المضمضة ثلاثاً.
+            ٦. الاستنشاق ثلاثاً.
+            ٧. تخليل اللحية.
+            ٨. تخليل أصابع اليدين والرجلين.
+            ٩. غسل كل عضو ثلاثاً.
+            ١٠. مسح جميع الرأس مرة واحدة.
+            ١١. مسح الأذنين.
+            ١٢. الترتيب في الوضوء.
+            ١٣. الموالاة (أن يغسل العضو قبل جفاف العضو السابق).
+            (الفتاوى الهندية، ج: ١، ص: ٢)</p>
+        </div>
+
+        <div class="info-card">
+            <h3>مستحبات الوضوء</h3>
+            <p>مستحبات الوضوء خمسة:
+            ١. البدء بالجهة اليمنى.
+            ٢. مسح الرقبة.
+            ٣. القيام بأعمال الوضوء بنفسه.
+            ٤. الاستقبال باتجاه القبلة.
+            ٥. الجلوس في مكان طاهر ومرتفع للوضوء.</p>
+        </div>
+
+        <div class="info-card">
+            <h3>مكروهات الوضوء</h3>
+            <p>مكروهات الوضوء أربعة:
+            ١. الوضوء في مكان نجس.
+            ٢. تنظيف الأنف باليد اليمنى.
+            ٣. التحدث بأمور الدنيا أثناء الوضوء.
+            ٤. الوضوء خلاف السنة.
+            (الفتاوى الهندية، ج: ١، ص: ٩)</p>
+        </div>
+
+        <div class="info-card" style="border-right: 5px solid #c62828;">
+            <h3>نواقض الوضوء (الأمور التي تبطل الوضوء)</h3>
+            <p>ينقض الوضوء بثمانية أشياء:
+            ١. خروج البول أو الغائط أو أي شيء من السبيلين.
+            ٢. خروج الريح من الدبر.
+            ٣. خروج الدم أو القيح من أي مكان في الجسم وسيلانه.
+            ٤. القيء بملء الفم.
+            ٥. النوم مستلقياً أو متكئاً على شيء.
+            ٦. فقدان الوعي بسبب المرض أو لسبب آخر.
+            ٧. الجنون أو زوال العقل.
+            ٨. القهقهة (الضحك بصوت عالٍ) في الصلاة.
+            (نور الإيضاح، ص: ٣)</p>
+        </div>
+
+        <div class="info-card">
+            <h3>طريقة الوضوء</h3>
+            <p>خذ ماءً طاهراً في إناء نظيف، واجلس في مكان طاهر ومرتفع مستقبلاً القبلة، ثم قل "بسم الله"، واغسل يديك إلى الرسغين ثلاث مرات، ثم تمضمض ثلاث مرات، واستخدم السواك (وإن لم يتوفر فافرك أسنانك بإصبعك)، ثم استنشق الماء في أنفك ثلاث مرات ونظفه بإصبع الخنصر من اليد اليسرى. ثم اغسل وجهك ثلاث مرات؛ لا تلطم وجهك بالماء بقوة بل اسكبه برفق بدءاً من الجبهة، من منابت الشعر إلى أسفل الذقن ومن شحمة الأذن إلى الأخرى. ثم اغسل يديك مع المرفقين؛ اليد اليمنى أولاً ثلاث مرات ثم اليسرى ثلاث مرات، ثم خذ ماءً جديداً وامسح رأسك، ثم أذنيك، ثم رقبتك (المسح مرة واحدة فقط). ثم اغسل قدميك مع الكعبين ثلاث مرات؛ القدم اليمنى أولاً ثم اليسرى. وبعد الفراغ، اقرأ كلمة الشهادة وهذا الدعاء:
+            <br><br>
+            <b>اَللّٰهُمَّ اجْعَلْنِيْ مِنَ التَّوَّابِيْنَ وَاجْعَلْنِيْ مِنَ الْمُتَطَهِّرِيْنَ</b>
+            <br><br>
+            الترجمة:
+            "اللهم اجعلني من التوابين واجعلني من المتطهرين (من الذنوب والنجاسات)."</p>
+        </div>`
+}
+};
+function applySettings() {
+    const lang = localStorage.getItem('pref_lang') || 'hi';
+    
+    const data = contentData[lang] || contentData['hi'];
+    
+    document.getElementById('pageTitle').innerText = data.title;
+    document.getElementById('pageSub').innerText = data.sub;
+    
+    document.getElementById('dynamic-content').innerHTML = data.html;
+}
+
+window.onload = applySettings;
+</script>
+</body>
+</html>

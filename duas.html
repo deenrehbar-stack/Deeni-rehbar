@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masnoon Dua Index</title>
+    <style>
+        :root { --p-green: #004d40; --light-bg: #f1f5f9; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--light-bg); margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        .header { 
+            background: var(--p-green); 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 20px; 
+            font-weight: bold; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        
+        /* RTL Support for Urdu & Arabic */
+        .rtl { direction: rtl; text-align: right; }
+        .rtl .dua-item { flex-direction: row-reverse; }
+        .rtl .dua-item span.arrow { transform: rotate(180deg); margin-right: 10px; margin-left: 0; }
+
+        .category-block { 
+            margin-bottom: 20px; 
+            background: white; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            border: 1px solid #e2e8f0; 
+        }
+
+        .category-header { 
+            background: #e0f2f1; 
+            color: var(--p-green); 
+            padding: 12px 18px; 
+            font-weight: bold; 
+            font-size: 17px; 
+            border-bottom: 2px solid var(--p-green); 
+        }
+
+        .dua-item { 
+            padding: 14px 18px; 
+            border-bottom: 1px solid #f1f5f9; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+            color: #334155; 
+            font-size: 15px; 
+            line-height: 1.4; 
+            transition: 0.2s;
+        }
+
+        .dua-item:last-child { border-bottom: none; }
+        .dua-item:active { background-color: #f8fafc; color: var(--p-green); }
+        .dua-item span.arrow { color: #cbd5e1; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <div class="header" id="mainTitle">मसनून दुआएं (इंडेक्स)</div>
+
+    <div class="container" id="indexContainer">
+        </div>
+
+<script>
+const langData = {
+    hi: {
+        title: "मसनून दुआएं (इंडेक्स)",
+        categories: [
+            { head: "🌅 सुबह और बेदारी", items: ["सोकर उठने की दुआ", "आसमान देखने की दुआ", "बाथरूम जाने की दुआ", "बाथरूम से निकलने की दुआ", "वुज़ू शुरू करने की दुआ", "वुज़ू के दरमियान की दुआ", "वुज़ू के बाद की दुआ", "मिस्वाक की दुआ", "लिबास पहनने की दुआ", "नया लिबास पहनने की दुआ", "आईना देखने की दुआ", "सुबह के अज़कार"] },
+            { head: "🕌 घर और मस्जिद", items: ["घर से निकलने की दुआ", "घर में दाखिल होने की दुआ", "मस्जिद जाने की दुआ", "मस्जिद में दाखिल होने की दुआ",
+            "मस्जिद में बैठने की नियत",
+            "मस्जिद से निकलने की दुआ", "अज़ान का जवाब", "अज़ान के बाद की दुआ"] },
+            { head: "🍽️ खाना और पीना", items: ["खाने से पहले की दुआ", "दुआ भूल जाने पर", "खाने के बाद की दुआ", "मेज़बान के लिए दुआ", "दूध पीने की दुआ", "पानी पीने की दुआ", "ज़मज़म की दुआ", "इफ्तार की दुआ", "सहरी की दुआ", "दावत खाने के बाद"] },
+            { head: "🤝 मेल-जोल", items: ["सलाम करना", "सलाम का जवाब", "छींक आने पर", "छींक का जवाब", "मजलिस की दुआ", "शुक्रिया (जज़ाकल्लाह)", "दोस्ती की दुआ", "हाथ मिलाते वक़्त", "किसी को हँसता देख"] },
+            { head: "🚗 सफर", items: ["बाज़ार जाने की दुआ", "सवारी की दुआ", "सफर शुरू करने की दुआ", "बुलंदी पर चढ़ने की दुआ", "नीचे उतरने की दुआ", "सफर से वापसी", "शहर में दाखिल होने पर", "मुसाफिर को रुखसत करना"] },
+            { head: "🛡️ परेशानी", items: ["मुश्किल आसान करने की दुआ", "क़र्ज़ की दुआ", "परेशानी की दुआ", "गुस्से की दुआ", "शैतान से बचने की दुआ", "इम्तिहान में कामयाबी", "इस्तखारा की दुआ", "दुश्मन का खौफ"] },
+            { head: "💊 सेहत", items: ["बीमारी की दुआ", "बीमार की अयादत", "दर्द की जगह दुआ", "बुख़ार की दुआ", "नज़र-ए-बद की दुआ", "बच्चों की नज़र की दुआ", "मरीज के पास बैठने की दुआ"] },
+            { head: "☁️ मौसम", items: ["नया चाँद देखना", "बारिश की दुआ", "तेज़ हवा की दुआ", "बिजली की गरज", "बारिश रुकने पर", "मुर्ग की बांग", "बादल गरजने की दुआ"] },
+            { head: "🤲 मगफिरत", items: ["तौबा की दुआ", "ईमान पर खात्मा", "क़ब्रिस्तान की दुआ", "वालदैन के लिए दुआ", "नेक औलाद की दुआ", "सैय्यदुल इस्तिग़फ़ार", "गुनाहों की माफ़ी"] },
+            { head: "🌙 रात", items: ["शाम के अज़कार", "सोने से पहले की दुआ", "सूरह मुल्क", "आयतुल कुर्सी", "नींद में डरना", "तहज्जुद के लिए उठना", "दुनिया-आख़िरत की भलाई", "सोते वक़्त करवट बदलना"] }
+        ]
+    },
+    en: {
+        title: "Masnoon Duas (Index)",
+        categories: [
+            { head: "🌅 Morning & Waking Up", items: ["Waking up", "Looking at the sky", "Entering bathroom", "Leaving bathroom", "Starting Wudu", "During Wudu", "After Wudu", "Using Miswak", "Wearing clothes", "New clothes", "Looking in mirror", "Morning Azkar"] },
+            { head: "🕌 Home & Mosque", items: ["Leaving home", "Entering home", "Walking to mosque", "Entering mosque",
+             "Intention for staying in the Mosque","Leaving mosque", "Replying to Azan", "After Azan"] },
+            { head: "🍽️ Eating & Drinking", items: ["Before eating", "If forgotten", "After eating", "Dua for host", "After drinking milk", "Drinking water", "Drinking Zamzam", "At Iftar", "At Sehri", "After a feast"] },
+            { head: "🤝 Socializing", items: ["Greeting (Salam)", "Replying to Salam", "On sneezing", "Reply to sneeze", "Leaving a meeting", "Giving thanks", "Dua for friendship", "Shaking hands", "Seeing someone laugh"] },
+            { head: "🚗 Travel & Business", items: ["Entering market", "Mounting vehicle", "Starting journey", "Going uphill", "Going downhill", "Returning from travel", "Entering a city", "Bidding farewell"] },
+            { head: "🛡️ Hardships", items: ["For easy tasks", "Freedom from debt", "During distress", "During anger", "Protection from Shaitan", "Success in exams", "Istikhara", "Fear of enemy"] },
+            { head: "💊 Health", items: ["During illness", "Visiting the sick", "For pain", "During fever", "Evil eye protection", "Protecting children", "Sitting with a patient"] },
+            { head: "☁️ Nature & Weather", items: ["Sighting new moon", "During rain", "Strong winds", "Thunder", "After rain", "Hearing rooster", "Cloudy weather"] },
+            { head: "🤲 Repentance", items: ["For forgiveness", "Ending on Iman", "Entering graveyard", "For parents", "For pious children", "Sayyidul Istigfar", "General Repentance"] },
+            { head: "🌙 Evening & Night", items: ["Evening Azkar", "Before sleeping", "Surah Mulk", "Ayatul Gursee", "Fear in sleep", "Waking for Tahajjud", "Good in both worlds", "Turning in sleep"] }
+        ]
+    },
+    ur: {
+        title: "مسنون دعائیں (انڈیکس)",
+        categories: [
+            { head: "🌅 صبح اور بیداری", items: ["سو کر اٹھنے کی دعا", "آسمان دیکھنے کی دعا", "بیت الخلا جانے کی دعا", "بیت الخلا سے نکلنے کی دعا", "وضو شروع کرنے کی دعا", "دورانِ وضو دعا", "وضو کے بعد کی دعا", "مسواک کی دعا", "لباس پہننے کی دعا", "نیالباس پہننے کی دعا"]},
+            { head: "🕌 گھر اور مسجد", items: [
+    "گھر سے نکلنے کی دعا", 
+    "گھر میں داخل ہونے کی دعا", 
+    "مسجد جانے کی دعا", 
+    "مسجد میں داخلہ", 
+    "مسجد میں بیٹھنے کی نیت", 
+    "مسجد سے نکلنا", 
+    "اذان کا جواب", 
+    "اذان کے بعد کی دعا"
+] },
+
+            { head: "🍽️ کھانا اور پینا", items: ["کھانے سے پہلے", "دعا بھول جانے پر", "کھانے کے بعد", "میزبان کے لیے دعا", "دودھ پینے کی دعا", "پانی پینے کی دعا", "زمزم کی دعا", "افطار کی دعا", "سحری کی دعا", "دعوت کے بعد"] },
+            { head: "🤝 میل جول", items: ["سلام کرنا", "سلام کا جواب", "چھینک آنے پر", "چھینک کا جواب", "مجلس کی دعا", "شکریہ کی دعا", "دوستی کی دعا", "مصافحہ کی دعا", "کسی کو ہنستا دیکھ کر"] },
+            { head: "🚗 سفر", items: ["بازار کی دعا", "سواری کی دعا", "سفر کی دعا", "بلندی پر چڑھنے کی", "نیچے اترنے کی", "سفر سے واپسی", "بستی میں داخلہ", "مسافر کو رخصت کرنا"] },
+            { head: "🛡️ پریشانی", items: ["مشکل کام کی دعا", "قرض کی دعا", "پریشانی کی دعا", "غصے کی دعا", "شیطان سے بچاؤ", "امتحان میں کامیابی", "استخارہ کی دعا", "دشمن کا خوف"] },
+            { head: "💊 صحت", items: ["بیماری کی دعا", "عیادت کی دعا", "درد کی دعا", "بخار کی دعا", "نظرِ بد کی دعا", "بچوں کی نظر", "مریض کے پاس بیٹھنے کی دعا"] },
+            { head: "☁️ موسم", items: ["نیا چاند دیکھنا", "بارش کی دعا", "آندھی کی دعا", "بجلی کی گرج", "بارش کے بعد", "مرغ کی آواز", "بادل گرجنے پر"] },
+            { head: "🤲 مغفرت", items: ["توبہ کی دعا", "ایمان پر خاتمہ", "قبرستان کی دعا", "والدین کے لیے دعا", "نیک اولاد کی دعا", "سید الاستغفار", "گناہوں کی معافی"] },
+            { head: "🌙 رات", items: ["شام کے اذکار", "سونے سے پہلے", "سورہ ملک", "آیت الکرسی", "نیند میں ڈرنا", "تہجد کے لیے اٹھنا", "دنیا و آخرت کی بھلائی", "کرٹ بدلنے کی دعا"] }
+        ]
+    },
+    ar: {
+        title: "فهرس الأدعية المأثورة",
+        categories: [
+            { head: "🌅 الصباح والاستيقاظ", items: ["دعاء الاستيقاظ", "النظر إلى السماء", "دخول الخلاء", "الخروج من الخلاء", "بدء الوضوء", "أثناء الوضوء", "بعد الوضوء", "عند السواك", "لبس الثوب", "الثوب الجديد", "النظر في المرآة", "أذكار الصباح"] },
+            { head: "🏠 والمسجد", items: [
+    "الخروج من البيت", 
+    "دخول البيت", 
+    "المشي إلى المسجد", 
+    "دخول المسجد", 
+    "نية الاعتكاف في المسجد", 
+    "الخروج من المسجد", 
+    "إجابة الأذان", 
+    "دعاء بعد الأذان"
+] },
+
+            { head: "🍽️ الطعام والشراب", items: ["قبل الطعام", "نسيان التسمية", "بعد الطعام", "دعاء للمضيف", "شرب اللبن", "شرب الماء", "شرب زمزم", "عند الإفطار", "عند السحور", "بعد الوليمة"] },
+            { head: "🤝 التواصل الاجتماعي", items: ["إلقاء السلام", "رد السلام", "عند العطاس", "الرد على العاطس", "كفارة المجلس", "دعاء الشكر", "دعاء المحبة", "عند المصافحة", "عند رؤية مبتسم"] },
+            { head: "🚗 السفر", items: ["دخول السوق", "ركوب الدابة", "دعاء السفر", "عند الصعود", "عند النزول", "الرجوع من السفر", "دخول القرية", "توديع المسافر"] },
+            { head: "🛡️ الهم والشدائد", items: ["تيسير الأمور", "قضاء الدين", "عند الكرب", "عند الغضب", "الاستعاذة من الشيطان", "النجاح في الامتحان", "صلاة الاستخارة", "خوف العدو"] },
+            { head: "💊 الصحة", items: ["دعاء المريض", "عيادة المريض", "وضع اليد على الألم", "عند الحمى", "من العين", "تعويذ الأولاد", "عند المريض"] },
+            { head: "☁️ الطبيعة", items: ["رؤية الهلال", "عند المطر", "عند الريح", "سماع الرعد", "بعد المطر", "صياح الديك", "عند الغيوم"] },
+            { head: "🤲 الاستغفار", items: ["دعاء التوبة", "حسن الخاتمة", "دخول المقابر", "دعاء للوالدين", "الذرية الصالحة", "سيد الاستغفار", "طلب المغفرة"] },
+            { head: "🌙 المساء والليل", items: ["أذكار المساء", "قبل النوم", "سورة الملك", "آية الكرسي", "الفزع في النوم", "القيام للتهجد", "خير الدنيا والآخرة", "عند التقلب"]}
+        ]
+    }
+};
+
+
+function applySettings() {
+    // Ye line aapke Ghusl wale code se li gayi hai
+    // Home page se jo 'pref_lang' save hogi, wahi yahan use hogi
+    const lang = localStorage.getItem('pref_lang') || 'hi';
+    
+    const data = langData[lang] || langData['hi'];
+    document.getElementById('mainTitle').innerText = data.title;
+    const container = document.getElementById('indexContainer');
+
+    // RTL for Urdu
+    if(lang === 'ur') {
+        document.body.classList.add('rtl');
+        document.body.style.textAlign = 'right';
+    } else {
+        document.body.classList.remove('rtl');
+        document.body.style.textAlign = 'left';
+    }
+
+    let html = '';
+    data.categories.forEach(cat => {
+        html += `<div class="category-block">
+                    <div class="category-header">${cat.head}</div>`;
+        cat.items.forEach(name => {
+            html += `<div class="dua-item" onclick="openDua('${name}')">
+                        ${name} <span class="arrow">➔</span>
+                     </div>`;
+        });
+        html += `</div>`;
+    });
+    container.innerHTML = html;
+}
+
+function openDua(name) {
+    // Ye line user ko detail page par le jayegi aur bataegi konsi dua kholni hai
+    window.location.href = `dua-detail.html?dua=${encodeURIComponent(name)}`;
+}
+
+
+// Page load par settings apply karein
+window.onload = applySettings;
+</script>
+
+</body>
+</html>

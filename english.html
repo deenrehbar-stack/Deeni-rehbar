@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn English - Deeni Rehbar</title>
+    <style>
+        :root {
+            --p-green: #1b4332;
+            --gold: #c5a059;
+            --blue: #0984e3;
+            --light-bg: #f0f7f0;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--light-bg); margin: 0; padding: 20px; text-align: center; transition: 0.3s; }
+        
+        /* RTL Support for Urdu */
+        [dir="rtl"] { text-align: right; }
+        [dir="rtl"] .header, [dir="rtl"] .back-btn { text-align: center; }
+
+        .header { margin-bottom: 30px; }
+        .header h2 { color: var(--p-green); margin-bottom: 5px; }
+
+        .main-choice-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .choice-card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: #2d3436;
+            border: 2px solid transparent;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .choice-card:active { transform: scale(0.95); border-color: var(--blue); }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 15px;
+        }
+
+        .video-icon { background: #ffebee; color: #d32f2f; }
+        .book-icon { background: #e3f2fd; color: #1976d2; }
+
+        .choice-card h3 { margin: 10px 0 5px; font-size: 20px; }
+        .choice-card p { font-size: 14px; color: #666; margin: 0; }
+
+        .back-btn { margin-top: 30px; display: inline-block; color: var(--p-green); font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2 data-key="eng_title">Learn English</h2>
+        <p data-key="eng_subtitle">Choose your learning method</p>
+    </div>
+
+    <div class="main-choice-container">
+        <div class="choice-card" onclick="location.href='english_video.html'">
+            <div class="icon-circle video-icon">🎬</div>
+            <h3 data-key="video_title">Learn with Video</h3>
+            <p data-key="video_desc">Watch and listen to experts</p>
+        </div>
+
+        <div class="choice-card" onclick="location.href='english_levels.html'">
+            <div class="icon-circle book-icon">📚</div>
+            <h3 data-key="book_title">Learn with Books</h3>
+            <p data-key="book_desc">Best books based on your level</p>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn" data-key="back_home">⬅ Back to Home</a>
+
+    <script>
+        // Translations Data
+        const translations = {
+            ur: {
+                dir: "rtl",
+                eng_title: "انگریزی سیکھیں",
+                eng_subtitle: "سیکھنے کا طریقہ منتخب کریں",
+                video_title: "ویڈیو سے سیکھیں",
+                video_desc: "ماہرین کو دیکھیں اور سنیں",
+                book_title: "کتابوں سے سیکھیں",
+                book_desc: "آپ کے لیول کے مطابق بہترین کتابیں",
+                back_home: "⬅ واپس ہوم پر جائیں"
+            },
+            hi: {
+                dir: "ltr",
+                eng_title: "अंग्रेजी सीखें",
+                eng_subtitle: "सीखने का तरीका चुनें",
+                video_title: "वीडियो से सीखें",
+                video_desc: "विशेषज्ञों को देखें और सुनें",
+                book_title: "किताबों से सीखें",
+                book_desc: "आपके स्तर के अनुसार बेहतरीन किताबें",
+                back_home: "⬅ वापस होम पर जाएं"
+            },
+            en: {
+                dir: "ltr",
+                eng_title: "Learn English",
+                eng_subtitle: "Choose your learning method",
+                video_title: "Learn with Video",
+                video_desc: "Watch and listen to experts",
+                book_title: "Learn with Books",
+                book_desc: "Best books based on your level",
+                back_home: "⬅ Back to Home"
+            }
+        };
+
+        function applyLanguage() {
+            const lang = localStorage.getItem('pref_lang') || 'ur';
+            const t = translations[lang];
+            
+            document.body.dir = t.dir;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[key]) {
+                    el.innerText = t[key];
+                }
+            });
+        }
+
+        window.onload = applyLanguage;
+    </script>
+</body>
+</html>

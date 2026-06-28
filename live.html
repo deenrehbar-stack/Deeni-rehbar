@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="hi" id="html-tag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Haramein - Deeni Rehbar</title>
+    <style>
+        :root {
+            --p-green: #004d40;
+            --gold: #c5a059;
+            --bg-light: #f4fbf4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            text-align: center;
+        }
+
+        .header {
+            background: var(--p-green);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 30px 30px;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute; left: 20px; top: 40px;
+            color: white; text-decoration: none; font-size: 22px;
+        }
+
+        .container { padding: 30px 20px; }
+
+        .live-box {
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 2px solid #eee;
+            transition: 0.3s;
+        }
+
+        .live-box:active { transform: scale(0.98); }
+
+        .icon-circle {
+            width: 80px; height: 80px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            border: 2px solid var(--gold);
+            line-height: 80px;
+        }
+
+        h3 { color: var(--p-green); margin: 10px 0; }
+        p { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+        .play-btn {
+            background: #ff0000;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(255,0,0,0.3);
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 10px; height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <!-- Back Button (Dynamic alignment is handled by JavaScript) -->
+        <a href="index.html" class="back-btn">←</a>
+        <h2 id="main-title" style="margin:0;">Makkah & Madinah Live</h2>
+        <p id="main-subtitle" style="font-size: 14px; opacity: 0.9; margin-top:5px;">Seedha Haramein Shareefain se Live</p>
+    </div>
+
+    <div class="container">
+        <!-- Dynamic Cards Container Block -->
+        <div id="dynamic-live-content"></div>
+    </div>
+
+    <div class="footer" id="note-text" style="font-size: 12px; color: #999; padding: 20px; line-height: 1.5; text-align: center;">
+        * Ye links aapko seedha official Saudi TV channels par le jayenge jahan 24/7 live streaming chalti hai.
+    </div>
+
+    <script>
+        // Exact dataset mapping format matching your ghusl logic structural blueprint
+        const liveContentData = {
+            hi: {
+                title: "मक्का और मदीना लाइव",
+                sub: "सीधे हरमैन शरीफैन से लाइव",
+                note: "* ये लिंक आपको सीधे आधिकारिक सऊदी टीवी चैनलों पर ले जाएंगे जहां 24/7 लाइव स्ट्रीमिंग चलती है।",
+                dir: "ltr",
+                html: `
+                    <div class="live-box">
+                        <div class="icon-circle">🕋</div>
+                        <h3>मक्का अल-मुकर्रमा</h3>
+                        <p>मस्जिद-अल-हरम से लाइव तिलावत और दृश्य देखें।</p>
+                        <a href="https://www.youtube.com/c/saudiqurantv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> लाइव देखें (YouTube)
+                        </a>
+                    </div>
+                    <div class="live-box">
+                        <div class="icon-circle">🕌</div>
+                        <h3>मदीना अल-मुनव्वरा</h3>
+                        <p>मस्जिद-ए-नबवी (S.A.W) से लाइव दृश्य देखें।</p>
+                        <a href="https://www.youtube.com/c/saudisunnahtv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> लाइव देखें (YouTube)
+                        </a>
+                    </div>`
+            },
+            ur: {
+                title: "مکہ اور مدینہ لائیو",
+                sub: "سیدھا حرمین شریفین سے لائیو",
+                note: "* یہ لنکس آپ کو سیدھا آفیشل سعودی ٹی وی چینلز پر لے جائیں گے جہاں 24/7 لائیو اسٹریمنگ چلتی ہے۔",
+                dir: "rtl",
+                html: `
+                    <div class="live-box">
+                        <div class="icon-circle">🕋</div>
+                        <h3>مکہ المکرمہ</h3>
+                        <p>مسجد الحرام سے لائیو تلاوت اور مناظر دیکھیں۔</p>
+                        <a href="https://www.youtube.com/c/saudiqurantv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> لائیو دیکھیں (YouTube)
+                        </a>
+                    </div>
+                    <div class="live-box">
+                        <div class="icon-circle">🕌</div>
+                        <h3>مدینہ منورہ</h3>
+                        <p>مسجد نبوی (S.A.W) سے لائیو مناظر دیکھیں۔</p>
+                        <a href="https://www.youtube.com/c/saudisunnahtv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> لائیو دیکھیں (YouTube)
+                        </a>
+                    </div>`
+            },
+            ar: {
+                title: "البث المباشر للحرمين",
+                sub: "بث مباشر من الحرمين الشريفين مباشرة",
+                note: "* ستنقلك هذه الروابط مباشرة إلى القنوات التلفزيونية السعودية الرسمية التي تبث على مدار الساعة.",
+                dir: "rtl",
+                html: `
+                    <div class="live-box">
+                        <div class="icon-circle">🕋</div>
+                        <h3>مكة المكرمة</h3>
+                        <p>شاهد التلاوة المباشرة والمناظر من المسجد الحرام.</p>
+                        <a href="https://www.youtube.com/c/saudiqurantv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> تشغيل البث (YouTube)
+                        </a>
+                    </div>
+                    <div class="live-box">
+                        <div class="icon-circle">🕌</div>
+                        <h3>المدينة المنورة</h3>
+                        <p>شاهد المناظر المباشرة من المسجد النبوي الشريف.</p>
+                        <a href="https://www.youtube.com/c/saudisunnahtv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> تشغيل البث (YouTube)
+                        </a>
+                    </div>`
+            },
+            en: {
+                title: "Makkah & Madinah Live",
+                sub: "Live from Haramein Shareefain directly",
+                note: "* These links will take you directly to the official Saudi TV channels broadcasting 24/7 live streaming.",
+                dir: "ltr",
+                html: `
+                    <div class="live-box">
+                        <div class="icon-circle">🕋</div>
+                        <h3>Makkah Al-Mukarramah</h3>
+                        <p>Watch live recitation and views from Masjid-al-Haram.</p>
+                        <a href="https://www.youtube.com/c/saudiqurantv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> Play Live (YouTube)
+                        </a>
+                    </div>
+                    <div class="live-box">
+                        <div class="icon-circle">🕌</div>
+                        <h3>Madinah Al-Munawwarah</h3>
+                        <p>Watch live views from Masjid-e-Nabwi (S.A.W).</p>
+                        <a href="https://www.youtube.com/c/saudisunnahtv/live" target="_blank" class="play-btn">
+                            <span class="live-indicator"></span> Play Live (YouTube)
+                        </a>
+                    </div>`
+            }
+        };
+
+        function applyLiveSettings() {
+            // Fetching active preference tracking system configuration record matching your homepage structure
+            const lang = localStorage.getItem('pref_lang') || 'hi';
+            const data = liveContentData[lang] || liveContentData['hi'];
+            
+            // Layout global configurations injection
+            document.getElementById('main-title').innerText = data.title;
+            document.getElementById('main-subtitle').innerText = data.sub;
+            document.getElementById('note-text').innerText = data.note;
+            document.getElementById('dynamic-live-content').innerHTML = data.html;
+
+            document.body.dir = data.dir;
+            document.body.style.textAlign = (data.dir === 'rtl') ? 'right' : 'left';
+            
+            // Explicit directional handling for structural alignment over application nav elements
+            const backBtn = document.querySelector('.back-btn');
+            if (data.dir === 'rtl') {
+                backBtn.style.left = 'auto';
+                backBtn.style.right = '20px';
+                backBtn.innerText = '→'; // Flips layout navigation handle text indicators for Arabic/Urdu
+            } else {
+                backBtn.style.right = 'auto';
+                backBtn.style.left = '20px';
+                backBtn.innerText = '←';
+            }
+        }
+
+        // Execution entry point hook attached directly to runtime windows frame wrapper
+        window.onload = applyLiveSettings;
+    </script>
+</body>
+</html>

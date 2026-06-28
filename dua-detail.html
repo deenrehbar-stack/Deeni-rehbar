@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dua Details</title>
+    <style>
+        :root { --p-green: #004d40; --light-bg: #f1f5f9; --text-dark: #334155; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--light-bg); margin: 0; padding: 0; color: var(--text-dark); }
+        
+        .header { 
+            background: var(--p-green); 
+            color: white; 
+            padding: 15px; 
+            display: flex;
+            align-items: center;
+            font-size: 18px; 
+            font-weight: bold; 
+            position: sticky; top: 0; z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .back-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; margin-right: 15px; padding: 0 5px; }
+        
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        
+        /* Card Styling */
+        .dua-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .dua-title { font-size: 20px; color: var(--p-green); font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #e0f2f1; padding-bottom: 8px; }
+        
+        /* Scripts Display */
+        .arabic-text { font-size: 26px; line-height: 1.8; text-align: right; direction: rtl; color: #000; margin: 20px 0; font-family: 'Traditional Arabic', Georgia, serif; }
+        .translation-block { margin-top: 15px; font-size: 16px; line-height: 1.5; }
+        .label { font-weight: bold; color: var(--p-green); display: block; margin-top: 10px; }
+
+        /* RTL Support for Urdu & Arabic */
+        .rtl { direction: rtl; text-align: right; }
+        .rtl .back-btn { transform: rotate(180deg); margin-left: 15px; margin-right: 0; }
+        .rtl .dua-title { text-align: right; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">«</button>
+        <span id="pageTitle">दुआ विवरण</span>
+    </div>
+
+    <div class="container" id="duaContainer">
+        <!-- Dynamic content content load hoga -->
+    </div>
+
+<script>
+// Naya Structure: Ek dua ke andar hi saari languages (Hi, En, Ur, Ar) line-by-line maujood hain
+const duasMasterData = {
+    // 1. सोकर उठने की दुआ
+    "so_uthna": {
+        hi: { key: "सोकर उठने की दुआ", title: "सोकर उठने की दुआ", translation: "तमाम तारीफें अल्लाह के लिए हैं जिसने हमें मारने (सुलाने) के बाद जिंदा (बेदार) किया और उसी की तरफ लौट कर जाना है।" },
+        en: { key: "Waking up", title: "Dua Upon Waking Up", translation: "All praise is to Allah Who gave us life after causing us to die (sleep), and unto Him is the resurrection." },
+        ur: { key: "سو کر اٹھنے کی دعا", title: "سو کر اٹھنے کی دعا", translation: "تمام تعریفیں اللہ کے لیے ہیں جس نے ہمیں مارنے (سلانے) کے بعد زندہ (بیدار) کیا اور اسی کی طرف لوٹ کر جانا ہے۔" },
+        ar: { key: "دعاء الاستيقاظ", title: "دعاء الاستيقاظ من النوم", translation: "الحمد لله الذي أعاد لنا الحياة بعد أن أماتنا بالنوم، وإليه العودة والنشور يوم القيامة." },
+        arabicRaw: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ"
+    },
+
+    // 2. आसमान देखने की दुआ
+    "asman_dekhna": {
+        hi: { key: "आसमान देखने की दुआ", title: "आसमान देखने की दुआ", translation: "ऐ हमारे रब! तूने यह सब (आसमान, ज़मीन और कायनात) बेकार नहीं पैदा किया, तू पाक है, पस हमें आग (जहन्नम) के अज़ाब से बचा ले।"
+ },
+        en: { key: "Looking at the sky", title: "Looking at the Sky", translation: "Our Lord, You did not create this aimlessly; exalted are You [above such a thing]; then protect us from the punishment of the Fire." },
+        ur: { key: "آسمان دیکھنے کی دعا", title: "آسمان دیکھنے کی دعا", translation: "اے ہمارے رب! تو نے یہ سب (آسمان اور زمین) بے مقصد پیدا نہیں کیا، تو پاک ہے، پس ہمیں آگ کے عذاب سے بچا لے۔"
+ },
+        ar: { key: "النظر إلى السماء", title: "النظر إلى السماء", translation:"يا ربنا، أنت لم تخلق هذا الكون العظيم بلا فائدة أو عبثاً، تنزهت وتقدست عن ذلك، فاحمنا من عذاب جهنم"
+ },
+        arabicRaw: "رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ"
+    },
+
+    // 3. बाथरूम जाने की दुआ
+    "washroom_in": {
+        hi: { key: "बाथरूम जाने की दुआ", title: "बाथरूम जाने की दुआ", translation: "ऐ अल्लाह! मैं नापाक जिन्नों (नर और मादा) की बुराई से तेरी पनाह चाहता हूँ।" },
+        en: { key: "Entering bathroom", title: "Entering the Bathroom", translation: "O Allah, I seek refuge with You from the bad jinns (male and female)." },
+        ur: { key: "بیت الخلا جانے کی دعا", title: "بیت الخلا جانے کی دعا", translation: "اے اللہ! میں ناپاک جنوں (نر اور مادہ) کی برائی سے تیری پناہ مانگتا ہوں۔" },
+        ar: { key: "دخول الخلاء", title: "دخول الخلاء", translation: "اللهم إني ألجأ إليك وأستعيذ بك من شرور الشياطين ذكوراً وإناثاً." },
+        arabicRaw: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ"
+    },
+
+    // 4. बाथरूम से निकलने की दुआ
+    "washroom_out": {
+        hi: { key: "बाथरूम से निकलने की दुआ", title: "बाथरूम से निकलने की दुआ", translation: "ऐ अल्लाह! मैं तेरी माफ़ी चाहता हूँ। तमाम तारीफें उस अल्लाह के लिए हैं जिसने मुझसे तकलीफदेह चीज़ को दूर किया और मुझे आराम दिया।" },
+        en: { key: "Leaving bathroom", title: "Leaving the Bathroom", translation: "I ask for Your forgiveness. Praise be to Allah who removed from me discomfort and gave me ease." },
+        ur: { key: "بیت الخلا سے نکلنے کی دعا", title: "بیت الخلا سے نکلنے کی دعا", translation: "اے اللہ! میں تیری معافی چاہتا ہوں۔ تمام تعریفیں اس اللہ کے لیے ہیں جس نے مجھ سے تکلیف دہ چیز دور کی اور مجھے عافیت دی۔" },
+        ar: { key: "الخروج من الخلاء", title: "الخروج من الخلاء", translation: "أسألك مغفرتك يا رب، والحمد لله الذي أزاح عن جسدي الأذى ومنحني العافية." },
+        arabicRaw: "غُفْرَانَكَ الْحَمْدُ لِلَّهِ الَّذِي أَذْهَبَ عَنِّي الأَذَى وَعَافَانِي"
+    },
+
+    // 5. वुज़ू शुरू करने की दुआ
+    "wudu_start": {
+        hi: { key: "वुज़ू शुरू करने की दुआ", title: "वुज़ू शुरू करने की दुआ", translation: "अल्लाह के नाम से शुरू करता हूँ और तमाम तारीफें अल्लाह ही के लिए हैं।" },
+        en: { key: "Starting Wudu", title: "Starting Wudu", translation: "In the name of Allah, and all praise is due to Allah." },
+        ur: { key: "وضو شروع کرنے کی دعا", title: "وضو شروع کرنے کی دعا", translation: "اللہ کے نام سے شروع کرتا ہوں اور تمام تعریفیں اللہ ہی کے لیے ہیں۔" },
+        ar: { key: "بدء الوضوء", title: "بدء الوضوء", translation: "أبدأ وضوئي مستعيناً باسم الله، والحمد لله على نعمة الإسلام والإيمان." },
+        arabicRaw: "بِسْمِ اللَّهِ وَالْحَمْدُ لِلَّهِ"
+    },
+
+    // 6. वुज़ू के दरमियान की दुआ
+    "wudu_during": {
+        hi: { key: "वुज़ू के दरमियान की दुआ", title: "वुज़ू के दरमियान की दुआ", translation: "ऐ अल्लाह! मेरे गुनाह माफ़ कर दे, मेरे घर में कुशादगी (बरकत) अता फरमा और मेरे रिज़्क में बरकत दे।" },
+        en: { key: "During Wudu", title: "During Wudu", translation: "O Allah! Forgive my sins, grant expansion in my home, and bless my livelihood." },
+        ur: { key: "دورانِ وضو دعا", title: "دورانِ وضو دعا", translation: "اے اللہ! میرے گناہ معاف کر دے، میرے گھر میں وسعت عطا فرما اور میرے رزق میں برکت دے۔" },
+        ar: { key: "أثناء الوضوء", title: "أثناء الوضوء", translation: "اللهم اغفر لي خطاياي، واجعل بيتي واسعاً مباركاً، وبارك لي في رزقي وقوتي." },
+        arabicRaw: "اللَّهُمَّ اغْفِرْ لِي ذَنْبِي وَوَسِّعْ لِي فِي دَارِي وَبَارِكْ لِي فِي رِزْقِي"
+    },
+
+    // 7. वुज़ू के बाद की दुआ
+    "wudu_after": {
+        hi: { key: "वुज़ू के बाद की दुआ", title: "वुज़ू के बाद की दुआ", translation: "मैं गवाही देता हूँ कि अल्लाह के सिवा कोई माबूद नहीं, वह अकेला है उसका कोई शरीक नहीं, और गवाही देता हूँ कि मुहम्मद (सल्ल.) उसके बंदे और रसूल हैं। ऐ अल्लाह! मुझे तौबा करने वालों और पाक-साफ रहने वालों में बना दे।" },
+        en: { key: "After Wudu", title: "After Wudu", translation: "I bear witness that there is no deity but Allah alone without partner, and Muhammad is His servant and Messenger. O Allah, make me among those who repent and make me among those who purify themselves." },
+        ur: { key: "وضو کے بعد کی دعا", title: "وضو کے بعد کی دعا", translation: "میں گواہی دیتا ہوں کہ اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے اس کا کوئی شریک نہیں، اور گواہی دیتا ہوں کہ محمد ﷺ اس کے بندے اور رسول ہیں۔ اے اللہ! مجھے توبہ کرنے والوں اور پاک صاف رہنے والوں میں بنا دے۔" },
+        ar: { key: "بعد الوضوء", title: "بعد الوضوء", translation: "أشهد أن لا معبود بحق إلا الله وحده، وأن محمداً عبده ورسوله. اللهم اجعلني من كثرة التوابين واجعلني من المتطهرين دائماً." },
+        arabicRaw: "أَشْهَدُ أَنْ لا إِلَهَ إِلا اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، اللَّهُمَّ اجْعَلْنِي مِنَ التَّوَّابِينَ وَاجْعَلْنِي مِنَ الْمُتَطَهِّرِينَ"
+    },
+
+    // 8. मिस्वाक की दुआ
+    "miswak": {
+        hi: { key: "मिस्वाक की दुआ", title: "मिस्वाक की दुआ", translation: "ऐ अल्लाह! मेरे लिए इस मिस्वाक में बरकत अता फरमा और मुझे इस पर सवाब दे।" },
+        en: { key: "Using Miswak", title: "Using Miswak", translation: "O Allah, bless me in this miswak and reward me for using it." },
+        ur: { key: "مسواک کی دعا", title: "مسواک کی دعا", translation: "اے اللہ! میرے لیے اس مسواک میں برکت عطا فرما اور مجھے اس پر ثواب دے।" },
+        ar: { key: "عند السواك", title: "عند السواك", translation: "اللهم بارك لي في هذه السُنّة العظيمة واجعل لي فيها ثواباً وأجراً." },
+        arabicRaw: "اللَّهُمَّ بَارِكْ لِي فِيهِ وَأَثِبْنِي عَلَيْهِ"
+    },
+
+    // 9. लिबास पहनने की दुआ
+    "clothes_on": {
+        hi: { key: "लिबास पहनने की दुआ", title: "लिबास पहनने की दुआ", translation: "तमाम तारीफें अल्लाह के लिए हैं जिसने मुझे यह लिबास पहनाया और मेरी किसी ताकत और कोशिश के बिना मुझे यह अता किया।" },
+        en: { key: "Wearing clothes", title: "Wearing Clothes", translation: "Praise be to Allah Who has clothed me with this garment and provided it for me without any power or might from myself." },
+        ur: { key: "لباس پہننے کی دعا", title: "لباس پہننے کی دعا", translation: "تمام تعریفیں اللہ کے لیے ہیں جس نے مجھے یہ لباس پہنایا اور میری کسی طاقت اور کوشش کے بغیر مجھے یہ عطا کیا۔" },
+        ar: { key: "لبس الثوب", title: "لبس الثوب", translation: "الحمد لله الذي رزقني هذا الكساء وستر عورتي من غير مجهود مني ولا قوة." },
+        arabicRaw: "الْحَمْدُ لِلَّهِ الَّذِي كَسَانِي هَذَا الثَّوْبَ وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلا قُوَّةٍ"
+    },
+
+    // 10. नया लिबास पहनने की दुआ
+   "clothes_new": {
+    hi: { 
+        key: "नया लिबास पहनने की दुआ", 
+        title: "नया लिबास पहनने की दुआ", 
+        translation: "ऐ अल्लाह! तमाम तारीफें तेरे ही लिए हैं कि तूने मुझे यह कपड़ा पहनाया। मैं तुझसे इसकी भलाई और जिस (नेक काम) के लिए यह बनाया गया है उसकी भलाई मांगता हूँ। और इसके नुकसान से और जिस (बुरे काम) के लिए यह बनाया गया है उसके नुकसान से तेरी पनाह चाहता हूँ।" 
+    },
+    en: { 
+        key: "New clothes", 
+        title: "Wearing New Clothes", 
+        translation: "O Allah, to You belongs all praise. You have clothed me with this (garment). I ask You for its good and the good for which it was made, and I seek refuge with You from its evil and the evil for which it was made." 
+    },
+    ur: { 
+        key: "نیالباس پہننے کی دعا", 
+       
+       
+        title: "نیا لباس پہننے کی دعا", 
+        translation: "اے اللہ! تمام تعریفیں تیرے ہی لیے ہیں کہ تو نے مجھے یہ کپڑا پہنایا۔ میں تجھ سے اس کی بھلائی اور جس (نیک کام) کے لیے یہ بنایا گیا ہے اس کی بھلائی مانگتا ہوں۔ اور اس کے نقصان سے اور جس (برے کام) کے لیے یہ بنایا گیا ہے اس کے نقصان سے تیری پناہ چاہتا ہوں" 
+    },
+    ar: { 
+        key: "الثوب الجديد", 
+        title: "دعاء لبس الثوب الجديد", 
+        translation: "اللهم لك الشكر والحمد على ما أنعمت به علي من لباس جديد، أسألك من خيره ونفعه وأعوذ بك من شره وأذاه." 
+    },
+    arabicRaw: "اللَّهُمَّ لَكَ الْحَمْدُ أَنْتَ كَسَوْتَنِيهِ، أَسْأَلُكَ مِنْ خَيْرِهِ وَخَيْرِ مَا صُنِعَ لَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّهِ وَشَرِّ مَا صُنِعَ لَهُ"
+},
+
+
+    // 11. आईना देखने की दुआ
+    "mirror": {
+        hi: { key: "आईना देखने की दुआ", title: "आईना देखने की दुआ", translation: "ऐ अल्लाह! तूने मेरी सूरत (शरीर) को अच्छा बनाया, मेरी सीरत (अख़लाक़) को भी अच्छा बना दे।" },
+        en: { key: "Looking in mirror", title: "Looking in Mirror", translation: "O Allah, You have made my physical creation beautiful, so make my character beautiful as well." },
+        ur: { key: "آئینہ دیکھنے کی دعا", title: "آئینہ دیکھنے کی دعا", translation: "اے اللہ! تو نے میری صورت (جسم) کو اچھا بنایا، میری سیرت (اخلاق) کو بھی اچھا بنا دے।" },
+        ar: { key: "النظر في المرآة", title: "النظر في المرآة", translation: "اللهم كما جمّلت مظهري جسدي الخارجي، فجمّل باطني وأخلاقي." },
+        arabicRaw: "اللَّهُمَّ أَنْتَ حَسَّنْتَ خَلْقِي فَحَسِّنْ خُلُقِي"
+    },
+
+    // 12. सुबह के अज़कार
+    "morning_azkar": {
+        hi: { key: "सुबह के अज़कार", title: "सुबह के अज़कार", translation: "हमने सुबह की और अल्लाह की पूरी बादशाही ने सुबह की, और तमाम तारीफें अल्लाह ही के लिए हैं। अल्लाह के सिवा कोई माबूद नहीं, वह अकेला है, उसका कोई शरीक (साझीदार) नहीं। उसी की बादशाही है और उसी के लिए तमाम तारीफें हैं, और वह हर चीज़ पर कादिर (शक्तिमान) है। ऐ मेरे रब! मैं तुझसे इस दिन की भलाई और इसके बाद की भलाई मांगता हूँ, और इस दिन की बुराई और इसके बाद की बुराई से तेरी पनाह चाहता हूँ। ऐ मेरे रब! मैं सुस्ती और बुढ़ापे की खराबियों से तेरी पनाह चाहता हूँ। ऐ मेरे रब! मैं जहन्नम के अज़ाब से और कब्र के अज़ाब से तेरी पनाह मांगता हूँ।"
+ },
+        en: { key: "Morning Azkar", title: "Morning Azkar", translation: "We have entered upon the morning and the whole kingdom of Allah has entered upon the morning, and all praise is due to Allah. There is no god but Allah, alone, without partner. To Him belongs the kingdom and to Him belongs the praise, and He has power over all things. My Lord, I ask You for the good of this day and the good of what follows it, and I seek refuge in You from the evil of this day and the evil of what follows it. My Lord, I seek refuge in You from laziness and the hardships of old age. My Lord, I seek refuge in You from the punishment of the Hellfire and the punishment of the grave."
+ },
+        ur: { key: "صبح کے اذکار", title: "صبح کے اذکار", translation: "ہم نے صبح کی اور اللہ کی تمام بادشاہی نے صبح کی، اور تمام تعریفیں اللہ ہی کے لیے ہیں۔ اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں۔ اسی کی بادشاہی ہے اور اسی کے لیے تمام تعریفیں ہیں، اور وہ ہر چیز پر قادر ہے۔ اے میرے رب! میں تجھ سے اس دن کی بھلائی اور اس کے بعد کی بھلائی مانگتا ہوں، اور اس دن کی برائی اور اس کے بعد کی برائی سے تیری پناہ چاہتا ہوں۔ اے میرے رب! میں سستی اور بڑھاپے کی خرابیوں سے تیری پناہ چاہتا ہوں۔ اے میرے رب! میں جہنم کے عذاب سے اور قبر کے عذاب سے تیری پناہ مانگتا ہوں۔"
+ },
+        ar: { key: "أذكار الصباح", title: "أذكار الصباح", translation: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ، وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ" },
+        arabicRaw: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ، وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ"
+    },
+        // 13. घर से निकलने की दुआ
+    "home_out": {
+        hi: { key: "घर से निकलने की दुआ", title: "घर से निकलने की दुआ", translation: "अल्लाह के नाम से (मैं निकलता हूँ), मैंने अल्लाह पर भरोसा किया। गुनाहों से बचने और नेक काम करने की ताकत सिर्फ अल्लाह की तरफ से ही है।" },
+        en: { key: "Leaving home", title: "Dua When Leaving Home", translation: "In the name of Allah, I place my trust in Allah. There is no might nor power except with Allah." },
+        ur: { key: "گھر سے نکلنے کی دعا", title: "گھر سے نکلنے کی دعا", translation: "اللہ کے نام سے (میں نکلتا ہوں)، میں نے اللہ پر بھروسہ کیا۔ گناہوں سے بچنے اور نیک کام کرنے کی طاقت صرف اللہ کی طرف سے ہی ہے۔" },
+        ar: { key: "الخروج من البيت", title: "دعاء الخروج من البيت", translation: "بسم الله، توكلت على الله، ولا حول ولا قوة إلا بالله العلي العظيم." },
+        arabicRaw: "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ وَلا حَوْلَ وَلا قُوَّةَ إِلاَّ بِاللَّهِ"
+    },
+
+    // 14. घर में दाखिल होने की दुआ
+    "home_in": {
+        hi: { key: "घर में दाखिल होने की दुआ", title: "घर में दाखिल होने की दुआ", translation: "ऐ अल्लाह! मैं तुझसे घर में दाखिल होने और निकलने की बेहतरीन जगह का सवाल करता हूँ। अल्लाह के नाम से ही हम दाखिल हुए और अल्लाह के नाम से ही हम निकले, और हमने अपने रब अल्लाह पर भरोसा किया।" },
+        en: { key: "Entering home", title: "Dua When Entering Home", translation: "O Allah, I ask You for the good of entrance and the good of exit. In the name of Allah we enter, and in the name of Allah we leave, and upon our Lord Allah we rely." },
+        ur: { key: "گھر میں داخل ہونے کی دعا", title: "گھر میں داخل ہونے کی دعا", translation: "اے اللہ! میں تجھ سے گھر میں داخل ہونے اور نکلنے کی بہترین جگہ کا سوال کرتا ہوں۔ اللہ کے نام سے ہی ہم داخل ہوئے اور اللہ کے نام سے ہی ہم نکلے، اور ہم نے اپنے رب اللہ پر بھروسہ کیا۔" },
+        ar: { key: "دخول البيت", title: "دعاء دخول البيت", translation: "اللهم إني أسألك خير المولج وخير المخرج، بسم الله ولجنا، وبسم الله خرجنا، وعلى الله ربنا توكلنا." },
+        arabicRaw: "اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ الْمَوْلِجِ وَخَيْرَ الْمُخْرَجِ، بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا"
+    },
+
+    // 15. मस्जिद जाने की दुआ
+    "mosque_going": {
+        hi: { key: "मस्जिद जाने की दुआ", title: "मस्जिद जाने की दुआ", translation: "ऐ अल्लाह! मेरे दिल में नूर पैदा कर दे, मेरी ज़ुबान में नूर, मेरे कानों में नूर, मेरी आँखों में नूर, मेरे ऊपर नूर, मेरे नीचे नूर, मेरे दाएँ नूर, मेरे बाएँ नूर, मेरे आगे नूर और मेरे पीछे नूर पैदा कर दे। और मेरे लिए नूर को बढ़ा दे।" },
+        en: { key: "Walking to mosque", title: "Dua While Walking to the Mosque", translation: "O Allah, place light in my heart, light in my tongue, light in my hearing, light in my sight, light above me, light below me, light on my right, light on my left, light in front of me, and light behind me; and magnify light for me." },
+        ur: { key: "مسجد جانے کی دعا", title: "مسجد جانے کی دعا", translation: "اے اللہ! میرے دل میں نور پیدا کر دے، میری زبان میں نور، میرے کانوں میں نور، میری آنکھوں میں نور، میرے اوپر نور، میرے نیچے نور، میرے دائیں نور، میرے بائیں نور، میرے آگے نور اور میرے پیچھے نور پیدا کر دے۔ اور میرے لیے نور کو بڑھا دے۔" },
+        ar: { key: "المشي إلى المسجد", title: "دعاء المشي إلى المسجد", translation: "اللهم اجعل في قلبي نوراً، وفي لساني نوراً، وفي سمعي نوراً، وفي بصري نوراً، ومن فوقي نوراً، ومن تحتي نوراً، وعن يميني نوراً، وعن شمالي نوراً، ومن أمامي نوراً، ومن خلفي نوراً، واجعل لي نوراً." },
+        arabicRaw: "اللَّهُمَّ اجْعَلْ فِي قَلْبِي نُورًا وَفِي لِسَانِي نُورًا وَفِي سَمْعِي نُورًا وَفِي بَصَرِي نُورًا وَمِنْ فَوْقِي نُورًا وَمِنْ تَحْتِي نُورًا وَعَنْ يَمِينِي نُورًا وَعَنْ شِمَالِي نُورًا وَمِنْ أَمَامِي نُورًا وَمِنْ خَلْفِي نُورًا وَاجْعَلْ لِي نُورًا"
+    },
+
+    // 16. मस्जिद में दाखिल होने की दुआ
+    "mosque_in": {
+        hi: { key: "मस्जिद में दाखिल होने की दुआ", title: "मस्जिद में दाखिल होने की दुआ", translation: "अल्लाह के नाम से (शुरुआत करता हूँ) और अल्लाह के रसूल (सल्लल्लाहु अलैहि वसल्लम) पर सलाम हो। ऐ अल्लाह! मेरे लिए अपनी रहमत के दरवाज़े खोल दे।" },
+        en: { key: "Entering mosque", title: "Dua When Entering the Mosque", translation: "In the name of Allah, and peace be upon the Messenger of Allah. O Allah, open for me the gates of Your mercy." },
+        ur: { key: "مسجد میں داخلہ", title: "مسجد میں داخل ہونے کی دعا", translation: "اللہ کے نام سے (شروعات کرتا ہوں) اور اللہ کے رسول ﷺ پر سلام ہو۔ اے اللہ! میرے لیے اپنی رحمت کے دروازے کھول دے۔" },
+        ar: { key: "دخول المسجد", title: "دعاء دخول المسجد", translation: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ." },
+        arabicRaw: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ"
+    },
+
+    // 17. मस्जिद में बैठने की नियत
+    "mosque_sit": {
+        hi: { key: "मस्जिद में बैठने की नियत", title: "मस्जिद में बैठने (एतिकाफ़) की नियत", translation: "मैंने नफ़्ल एतिकाफ़ की नियत की, जब तक मैं मस्जिद में रहूँ।" },
+        en: { key: "Intention for staying in the Mosque", title: "Intention for Itikaf in Mosque", translation: "I intend the Sunnah of Itikaf for as long as I remain in the mosque." },
+        ur: { key: "مسجد میں بیٹھنے کی نیت", title: "مسجد میں بیٹھنے کی نیت", translation: "میں نے نفل اعتکاف کی نیت کی، جب تک میں مسجد میں رہوں۔" },
+        ar: { key: "نية الاعتكاف في المسجد", title: "نية الاعتكاف في المسجد", translation: "نويت سنة الاعتكاف لله تعالى ما دمت في المسجد." },
+        arabicRaw: "نَوَيْتُ سُنَّةَ الإِعْتِكَافِ لِلَّهِ تَعَالَى"
+    },
+
+    // 18. मस्जिद से निकलने की दुआ
+    "mosque_out": {
+        hi: { key: "मस्जिद से निकलने की दुआ", title: "मस्जिद से निकलने की दुआ", translation: "अल्लाह के नाम से (शुरुआत करता हूँ) और अल्लाह के रसूल (सल्लल्लाहु अलैहि वसल्लम) पर सलाम हो। ऐ अल्लाह! मैं तुझसे तेरे फ़ज़ल (रोज़ी/बरकत) का सवाल करता हूँ। ऐ अल्लाह! मुझे दुत्कारे हुए शैतान से महफ़ूज़ रख।" },
+        en: { key: "Leaving mosque", title: "Dua When Leaving the Mosque", translation: "In the name of Allah, and peace be upon the Messenger of Allah. O Allah, I ask You of Your bounty. O Allah, protect me from Shaitan, the outcast." },
+        ur: { key: "مسجد سے نکلنا", title: "مسجد سے نکلنے کی دعا", translation: "اللہ کے نام سے (شروعات کرتا ہوں) اور اللہ کے رسول ﷺ پر سلام ہو۔ اے اللہ! میں تجھ سے تیرے فضل کا سوال کرتا ہوں۔ اے اللہ! مجھے دھتکارے ہوئے شیطان سے محفوظ رکھ۔" },
+        ar: { key: "الخروج من المسجد", title: "دعاء الخروج من المسجد", translation: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ، اللَّهُمَّ اعْصِمْنِي مِنَ الشَّيْطَانِ الرَّجِيمِ." },
+        arabicRaw: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ، اللَّهُمَّ اعْصِمْنِي مِنَ الشَّيْطَانِ الرَّجِيمِ"
+    },
+
+    // 19. अज़ान का जवाब
+    "azan_reply": {
+        hi: { key: "अज़ान का जवाब", title: "अज़ान का जवाब देना", translation: "अज़ान के कलिमात का जवाब वैसे ही दें जैसे मुअज़्ज़िन कहे। सिर्फ 'हय्या अलस्सलाह' और 'हय्या अलल्फलाह' के जवाब में यह कहें:" },
+        en: { key: "Replying to Azan", title: "Replying to Azan", translation: "Repeat the words of the Muazzin. Except when he says 'Hayya 'alas-Salah' and 'Hayya 'alal-Falah', reply with:" },
+        ur: { key: "اذان کا جواب", title: "اذان کا جواب", translation: "اذان کے کلمات کا جواب ویسے ہی دیں جیسے مؤذن کہے۔ صرف 'حی علی الصلاۃ' اور 'حی علی الفلاح' کے جواب میں یہ کہیں:" },
+        ar: { key: "إجابة الأذان", title: "إجابة الأذان", translation: "ترديد كلمات الأذان خلف المؤذن، وعند سماع 'حي على الصلاة' و'حي على الفلاح' نقول:" },
+        arabicRaw: "لا حَوْلَ وَلا قُوَّةَ إِلاَّ بِاللَّهِ"
+    },
+
+    // 20. अज़ान के बाद की दुआ
+    "azan_after": {
+        hi: { key: "अज़ान के बाद की दुआ", title: "अज़ान के बाद की दुआ", translation: "ऐ अल्लाह! इस मुकम्मल पुकार और कायम होने वाली नमाज़ के रब! हमारे नबी मुहम्मद (सल्लल्लाहु अलैहि वसल्लम) को वसीला और बुज़ुर्ग़ी अता फरमा, और उन्हें मक़ाम-ए-महमूद पर पहुँचा जिसका तूने उनसे वादा किया है। यक़ीनन तू वादे के खिलाफ नहीं करता।" },
+        en: { key: "After Azan", title: "Dua After Azan", translation: "O Allah, Lord of this perfect call and established prayer, grant Muhammad the status of Al-Wasilah and eminence, and resurrect him to the praised station which You have promised him. Truly, You never break Your promise." },
+        ur: { key: "اذان کے بعد کی دعا", title: "اذان کے بعد کی دعا", translation: "اے اللہ! اس مکمل پکار اور قائم ہونے والی نماز کے رب! ہمارے نبی محمد ﷺ کو وسیلہ اور بزرگی عطا فرما، اور انہیں مقامِ محمود پر پہنچا جس کا تو نے ان سے وعدہ کیا ہے۔ یقیناً تو وعدے کے خلاف نہیں کرتا۔" },
+        ar: { key: "دعاء بعد الأذان", title: "دعاء بعد الأذان", translation: "اللهم رب هذه الدعوة التامة، والصلاة القائمة، آت محمداً الوسيلة والفضيلة، وابعثه مقاماً محموداً الذي وعدته، إنك لا تخلف الميعاد." },
+        arabicRaw: "اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ وَالصَّلاةِ الْقَائِمَةِ آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ، إِنَّكَ لا تُخْلِفُ الْمِيعَادَ"
+    },
+        // 21. खाने से पहले की दुआ
+    "before_eating": {
+        hi: { key: "खाने से पहले की दुआ", title: "खाने से पहले की दुआ", translation: "अल्लाह के नाम से और अल्लाह की बरकत पर (मैं खाना शुरू करता हूँ)।" },
+        en: { key: "Before eating", title: "Dua Before Eating", translation: "In the name of Allah and with the blessings of Allah (I begin eating)." },
+        ur: { key: "کھانے سے پہلے", title: "کھانے سے پہلے کی دعا", translation: "اللہ کے نام سے اور अल्लाह की बरकत पर (मैं खाना शुरू करता हूँ)।" },
+        ar: { key: "قبل الطعام", title: "دعاء قبل الطعام", translation: "بسم الله وعلى بركة الله." },
+        arabicRaw: "بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ"
+    },
+
+    // 22. दुआ भूल जाने पर
+    "forget_eating_dua": {
+        hi: { key: "दुआ भूल जाने पर", title: "खाने की शुरुआत में दुआ भूल जाने पर", translation: "अल्लाह के नाम से इसके शुरू में भी और इसके आख़िर में भी।" },
+        en: { key: "If forgotten", title: "Dua If Forgotten Before Eating", translation: "In the name of Allah in its beginning and its end." },
+        ur: { key: "دعا بھول جانے پر", title: "شروع میں دعا بھول جانے پر", translation: "अल्लाह के नाम से इसके शुरू में भी और इसके आख़िर में भी।" },
+        ar: { key: "نسيان التسمية", title: "دعاء نسيان التسمية في أول الطعام", translation: "بسم الله في أوله وآخره." },
+        arabicRaw: "بِسْمِ اللَّهِ أَوَّلَهُ وَآخِرَهُ"
+    },
+
+    // 23. खाने के बाद की दुआ
+    "after_eating": {
+        hi: { key: "खाने के बाद की दुआ", title: "खाने के बाद की दुआ", translation: "तमाम तारीफें अल्लाह के लिए हैं जिसने हमें खिलाया, पिलाया और हमें मुसलमान बनाया।" },
+        en: { key: "After eating", title: "Dua After Eating", translation: "Praise be to Allah who has fed us, given us drink, and made us Muslims." },
+        ur: { key: "کھانے کے بعد", title: "کھانے के बाद की दुआ", translation: "तमाम तारीफें अल्लाह के लिए हैं जिसने हमें खिलाया, पिलाया और हमें मुसलमान बनाया।" },
+        ar: { key: "بعد الطعام", title: "دعاء بعد الطعام", translation: "الحمد لله الذي أطعمنا وسقانا وجعلنا مسلمين." },
+        arabicRaw: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ"
+    },
+
+    // 24. मेज़बान के लिए दुआ
+    "dua_for_host": {
+        hi: { key: "मेज़बान के लिए दुआ", title: "मेज़बान (दावत देने वाले) के लिए दुआ", translation: "ऐ अल्लाह! उनके रिज़्क में बरकत अता फरमा जो तूने उन्हें दिया है, उन्हें माफ़ फरमा और उन पर रहम फरमा।" },
+        en: { key: "Dua for host", title: "Dua for the Host", translation: "O Allah, bless them in what You have provided for them, forgive them and have mercy upon them." },
+        ur: { key: "میزبان کے لیے دعا", title: "میزبان (دعوت دینے والے) کے لیے دعا", translation: "ऐ अल्लाह! उनके रिज़्क में बरकत अता फरमा जो तूने उन्हें दिया है, उन्हें माफ़ फरमा और उन पर रहम फरमा।" },
+        ar: { key: "دعاء للمضيف", title: "دعاء للمضيف", translation: "اللهم بارك لهم فيما رزقتهم، واغفر لهم وارحمهم." },
+        arabicRaw: "اللَّهُمَّ بَارِكْ لَهُمْ فِيمَا رَزَقْتَهُمْ، وَاغْفِرْ لَهُمْ وَارْحَمْهُمْ"
+    },
+
+    // 25. दूध पीने की दुआ
+    "drinking_milk": {
+        hi: { key: "दूध पीने की दुआ", title: "दूध पीने की दुआ", translation: "ऐ अल्लाह! हमारे लिए इसमें बरकत अता फरमा और हमें इससे ज़्यादा अता फरमा।" },
+        en: { key: "After drinking milk", title: "Dua After Drinking Milk", translation: "O Allah, bless us in it and give us more of it." },
+        ur: { key: "دودھ پینے کی دعا", title: "دودھ پینے کی دعا", translation: "ऐ अल्लाह! हमारे लिए इसमें बरकत अता फरमा और हमें इससे ज़्यादा अता फरमा।" },
+        ar: { key: "شرب اللبن", title: "دعاء عند شرب اللبن", translation: "اللهم بارك لنا فيه وزدنا منه." },
+        arabicRaw: "اللَّهُمَّ بَارِكْ لَنَا فِيهِ وَزِدْنَا مِنْهُ"
+    },
+
+    // 26. पानी पीने की दुआ
+    "drinking_water": {
+        hi: { key: "पानी पीने की दुआ", title: "पानी पीने के बाद की दुआ", translation: "तमाम तारीफें अल्लाह के लिए हैं जिसने अपनी रहमत से इसे मीठा और प्यास बुझाने वाला बनाया, और हमारे गुनाहों की वजह से इसे खारी (नमकीन) और कड़वा नहीं बनाया।" },
+        en: { key: "Drinking water", title: "Dua After Drinking Water", translation: "All praise is due to Allah Who by His mercy made it sweet and pleasant, and did not make it salty and bitter due to our sins." },
+        ur: { key: "پانی پینے کی دعا", title: "پانی پینے کے بعد کی دعا", translation: "तमाम तारीफें अल्लाह के लिए हैं जिसने अपनी रहमत से इसे मीठा और प्यास बुझाने वाला बनाया, और हमारे गुनाहों की वजह से इसे खاری (नमकीन) और कड़वा नहीं बनाया।" },
+        ar: { key: "شرب الماء", title: "دعاء بعد شرب الماء", translation: "الحمد لله الذي جعله عذباً فراتاً برحمته، ولم يجعله ملحاً أجاجاً بذنوبنا." },
+        arabicRaw: "الْحَمْدُ لِلَّهِ الَّذِي جَعَلَهُ عَذْبًا فُرَاتًا بِرَحْمَتِهِ، وَلَمْ يَجْعَلْهُ مِلْحًا أُجَاجًا بِذُنُوبِنَا"
+    },
+
+    // 27. ज़मज़म की दुआ
+    "zamzam_water": {
+        hi: { key: "ज़मज़म की दुआ", title: "ज़मज़म का पानी पीते वक़्त की दुआ", translation: "ऐ अल्लाह! मैं तुझसे नफ़ा देने वाले इल्म, कुशादा (बड़े) रिज़्क और हर बीमारी से शिफ़ा का सवाल करता हूँ।" },
+        en: { key: "Drinking Zamzam", title: "Dua for Drinking Zamzam Water", translation: "O Allah, I ask You for beneficial knowledge, abundant provision, and a cure from every illness." },
+        ur: { key: "زمزم کی دعا", title: "زمزم کا پانی پیتے وقت کی دعا", translation: "ऐ अल्लाह! मैं तुझसे नफ़ा देने वाले इल्म, कुशादा (बड़े) रिज़्क और हर बीमारी से शिफ़ा का सवाल करता हूँ।" },
+        ar: { key: "شرب زمزم", title: "دعاء شرب ماء زمزم", translation: "اللهم إني أسألك علماً نافعاً، ورزقاً واسعاً، وشفاءً من كل داء." },
+        arabicRaw: "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا وَاسِعًا، وَشِفَاءً مِنْ كُلِّ دَاءٍ"
+    },
+
+    // 28. इफ्तार की दुआ
+    "iftar_dua": {
+        hi: { key: "इफ्तार की दुआ", title: "इफ़्तार के वक़्त की दुआ", translation: "प्यास बुझ गई, रगें तर हो गईं और अल्लाह ने चाहा तो सवाब पक्का हो गया।" },
+        en: { key: "At Iftar", title: "Dua at the Time of Iftar", translation: "The thirst is gone, the veins are moistened, and the reward is confirmed, if Allah wills." },
+        ur: { key: "افطار کی دعا", title: "افطار کے وقت کی دعا", translation: "प्यास बुझ गई, रगें तर हो गईं और अल्लाह ने चाहा तो सवाब पक्का हो गया।" },
+        ar: { key: "عند الإفطار", title: "دعاء عند الإفطار", translation: "ذهب الظمأ، وابتلت العروق، وثبت الأجر إن شاء الله." },
+        arabicRaw: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ"
+    },
+
+    // 29. सहरी की दुआ
+    "sehri_intent": {
+        hi: { key: "सहरी की दुआ", title: "रमज़ान के रो़ज़े की नियत (सहरी)", translation: "मैंने कल के रमज़ान के फ़र्ज़ रोज़े की नियत की।" },
+        en: { key: "At Sehri", title: "Intention for Fasting (Sehri)", translation: "I intend to keep the obligatory fast of Ramadan tomorrow." },
+        ur: { key: "سحری کی دعا", title: "رمضان کے روزے کی نیت", translation: "मैंने कल के रमज़ान के फ़र्ज़ रोज़े की नियत की।" },
+        ar: { key: "عند السحور", title: "نية صيام رمضان عند السحور", translation: "نويت صيام غدٍ من شهر رمضان مبارك فرضاً لله تعالى." },
+        arabicRaw: "وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ"
+    },
+
+    // 30. दावत खाने के बाद
+    "after_feast": {
+        hi: { key: "दावत खाने के बाद", title: "दावत खाने के बाद मेज़बान के लिए दुआ", translation: "रोज़ेदारों ने तुम्हारे यहाँ इफ़्तार किया, नेक लोगों ने तुम्हारा खाना खाया और फ़रिश्तों ने तुम्हारे लिए रहमत की दुआएँ कीं।" },
+        en: { key: "After a feast", title: "Dua After Attending a Feast", translation: "May the fasting people break their fast with you, may the pious eat your food, and may the angels send blessings upon you." },
+        ur: { key: "دعوت کے بعد", title: "دعوت کھانے کے بعد میزبان کے لیے دعا", translation: "रोज़ेदारों ने तुम्हारे यहाँ इफ़्तार किया, नेक लोगों ने तुम्हारा खाना खाया और फ़रिश्तों ने तुम्हारे लिए रहमत की दुआएँ कीं।" },
+        ar: { key: "بعد الوليمة", title: "دعاء بعد تناول الطعام في الوليمة", translation: "أفطر عندكم الصائمون، وأكل طعامكم الأبرار، وصلت عليكم الملائكة." },
+        arabicRaw: "أَفْطَرَ عِنْدَكُمُ الصَّائِمُونَ، وَأَكَلَ طَعَامَكُمُ الأَبْرَارُ، وَصَلَّتْ عَلَيْكُمُ الْمَلائِكَةُ"
+    },
+        // 31. सलाम करना
+    "greeting_salam": {
+        hi: { key: "सलाम करना", title: "सलाम करना", translation: "तुम पर सलामती हो और अल्लाह की रहमतें और उसकी बरकतें हों।" },
+        en: { key: "Greeting (Salam)", title: "Greeting (Salam)", translation: "May the peace, mercy, and blessings of Allah be upon you." },
+        ur: { key: "سلام کرنا", title: "سلام کرنا", translation: "تم پر سلامتی ہو اور اللہ کی رحمتیں اور اس کی برکتیں ہوں۔" },
+        ar: { key: "إلقاء السلام", title: "إلقاء السلام", translation: "السلام عليكم ورحمة الله وبركاته." },
+        arabicRaw: "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ"
+    },
+
+    // 32. सलाम का जवाब
+    "reply_salam": {
+        hi: { key: "सलाम का जवाब", title: "सलाम का जवाब देना", translation: "और तुम पर भी सलामती हो और अल्लाह की रहमतें और उसकी बरकतें।" },
+        en: { key: "Replying to Salam", title: "Replying to Salam", translation: "And upon you be peace, and the mercy of Allah and His blessings." },
+        ur: { key: "سلام کا جواب", title: "سلام کا جواب دینا", translation: "اور تم پر بھی سلامتی ہو اور اللہ کی رحمتیں اور اس کی برکتیں ہوں۔" },
+        ar: { key: "رد السلام", title: "رد السلام", translation: "وعليكم السلام ورحمة الله وبركاته." },
+        arabicRaw: "وَعَلَيْكُمُ السَّلَامُ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ"
+    },
+
+    // 33. छींक आने पर
+    "sneezing": {
+        hi: { key: "छींक आने पर", title: "छींक आने पर (अल्हम्दुलिल्लाह)", translation: "तमाम तारीफें अल्लाह के लिए हैं।" },
+        en: { key: "On sneezing", title: "Upon Sneezing", translation: "All praise is due to Allah." },
+        ur: { key: "چھینک آنے پر", title: "چھینک آنے پر", translation: "تمام تعریفیں اللہ کے لیے ہیں۔" },
+        ar: { key: "عند العطاس", title: "عند العطاس", translation: "الحمد لله." },
+        arabicRaw: "الْحَمْدُ لِلَّهِ"
+    },
+
+    // 34. छींक का जवाब
+    "reply_sneezing": {
+        hi: { key: "छींक का जवाब", title: "छींक का जवाब देना (यरहमुकल्लाह)", translation: "अल्लाह आप पर रहम करे।" },
+        en: { key: "Reply to sneeze", title: "Replying to a Sneeze", translation: "May Allah have mercy upon you." },
+        ur: { key: "چھینک کا جواب", title: "چھینک کا جواب", translation: "اللہ آپ پر رحم کرے۔" },
+        ar: { key: "الرد على العاطس", title: "الرد على العاطس", translation: "يرحمك الله." },
+        arabicRaw: "يَرْحَمُكَ اللَّهُ"
+    },
+
+    // 35. मजलिस (बैठक) की दुआ
+    "meeting_kaffara": {
+        hi: { key: "मजलिस की दुआ", title: "मजलिस (बैठक) के आखिर की दुआ", translation: "ऐ अल्लाह! हम तेरी पाकी बयान करते हैं, मैं गवाही देता हूँ कि तेरे सिवा कोई इबादत के लायक नहीं, मैं तुझसे माफ़ी माँगता हूँ और तेरी तरफ तौबा करता हूँ।" },
+        en: { key: "Leaving a meeting", title: "Dua for Ending a Gathering", translation: "Glory is to You, O Allah, and praise is to You. I bear witness that there is none worthy of worship but You, I seek Your forgiveness and repent to You." },
+        ur: { key: "مجلس کی دعا", title: "مجلس کے آخر کی دعا", translation: "اے اللہ! ہم تیری پاکی بیان کرتے ہیں، میں گواہی دیتا ہوں کہ تیرے سوا کوئی عبادت کے لائق نہیں، میں تجھ سے معافی مانگتا ہوں اور تیری طرف توبہ کرتا ہوں۔" },
+        ar: { key: "كفارة المجلس", title: "كفارة المجلس", translation: "سبحانك اللهم وبحمدك، أشهد أن لا إله إلا أنت، أستغفرك وأتوب إليك." },
+        arabicRaw: "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ"
+    },
+
+    // 36. शुक्रिया (जज़ाकल्लाह)
+    "thanks_giving": {
+        hi: { key: "शुक्रिया (जज़ाकल्लाह)", title: "शुक्रिया अदा करने पर (जज़ाकल्लाह)", translation: "अल्लाह आपको बेहतर जज़ा (बदला) दे।" },
+        en: { key: "Giving thanks", title: "Dua for Thanking Someone", translation: "May Allah reward you with good." },
+        ur: { key: "شکریہ کی دعا", title: "شکریہ ادا کرنے کی دعا", translation: "اللہ آپ کو بہتر جزا (بدلہ) دے۔" },
+        ar: { key: "دعاء الشكر", title: "دعاء الشكر", translation: "جزاك الله خيراً." },
+        arabicRaw: "جَزَاكَ اللَّهُ خَيْرًا"
+    },
+
+    // 37. दोस्ती की दुआ
+    "friendship_dua": {
+        hi: { key: "दोस्ती की दुआ", title: "मुहब्बत और दोस्ती की दुआ", translation: "मैं आपसे अल्लाह की रज़ा के लिए मोहब्बत करता हूँ।" },
+        en: { key: "Dua for friendship", title: "Dua for Love and Friendship", translation: "I love you for the sake of Allah." },
+        ur: { key: "دوستی کی دعا", title: "محبت اور دوستی کی دعا", translation: "میں آپ سے اللہ کی رضا کے لیے محبت کرتا ہوں۔" },
+        ar: { key: "دعاء المحبة", title: "دعاء المحبة", translation: "أحبك الذي أحببتني له." },
+        arabicRaw: "أَحَبَّكَ الَّذِي أَحْبَبْتَنِي لَهُ"
+    },
+
+    // 38. हाथ मिलाते वक़्त
+    "shaking_hands": {
+        hi: { key: "हाथ मिलाते वक़्त", title: "हाथ मिलाते वक़्त (मुसाफ़हा)", translation: "अल्लाह हमारे और आपके गुनाहों को माफ़ करे।" },
+        en: { key: "Shaking hands", title: "Dua When Shaking Hands", translation: "May Allah forgive our sins and yours." },
+        ur: { key: "مصافحہ کی دعا", title: "مصافحہ (ہاتھ ملانے) کے وقت کی دعا", translation: "اللہ ہمارے اور آپ کے گناہوں کو معاف کرے۔" },
+        ar: { key: "عند المصافحة", title: "عند المصافحة", translation: "يغفر الله لنا ولكم." },
+        arabicRaw: "يَغْفِرُ اللَّهُ لَنَا وَلَكُمْ"
+    },
+
+    // 39. किसी को हँसता देख
+    "seeing_someone_laugh": {
+        hi: { key: "किसी को हँसता देख", title: "किसी को हँसता देख यह दुआ पढ़ें", translation: "अल्लाह तुम्हारे चेहरे को हमेशा हँसता रखे।" },
+        en: { key: "Seeing someone laugh", title: "Dua When Seeing Someone Laugh", translation: "May Allah always keep your face smiling." },
+        ur: { key: "کسی کو ہنستا دیکھ کر", title: "کسی کو ہنستا دیکھ کر", translation: "اللہ تمہارے چہرے کو ہمیشہ ہنستا رکھے۔" },
+        ar: { key: "عند رؤية مبتسم", title: "عند رؤية المبتسم", translation: "أضحك الله سنك." },
+        arabicRaw: "أَضْحَكَ اللَّهُ سِنَّكَ"
+    },
+        // 40. बाज़ार जाने की दुआ
+    "market_dua": {
+        hi: { key: "बाज़ार जाने की दुआ", title: "बाज़ार (Market) में दाखिल होने की दुआ", translation: "अल्लाह के सिवा कोई इबादत के लायक नहीं, वह अकेला है उसका कोई शरीक नहीं। उसी की बादशाही है और उसी के लिए तमाम तारीफें हैं, वही ज़िंदा करता है और वही मारता है। वह हमेशा रहने वाला है, कभी नहीं मरेगा। भलाई उसी के हाथ में है और वह हर चीज़ पर कादिर (समर्थ) है।" },
+        en: { key: "Entering market", title: "Dua Upon Entering the Market", translation: "There is none worthy of worship but Allah alone, having no partner. To Him belongs sovereignty and to Him is praise. He gives life and causes death. He is Ever-Living and will never die. In His hand is all good, and He is over all things omnipotent." },
+        ur: { key: "بازار کی دعا", title: "بازار میں داخل ہونے کی دعا", translation: "اللہ کے سوا کوئی عبادت کے لائق نہیں، وہ اکیلا ہے اس کا کوئی شریک نہیں۔ اسی کی بادشاہی ہے اور اسی کے لیے تمام تعریفیں ہیں۔ وہی زندہ کرتا ہے اور وہی مارتا ہے۔ وہ ہمیشہ رہنے والا ہے، کبھی نہیں مرے گا۔ بھلائی اسی کے ہاتھ میں ہے اور وہ ہر چیز پر قادر ہے۔" },
+        ar: { key: "دخول السوق", title: "دعاء دخول السوق", translation: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، يحيي ويميت، وهو حي لا يموت، بيده الخير، وهو على كل شيء قدير." },
+        arabicRaw: "لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، يُحْيِي وَيُمِيتُ، وَهُوَ حَيٌّ لاَ يَمُوتُ، بِيَدِهِ الْخَيْرُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ"
+    },
+
+    // 41. सवारी की दुआ
+    "vehicle_dua": {
+        hi: { key: "सवारी की दुआ", title: "सवारी पर बैठते वक़्त की दुआ", translation: "पाक है वह जिसने इसे हमारे काबू में कर दिया, और हम इसे काबू करने वाले नहीं थे। और हम बेशक अपने रब की तरफ लौटने वाले हैं।" },
+        en: { key: "Mounting vehicle", title: "Dua When Mounting a Vehicle", translation: "Glory be to Him who has subjected this to us, and we were not able to control it. And indeed, we will surely return to our Lord." },
+        ur: { key: "سواری کی دعا", title: "سواری پر بیٹھتے وقت کی دعا", translation: "پاک ہے وہ جس نے اسے ہمارے قابو میں کر دیا، اور ہم اسے قابو کرنے والے نہیں تھے۔ اور ہم بے شک اپنے رب کی طرف لوٹنے والے ہیں۔" },
+        ar: { key: "ركوب الدابة", title: "دعاء ركوب الدابة", translation: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ." },
+        arabicRaw: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ"
+    },
+
+    // 42. सफर शुरू करने की दुआ
+    "travel_dua": {
+        hi: { key: "सफर शुरू करने की दुआ", title: "सफर शुरू करने की दुआ", translation: "ऐ अल्लाह! हम इस सफर में तुझसे नेकी और परहेजगारी का सवाल करते हैं, और ऐसे काम का सवाल करते हैं जिसे तू पसंद करे। ऐ अल्लाह! इस सफर को हम पर आसान कर दे और इसकी दूरी को कम कर दे।" },
+        en: { key: "Starting journey", title: "Dua for Starting a Journey", translation: "O Allah, we ask You for righteousness and piety in this journey, and for deeds that please You. O Allah, make this journey easy for us and make its distance short." },
+        ur: { key: "سفر کی دعا", title: "سفر شروع کرنے کی دعا", translation: "اے اللہ! ہم اس سفر میں تجھ سے نیکی اور پرہیزگاری کا سوال کرتے ہیں، اور ایسے کام کا سوال کرتے ہیں جسے تو پسند کرے۔ اے اللہ! اس سفر کو ہم پر آسان کر دے اور اس کی دوری کو کم کر دے۔" },
+        ar: { key: "دعاء السفر", title: "دعاء السفر", translation: "اللهم إنا نسألك في سفرنا هذا البر والتقوى، ومن العمل ما ترضى، اللهم هون علينا سفرنا هذا، واطو عنا بعده." },
+        arabicRaw: "اللَّهُمَّ إِنَّا نَسْأَلُكَ فِي سَفَرِنَا هَذَا الْبِرَّ وَالتَّقْوَى، وَمِنَ الْعَمَلِ مَا تَرْضَى، اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا، وَاطْوِ عَنَّا بُعْدَهُ"
+    },
+
+    // 43. बुलंदी पर चढ़ने की दुआ
+    "uphill_dua": {
+        hi: { key: "बुलंदी पर चढ़ने की दुआ", title: "बुलंदी (पहाड़/ऊंचाई) पर चढ़ते वक्त", translation: "अल्लाह सबसे बड़ा है, अल्लाह सबसे बड़ा है, अल्लाह सबसे बड़ा है।" },
+        en: { key: "Going uphill", title: "Dua When Going Uphill", translation: "Allah is the Greatest, Allah is the Greatest, Allah is the Greatest." },
+        ur: { key: "بلندی پر چڑھنے کی", title: "بلندی پر چڑھتے وقت", translation: "اللہ سب سے بڑا ہے، اللہ سب سے بڑا ہے، اللہ سب سے بڑا ہے।" },
+        ar: { key: "عند الصعود", title: "عند الصعود (التكبير)", translation: "الله أكبر، الله أكبر، الله أكبر." },
+        arabicRaw: "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ"
+    },
+
+    // 44. नीचे उतरने की दुआ
+    "downhill_dua": {
+        hi: { key: "नीचे उतरने की दुआ", title: "ढलान (नीचे) उतरते वक्त", translation: "अल्लाह पाक है (तस्बीह करता हूँ)।" },
+        en: { key: "Going downhill", title: "Dua When Going Downhill", translation: "Glory be to Allah." },
+        ur: { key: "نیچے اترنے کی", title: "ڈھلان (نیچے) اترتے وقت", translation: "اللہ پاک ہے (تسبیح کرتا ہوں)۔" },
+        ar: { key: "عند النزول", title: "عند النزول (التسبيح)", translation: "سبحان الله." },
+        arabicRaw: "سُبْحَانَ اللَّهِ"
+    },
+
+    // 45. सफर से वापसी की दुआ
+    "return_travel": {
+        hi: { key: "सफर से वापसी", title: "सफर से वापसी की दुआ", translation: "हम वापस लौटने वाले, तौबा करने वाले, इबादत करने वाले और अपने रब की तारीफ करने वाले हैं।" },
+        en: { key: "Returning from travel", title: "Dua When Returning from Travel", translation: "We are returning, repenting, worshipping, and praising our Lord." },
+        ur: { key: "سفر سے واپسی", title: "سفر سے واپسی کی دعا", translation: "ہم واپس لوٹنے والے، توبہ کرنے والے، عبادت کرنے والے اور اپنے رب کی تعریف کرنے والے ہیں۔" },
+        ar: { key: "الرجوع من السفر", title: "الرجوع من السفر", translation: "آيبون، تائبون، عابدون، لربنا حامدون." },
+        arabicRaw: "آيِبُونَ، تَائِبُونَ، عَابِدُونَ، لِرَبِّنَا حَامِدُونَ"
+    },
+
+    // 46. शहर में दाखिल होने पर
+    "city_entry": {
+        hi: { key: "शहर में दाखिल होने पर", title: "किसी बस्ती/शहर में दाखिल होने की दुआ", translation: "ऐ अल्लाह! तू सातों आसमानों का और जो उनके नीचे है उसका रब है, सातों ज़मीनों का और जो उनके ऊपर है उसका रब है, तू शैतानों का और जो उनके बहकावे में हैं उनका रब है। मैं तुझसे इस बस्ती की भलाई और इसमें रहने वालों की भलाई का सवाल करता हूँ।" },
+        en: { key: "Entering a city", title: "Dua Upon Entering a City", translation: "O Allah, Lord of the seven heavens and what is beneath them, Lord of the seven earths and what is upon them, Lord of the devils and those they have misled. I ask You for the good of this town and the good of its people." },
+        ur: { key: "بستی میں داخلہ", title: "کسی بستی/شہر میں داخل ہونے کی دعا", translation: "اے اللہ! تو ساتوں آسمانوں کا اور جو ان کے نیچے ہے اس کا رب ہے، ساتوں زمینوں کا اور جو ان کے اوپر ہے اس کا رب ہے، تو شیطانوں کا اور جو ان کے بہکاوے میں ہیں ان کا رب ہے۔ میں تجھ سے اس بستی کی بھلائی اور اس میں رہنے والوں کی بھلائی کا سوال کرتا ہوں۔" },
+        ar: { key: "دخول القرية", title: "دعاء دخول القرية", translation: "اللهم رب السماوات السبع وما أظللن، ورب الأرضين السبع وما أقللن، ورب الشياطين وما أضللن، أسألك خير هذه القرية وخير أهلها." },
+        arabicRaw: "اللَّهُمَّ رَبَّ السَّمَوَاتِ السَّبْعِ وَمَا أَظْلَلْنَ، وَرَبَّ الأَرَضِينَ السَّبْعِ وَمَا أَقْلَلْنَ، وَرَبَّ الشَّيَاطِينِ وَمَا أَضْلَلْنَ، أَسْأَلُكَ خَيْرَ هَذِهِ الْقَرْيَةِ وَخَيْرَ أَهْلِهَا"
+    },
+
+    // 47. मुसाफिर को रुखसत करना
+    "farewell_traveler": {
+        hi: { key: "मुसाफिर को रुखसत करना", title: "मुसाफिर को रुखसत करते वक्त", translation: "मैं तेरे दीन, तेरी अमानत और तेरे आखिरी अंजाम को अल्लाह के हवाले करता हूँ।" },
+        en: { key: "Bidding farewell", title: "Dua When Bidding Farewell", translation: "I entrust your religion, your trust, and the end of your deeds to Allah." },
+        ur: { key: "مسافر کو رخصت کرنا", title: "مسافر کو رخصت کرتے وقت", translation: "میں تیرے دین، تیری امانت اور تیرے آخری انجام کو اللہ کے حوالے کرتا ہوں۔" },
+        ar: { key: "توديع المسافر", title: "توديع المسافر", translation: "أستودع الله دينك، وأمانتك، وخواتيم عملك." },
+        arabicRaw: "أَسْتَوْدِعُ اللَّهَ دِينَكَ، وَأَمَانَتَكَ، وَخَوَاتِيمَ عَمَلِكَ"
+    },
+        // 1. मुश्किल आसान करने की दुआ
+    "मुश्किल आसान करने की दुआ": {
+        hi: { key: "मुश्किल आसान करने की दुआ", title: "मुश्किल आसान करने की दुआ", translation: "ऐ अल्लाह! कोई काम आसान नहीं है मगर जिसे तू आसान कर दे, और तू जब चाहता है मुश्किल को आसान कर देता है।" },
+        en: { key: "For easy tasks", title: "For easy tasks", translation: "O Allah, there is no ease except in that which You have made easy, and You make the difficulty, if You will, easy." },
+        ur: { key: "مشکل کام کی دعا", title: "مشکل کام کی دعا", translation: "اے اللہ! کوئی کام آسان نہیں ہے مگر जिसे तू आसान कर दे, और तू जब चाहता है मुश्किल को आसान कर देता है।" },
+        ar: { key: "تيسير الأمور", title: "تيسير الأمور", translation: "اللهم لا سهل إلا ما جعلته سهلاً، وأنت تجعل الحزن إذا شئت سهلاً." },
+        arabicRaw: "اللَّهُمَّ لاَ سَهْلَ إِلاَّ مَا جَعَلْتَهُ سَهْلاً، وَأَنْتَ تَجْعَلُ الْحَزَنَ إِذَا شِئْتَ سَهْلاً"
+    },
+
+    // 2. क़र्ज़ की दुआ
+    "क़र्ज़ की दुआ": {
+        hi: { key: "क़र्ज़ की दुआ", title: "क़र्ज़ की दुआ", translation: "ऐ अल्लाह! मुझे अपने हलाल रिज़्क के साथ अपने हराम से बचा ले, और अपने फ़ज़ल से मुझे अपने सिवा हर किसी से बेनियाज़ (मुक्त) कर दे।" },
+        en: { key: "Freedom from debt", title: "Freedom from debt", translation: "O Allah, suffice me with Your lawful against Your unlawful, and make me independent of all besides You by Your grace." },
+        ur: { key: "قرض کی دعا", title: "قرض کی دعا", translation: "اے اللہ! مجھے اپنے حلال رزق کے ساتھ اپنے حرام سے بچا لے، اور اپنے فضل سے مجھے اپنے سوا ہر کسی سے بے نیاز کر دے۔" },
+        ar: { key: "قضاء الدين", title: "قضاء الدين", translation: "اللهم اكفني بحلالك عن حرامك، وأغنني بفضلك عمن سواك." },
+        arabicRaw: "اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاك"
+    },
+
+    // 3. परेशानी की दुआ
+    "परेशानी की दुआ": {
+        hi: { key: "परेशानी की दुआ", title: "परेशानी की दुआ", translation: "अल्लाह के सिवा कोई इबादत के लायक नहीं, जो बहुत बड़ा और बर्दाश्त करने वाला है। अल्लाह के सिवा कोई इबादत के लायक नहीं, जो अर्श-ए-अज़ीम (बड़े सिंहासन) का रब है।" },
+        en: { key: "During distress", title: "During distress", translation: "There is no god but Allah, the Almighty, the Forbearing. There is no god but Allah, Lord of the Mighty Throne." },
+        ur: { key: "پریشانی کی دعا", title: "پریشانی کی دعا", translation: "اللہ کے سوا کوئی عبادت کے لائق نہیں, جو بہت بڑا اور برداشت کرنے والا ہے۔ اللہ के सिवा कोई इबादत के लायक नहीं, जो अर्श-ए-अज़ीम का रब है।" },
+        ar: { key: "عند الكرب", title: "عند الكرب", translation: "لا إله إلا الله العظيم الحليم، لا إله إلا الله رب العرش العظيم." },
+        arabicRaw: "لاَ إِلَهَ إِلاَّ اللَّهُ الْعَظِيمُ الْحَلِيمُ، لاَ إِلَهَ إِلاَّ اللَّهُ رَبُّ الْعَرْشِ الْعَظِيمُ"
+    },
+
+    // 4. गुस्से की दुआ
+    "गुस्से की दुआ": {
+        hi: { key: "गुस्से की दुआ", title: "गुस्से की दुआ", translation: "मैं अल्लाह की पनाह माँगता हूँ शैतान मरदूद से।" },
+        en: { key: "During anger", title: "During anger", translation: "I seek refuge with Allah from the accursed Satan." },
+        ur: { key: "غصے کی دعا", title: "غصے کی دعا", translation: "میں اللہ کی پناہ مانگتا ہوں شیطان مردود سے۔" },
+        ar: { key: "عند الغضب", title: "عند الغضب", translation: "أعوذ بالله من الشيطان الرجيم." },
+        arabicRaw: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ"
+    },
+
+    // 5. शैतान से बचने की दुआ
+    "शैतान से बचने की दुआ": {
+        hi: { key: "शैतान से बचने की दुआ", title: "शैतान से बचने की दुआ", translation: "ऐ मेरे रब! मैं शैतानों के वसवसों (बहकावे) से तेरी पनाह माँगता हूँ, और ऐ मेरे रब! मैं इस बात से भी तेरी पनाह माँगता हूँ कि वे मेरे पास आएं।" },
+        en: { key: "Protection from Shaitan", title: "Protection from Shaitan", translation: "My Lord, I seek refuge in You from the incitements of the devils, and I seek refuge in You, my Lord, lest they be present with me." },
+        ur: { key: "شیطان سے بچاؤ", title: "شیطان से बचاؤ", translation: "اے میرے رب! میں شیطانوں کے وسوسوں سے تیری پناہ مانگتا ہوں، اور اے میرے رب! میں اس بات سے بھی تیری پناہ مانگتا ہوں کہ وہ میرے پاس آئیں۔" },
+        ar: { key: "الاستعاذة من الشيطان", title: "الاستعاذة من الشيطان", translation: "رب أعوذ بك من همزات الشياطين، وأعوذ بك رب أن يحضرون." },
+        arabicRaw: "رَّبِّ أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَعُوذُ بِكَ رَبِّ أَن يَحْضُرُونِ"
+    },
+
+    // 6. इम्तिहान में कामयाबी
+    "इम्तिहान में कामयाबी": {
+        hi: { key: "इम्तिहान में कामयाबी", title: "इम्तिहान में कामयाबी", translation: "ऐ मेरे रब! मेरा सीना खोल दे, और मेरे काम को मेरे लिए आसान कर दे, और मेरी ज़ुबान की गिरह (गाँठ) खोल दे ताकि लोग मेरी बात समझ सकें।" },
+        en: { key: "Success in exams", title: "Success in exams", translation: "My Lord, expand for me my breast and ease for me my task and untie the knot from my tongue that they may understand my speech." },
+        ur: { key: "امتحان میں کامیابی", title: "امتحان میں کامیابی", translation: "اے میرے رب! میرا سینہ کھول دے، اور میرے کام کو میرے لیے آسان کر دے، اور میری زبان کی گرہ کھول دے تاکہ لوگ میری بات سمجھ سکیں۔" },
+        ar: { key: "النجاح في الامتحان", title: "النجاح في الامتحان", translation: "رب اشرح لي صدري، ويسر لي أمري, واحلل عقدة من لساني يفقهوا قولي." },
+        arabicRaw: "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسْرLoading... لِي أَمْرِي وَاحْلُلْ عُقْدَةً مِّن لِّسَانِي يَفْقَهُوا قَوْلِي"
+    },
+
+    // 7. इस्तखारा की दुआ
+    "इस्तखारा की दुआ": {
+        hi: { key: "इस्तखारा की दुआ", title: "इस्तखारा की दुआ", translation: "ऐ अल्लाह! मैं तेरे इल्म के ज़रिए तुझसे भलाई की ख़ैर माँगता हूँ, और तेरी कुदरत के ज़रिए तुझसे ताकत माँगता हूँ, और तुझसे तेरे बड़े फ़ज़ल का सवाल करता हूँ।" },
+        en: { key: "Istikhara", title: "Istikhara", translation: "O Allah, I seek Your guidance by virtue of Your knowledge, and I seek ability by virtue of Your power, and I ask You of Your great bounty." },
+        ur: { key: "استخارہ کی دعا", title: "استخارہ کی دعا", translation: "اے اللہ! میں تیرے علم کے ذریعے تجھ سے بھلائی کی خیر مانگتا ہوں، اور تمہاری قدرت کے ذریعے تجھ سے طاقت مانگتا ہوں، اور تجھ سے تیرے بڑے فضل کا سوال کرتا ہوں۔" },
+        ar: { key: "صلاة الاستخارة", title: "صلاة الاستخارة", translation: "اللهم إني أستخيرك بعلمك، وأستقدرك بقدرتك، وأسألك من فضلك العظيم." },
+        arabicRaw: "اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ وَأَسْتَقْدِرُكَ بِقَدْرِكَ وَأَسْتَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ"
+    },
+
+    // 8. दुश्मन का खौफ
+    "दुश्मन का खौफ": {
+        hi: { key: "दुश्मन का खौफ", title: "दुश्मन का खौफ", translation: "ऐ अल्लाह! हम तुझे उनके मुक़ाबले में ढाल बनाते हैं और उनकी शरारतों से तेरी पनाह माँगता हूँ।" },
+        en: { key: "Fear of enemy", title: "Fear of enemy", translation: "O Allah, we make You our shield against them, and we seek refuge in You from their evils." },
+        ur: { key: "دشمن کا خوف", title: "دشمن کا خوف", translation: "اے اللہ! ہم تجھے ان کے مقابلے میں ڈھال بناتے ہیں اور ان کی شرارتوں سے تیری پناہ مانگتے ہیں۔" },
+        ar: { key: "خوف العدو", title: "خوف العدو", translation: "اللهم إنا نجعلك في نحورهم، ونعوذ بك من شرورهم." },
+        arabicRaw: "اللَّهُمَّ إِنَّا نَجْعَلُكَ فِي نُحُورِهِمْ وَنَعُوذُ بِكَ مِنْ شُرُورِهِمْ"
+    },
+        // 1. मुश्किल आसान करने की दुआ
+    "मुश्किल आसान करने की दुआ": {
+        hi: { key: "मुश्किल आसान करने की दुआ", title: "मुश्किल आसान करने की दुआ", translation: "ऐ अल्लाह! कोई काम आसान नहीं है मगर जिसे तू आसान कर दे, और तू जब चाहता है मुश्किल को आसान कर देता है।" },
+        en: { key: "For easy tasks", title: "For easy tasks", translation: "O Allah, there is no ease except in that which You have made easy, and You make the difficulty, if You will, easy." },
+        ur: { key: "مشکل کام کی دعا", title: "مشکل کام کی دعا", translation: "اے اللہ! کوئی کام آسان نہیں ہے مگر जिसे तू आसान कर दे, और तू जब चाहता है मुश्किल को आसान कर देता है।" },
+        ar: { key: "تيسير الأمور", title: "تيسير الأمور", translation: "اللهم لا سهل إلا ما جعلته سهلاً، وأنت تجعل الحزن إذا شئت سهلاً." },
+        arabicRaw: "اللَّهُمَّ لاَ سَهْلَ إِلاَّ مَا جَعَلْتَهُ سَهْلاً، وَأَنْتَ تَجْعَلُ الْحَزَنَ إِذَا شِئْتَ سَهْلاً"
+    },
+
+    // 2. क़र्ज़ की दुआ
+    "क़र्ज़ की दुआ": {
+        hi: { key: "क़र्ज़ की दुआ", title: "क़र्ज़ की दुआ", translation: "ऐ अल्लाह! मुझे अपने हलाल रिज़्क के साथ अपने हराम से बचा ले, और अपने फ़ज़ल से मुझे अपने सिवा हर किसी से बेनियाज़ (मुक्त) कर दे।" },
+        en: { key: "Freedom from debt", title: "Freedom from debt", translation: "O Allah, suffice me with Your lawful against Your unlawful, and make me independent of all besides You by Your grace." },
+        ur: { key: "قرض کی دعا", title: "قرض کی دعا", translation: "اے اللہ! مجھے اپنے حلال رزق کے ساتھ اپنے حرام سے بچا لے، اور اپنے فضل سے مجھے اپنے سوا ہر کسی سے بے نیاز کر دے۔" },
+        ar: { key: "قضاء الدين", title: "قضاء الدين", translation: "اللهم اكفني بحلالك عن حرامك، وأغنني بفضلك عمن سواك." },
+        arabicRaw: "اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاك"
+    },
+
+    // 3. परेशानी की दुआ
+    "परेशानी की दुआ": {
+        hi: { key: "परेशानी की दुआ", title: "परेशानी की दुआ", translation: "अल्लाह के सिवा कोई इबादत के लायक नहीं, जो बहुत बड़ा और बर्दाश्त करने वाला है। अल्लाह के सिवा कोई इबादत के लायक नहीं, जो अर्श-ए-अज़ीम (बड़े सिंहासन) का रब है।" },
+        en: { key: "During distress", title: "During distress", translation: "There is no god but Allah, the Almighty, the Forbearing. There is no god but Allah, Lord of the Mighty Throne." },
+        ur: { key: "پریشانی کی دعا", title: "پریشانی کی دعا", translation: "اللہ کے سوا کوئی عبادت کے لائق نہیں, جو بہت بڑا اور برداشت کرنے والا ہے۔ اللہ के सिवा कोई इबादत के लायक नहीं, जो अर्श-ए-अज़ीम का रब है।" },
+        ar: { key: "عند الكرب", title: "عند الكرب", translation: "لا إله إلا الله العظيم الحليم، لا إله إلا الله رب العرش العظيم." },
+        arabicRaw: "لاَ إِلَهَ إِلاَّ اللَّهُ الْعَظِيمُ الْحَلِيمُ، لاَ إِلَهَ إِلاَّ اللَّهُ رَبُّ الْعَرْشِ الْعَظِيمُ"
+    },
+
+    // 4. गुस्से की दुआ
+    "गुस्से की दुआ": {
+        hi: { key: "गुस्से की दुआ", title: "गुस्से की दुआ", translation: "मैं अल्लाह की पनाह माँगता हूँ शैतान मरदूद से।" },
+        en: { key: "During anger", title: "During anger", translation: "I seek refuge with Allah from the accursed Satan." },
+        ur: { key: "غصے کی دعا", title: "غصے کی دعا", translation: "میں اللہ کی پناہ مانگتا ہوں شیطان مردود سے۔" },
+        ar: { key: "عند الغضب", title: "عند الغضب", translation: "أعوذ بالله من الشيطان الرجيم." },
+        arabicRaw: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ"
+    },
+
+    // 5. शैतान से बचने की दुआ
+    "शैतान से बचने की दुआ": {
+        hi: { key: "शैतान से बचने की दुआ", title: "शैतान से बचने की दुआ", translation: "ऐ मेरे रब! मैं शैतानों के वसवसों (बहकावे) से तेरी पनाह माँगता हूँ, और ऐ मेरे रब! मैं इस बात से भी तेरी पनाह माँगता हूँ कि वे मेरे पास आएं।" },
+        en: { key: "Protection from Shaitan", title: "Protection from Shaitan", translation: "My Lord, I seek refuge in You from the incitements of the devils, and I seek refuge in You, my Lord, lest they be present with me." },
+        ur: { key: "شیطان سے بچاؤ", title: "شیطان से बचاؤ", translation: "اے میرے رب! میں شیطانوں کے وسوسوں سے تیری پناہ مانگتا ہوں، اور اے میرے رب! میں اس بات سے بھی تیری پناہ مانگتا ہوں کہ وہ میرے پاس آئیں۔" },
+        ar: { key: "الاستعاذة من الشيطان", title: "الاستعاذة من الشيطان", translation: "رب أعوذ بك من همزات الشياطين، وأعوذ بك رب أن يحضرون." },
+        arabicRaw: "رَّبِّ أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَعُوذُ بِكَ رَبِّ أَن يَحْضُرُونِ"
+    },
+
+    // 6. इम्तिहान में कामयाबी
+    "इम्तिहान में कामयाबी": {
+        hi: { key: "इम्तिहान में कामयाबी", title: "इम्तिहान में कामयाबी", translation: "ऐ मेरे रब! मेरा सीना खोल दे, और मेरे काम को मेरे लिए आसान कर दे, और मेरी ज़ुबान की गिरह (गाँठ) खोल दे ताकि लोग मेरी बात समझ सकें।" },
+        en: { key: "Success in exams", title: "Success in exams", translation: "My Lord, expand for me my breast and ease for me my task and untie the knot from my tongue that they may understand my speech." },
+        ur: { key: "امتحان میں کامیابی", title: "امتحان میں کامیابی", translation: "اے میرے رب! میرا سینہ کھول دے، اور میرے کام کو میرے لیے آسان کر دے، اور میری زبان کی گرہ کھول دے تاکہ لوگ میری بات سمجھ سکیں۔" },
+        ar: { key: "النجاح في الامتحان", title: "النجاح في الامتحان", translation: "رب اشرح لي صدري، ويسر لي أمري, واحلل عقدة من لساني يفقهوا قولي." },
+        arabicRaw: "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي وَاحْلُلْ عُقْدَةً مِّن لِّسَانِي يَفْقَهُوا قَوْلِي"
+    },
+
+
+    // 7. इस्तखारा की दुआ
+    "इस्तखारा की दुआ": {
+        hi: { key: "इस्तखारा की दुआ", title: "इस्तखारा की दुआ", translation: "ऐ अल्लाह! मैं तेरे इल्म के ज़रिए तुझसे भलाई की ख़ैर माँगता हूँ, और तेरी कुदरत के ज़रिए तुझसे ताकत माँगता हूँ, और तुझसे तेरे बड़े फ़ज़ल का सवाल करता हूँ।" },
+        en: { key: "Istikhara", title: "Istikhara", translation: "O Allah, I seek Your guidance by virtue of Your knowledge, and I seek ability by virtue of Your power, and I ask You of Your great bounty." },
+        ur: { key: "استخارہ کی دعا", title: "استخارہ کی دعا", translation: "اے اللہ! میں تیرے علم کے ذریعے تجھ سے بھلائی کی خیر مانگتا ہوں، اور تمہاری قدرت کے ذریعے تجھ سے طاقت مانگتا ہوں، اور تجھ سے تیرے بڑے فضل کا سوال کرتا ہوں۔" },
+        ar: { key: "صلاة الاستخارة", title: "صلاة الاستخارة", translation: "اللهم إني أستخيرك بعلمك، وأستقدرك بقدرتك، وأسألك من فضلك العظيم." },
+        arabicRaw: "اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ وَأَسْتَقْدِرُكَ بِقَدْرِكَ وَأَسْتَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ"
+    },
+
+    // 8. दुश्मन का खौफ
+    "दुश्मन का खौफ": {
+        hi: { key: "दुश्मन का खौफ", title: "दुश्मन का खौफ", translation: "ऐ अल्लाह! हम तुझे उनके मुक़ाबले में ढाल बनाते हैं और उनकी शरारतों से तेरी पनाह माँगता हूँ।" },
+        en: { key: "Fear of enemy", title: "Fear of enemy", translation: "O Allah, we make You our shield against them, and we seek refuge in You from their evils." },
+        ur: { key: "دشمن کا خوف", title: "دشمن کا خوف", translation: "اے اللہ! ہم تجھے ان کے مقابلے میں ڈھال بناتے ہیں اور ان کی شرارتوں سے تیری پناہ مانگتے ہیں۔" },
+        ar: { key: "خوف العدو", title: "خوف العدو", translation: "اللهم إنا نجعلك في نحورهم، ونعوذ بك من شرورهم." },
+        arabicRaw: "اللَّهُمَّ إِنَّا نَجْعَلُكَ فِي نُحُورِهِمْ وَنَعُوذُ بِكَ مِنْ شُرُورِهِمْ"
+    },
+        // 1. बीमारी की दुआ
+    "बीमारी की दुआ": {
+        hi: { key: "बीमारी की दुआ", title: "बीमारी की दुआ", translation: "ऐ लोगों के रब! तकलीफ को दूर कर दे, शिफा अता फरमा, तू ही शिफा देने वाला है। तेरी शिफा के सिवा कोई शिफा नहीं, ऐसी शिफा जो किसी बीमारी को न छोड़े।" },
+        en: { key: "During illness", title: "During illness", translation: "O Lord of the people, remove the hardship. Grant healing, for You are the Healer. There is no healing but Your healing, a healing that leaves no illness." },
+        ur: { key: "بیماری کی دعا", title: "بیماری کی دعا", translation: "اے لوگوں کے رب! تکلیف کو دور کر دے، شفا عطا فرما، تو ہی شفا دینے والا ہے۔ تیری شفا کے سوا کوئی شفا نہیں، ایسی شفا جو کسی بیماری کو نہ چھوڑے۔" },
+        ar: { key: "دعاء المريض", title: "دعاء المريض", translation: "أذهب البأس رب الناس، واشف أنت الشافي، لا شفاء إلا شفاؤك، شفاء لا يغادر سقماً." },
+        arabicRaw: "أَذْهِبِ الْبَأْسَ رَبَّ النَّاسِ، وَاشْفِ أَنْتَ الشَّافِي، لاَ شِفَاءَ إِلاَّ شِفَاؤُكَ، شِفَاءً لاَ يُغَادِرُ سَقَمًا"
+    },
+
+    // 2. बीमार की अयादत
+    "बीमार की अयादत": {
+        hi: { key: "बीमार की अयादत", title: "बीमार की अयादत", translation: "कोई बात नहीं (घबराएं नहीं), यह बीमारी अल्लाह की मर्जी से गुनाहों से पाकीजगी का जरिया है, अगर अल्लाह ने चाहा।" },
+        en: { key: "Visiting the sick", title: "Visiting the sick", translation: "No harm, it will be a purification (from sins) if Allah wills." },
+        ur: { key: "عیادت کی دعا", title: "عیادت کی دعا", translation: "کوئی بات نہیں، یہ بیماری اللہ کی مرضی سے گناہوں سے پاکیزگی کا ذریعہ ہے، اگر اللہ نے چاہا۔" },
+        ar: { key: "عيادة المريض", title: "عيادة المريض", translation: "لا بأس، طهور إن شاء الله." },
+        arabicRaw: "لاَ بَأْسَ طَهُورٌ إِنْ شَاءَ اللَّهُ"
+    },
+
+    // 3. दर्द की जगह दुआ
+    "दर्द की जगह दुआ": {
+        hi: { key: "दर्द की जगह दुआ", title: "दर्द की जगह दुआ", translation: "अल्लाह के नाम से (3 बार)। मैं अल्लाह की इज्जत और उसकी कुदरत की पनाह मांगता हूं उस चीज के शर से जो मैं महसूस करता हूं और जिससे डरता हूं (7 बार)।" },
+        en: { key: "For pain", title: "For pain", translation: "In the name of Allah (x3). I seek refuge in the might and power of Allah from the evil of what I feel and fear (x7)." },
+        ur: { key: "درد کی دعا", title: "درد کی دعا", translation: "اللہ کے نام سے (3 بار)۔ میں اللہ کی عزت اور اس کی قدرت کی پناہ مانگتا ہوں اس چیز کے شر سے جو میں محسوس کرتا ہوں اور جس سے ڈرتا ہوں (7 بار)۔" },
+        ar: { key: "وضع اليد على الألم", title: "وضع اليد على الألم", translation: "باسم الله (ثلاثاً). أعوذ بالله وقدرته من شر ما أجد وأحاذر (سبعاً)." },
+        arabicRaw: "بِسْمِ اللَّهِ (ثلاثاً) ... أَعُوذُ بِاللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ (سبعاً)"
+    },
+
+    // 4. बुख़ार की दुआ
+    "बुख़ार की दुआ": {
+        hi: { key: "बुख़ार की दुआ", title: "बुख़ार की दुआ", translation: "महान अल्लाह के नाम से, मैं हर फड़कने वाली रग के शर से और आग (बुखार) की तपिश के शर से बड़े अल्लाह की पनाह मांगता हूं।" },
+        en: { key: "During fever", title: "During fever", translation: "In the name of Allah the Great, I seek refuge in Allah the Magnificent from the evil of every gushing vein and from the evil of the heat of the Fire." },
+        ur: { key: "بخار کی دعا", title: "بخار کی دعا", translation: "عظیم اللہ کے نام سے، میں ہر پھڑکنے والی رگ کے شر سے اور آگ کی تپش کے شر سے بڑے اللہ کی پناہ مانگتا ہوں۔" },
+        ar: { key: "عند الحمى", title: "عند الحمى", translation: "باسم الله الكبير، أعوذ بالله العظيم من شر كل عرق نعار، ومن شر حر النار." },
+        arabicRaw: "بِسْمِ اللَّهِ الْكَبِيرِ، أَعُوذُ بِاللَّهِ الْعَظِيمِ مِنْ شَرِّ كُلِّ عِرْقٍ نَعَّارٍ، وَمِن شَرِّ حَرِّ النَّارِ"
+    },
+
+    // 5. नज़र-ए-बद की दुआ
+    "नज़र-ए-बद की दुआ": {
+        hi: { key: "नज़र-ए-बद की दुआ", title: "नज़र-ए-बद की दुआ", translation: "मैं अल्लाह के मुकम्मल कलिमों की पनाह मांगता हूं हर एक शैतान से, जहरीले जानवर से और नुकसान पहुंचाने वाली (बुरी) आंख से।" },
+        en: { key: "Evil eye protection", title: "Evil eye protection", translation: "I seek refuge in the perfect words of Allah from every devil and poisonous pest, and from every harmful, envious eye." },
+        ur: { key: "نظرِ بد کی دعا", title: "نظرِ بد کی دعا", translation: "میں اللہ کے مکمل کلموں کی پناہ مانگتا ہوں ہر ایک شیطان سے، زہریلے جانور سے اور نقصان پہنچانے والی آنکھ سے۔" },
+        ar: { key: "من العين", title: "من العين", translation: "أعوذ بكلمات الله التامة، من كل شيطان وهامة، ومن كل عين لامة." },
+        arabicRaw: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لاَمَّةٍ"
+    },
+
+    // 6. बच्चों की नज़र की दुआ
+    "बच्चों की नज़र की दुआ": {
+        hi: { key: "बच्चों की नज़र की दुआ", title: "बच्चों की नज़र की दुआ", translation: "मैं तुम दोनों को अल्लाह के मुकम्मल कलिमों की पनाह में देता हूं हर शैतान और जहरीले जानवर से, और हर नुकसान पहुंचाने वाली आंख से।" },
+        en: { key: "Protecting children", title: "Protecting children", translation: "I commend you two to the protection of Allah's perfect words from every devil and poisonous pest, and from every evil eye." },
+        ur: { key: "بچوں کی نظر", title: "بچوں کی نظر", translation: "میں تم دونوں کو اللہ کے مکمل کلموں کی پناہ میں دیتا ہوں ہر شیطان اور زہریلے جانور سے، اور ہر نقصان پہنچانے والی آنکھ سے۔" },
+        ar: { key: "تعويذ الأولاد", title: "تعويذ الأولاد", translation: "أعيذكما بكلمات الله التامة، من كل شيطان وهامة، ومن كل عين لامة." },
+        arabicRaw: "أُعِيذُكُمَا بِكَلِمَاتِ اللَّهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لاَمَّةٍ"
+    },
+
+    // 7. मरीज के पास बैठने की दुआ
+    "मरीज के पास बैठने की दुआ": {
+        hi: { key: "मरीज के पास बैठने की दुआ", title: "मरीज के पास बैठने की दुआ", translation: "मैं महान अल्लाह से, जो महान अर्श का रब है, दुआ करता हूं कि वह तुम्हें शिफा अता फरमाए (7 बार)।" },
+        en: { key: "Sitting with a patient", title: "Sitting with a patient", translation: "I ask Allah the Almighty, Lord of the Magnificent Throne, to heal you (x7)." },
+        ur: { key: "مریض کے پاس بیٹھنے کی دعا", title: "مریض کے پاس بیٹھنے کی دعا", translation: "میں عظمت والے اللہ سے، جو بڑے عرش کا رب ہے، دعا کرتا ہوں کہ وہ تمہیں شفا عطا فرمائے (7 بار)۔" },
+        ar: { key: "عند المريض", title: "عند المريض", translation: "أسأل الله العظيم رب العرش العظيم أن يشفيك (سبعاً)." },
+        arabicRaw: "أَسْأَلُ اللَّهَ الْعَظِيمَ رَبَّ الْعَرْشِ الْعَظِيمِ أَنْ يَشْفِيَكَ (سبعاً)"
+    },
+        // 1. नया चाँद देखना
+    "नया चाँद देखना": {
+        hi: { key: "नया चाँद देखना", title: "नया चाँद देखना", translation: "ऐ अल्लाह! इस चाँद को हमारे ऊपर बरकत, ईमान, सलामती और इस्लाम के साथ निकाल। (ऐ चाँद!) मेरा और तेरा रब अल्लाह है।" },
+        en: { key: "Sighting new moon", title: "Sighting new moon", translation: "O Allah, bring this moon over us with blessings, faith, security, and Islam. My Lord and your Lord is Allah." },
+        ur: { key: "نیا چاند دیکھنا", title: "نیا چاند دیکھنا", translation: "اے اللہ! اس چاند کو ہمارے اوپر برکت، ایمان، سلامتی اور اسلام کے ساتھ نکال۔ (اے چاند!) میرا اور تیرا رب اللہ ہے۔" },
+        ar: { key: "رؤية الهلال", title: "رؤية الهلال", translation: "اللهم أهله علينا باليمن والإيمان، والسلامة والإسلام، ربي وربك الله." },
+        arabicRaw: "اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْيُمْنِ وَالإِيمَانِ وَالسَّلامَةِ وَالإِسْلامِ، رَبِّي وَرَبُّكَ اللَّهُ"
+    },
+
+    // 2. बारिश की दुआ
+    "बारिश की दुआ": {
+        hi: { key: "बारिश की दुआ", title: "बारिश की दुआ", translation: "ऐ अल्लाह! हमारे लिए फायदेमंद बारिश बरसा।" },
+        en: { key: "During rain", title: "During rain", translation: "O Allah, make it a beneficial rain." },
+        ur: { key: "بارش کی دعا", title: "بارش کی دعا", translation: "اے اللہ! ہمارے لیے فائدہ مند بارش برسا۔" },
+        ar: { key: "عند المطر", title: "عند المطر", translation: "اللهم صيباً نافعاً." },
+        arabicRaw: "اللَّهُمَّ صَيِّبًا نَافِعًا"
+    },
+
+    // 3. तेज़ हवा की दुआ
+    "तेज़ हवा की दुआ": {
+        hi: { key: "तेज़ हवा की दुआ", title: "तेज़ हवा की दुआ", translation: "ऐ अल्लाह! मैं तुझसे इस हवा की भलाई चाहता हूँ और इसके शर (बुराई) से तेरी पनाह माँगता हूँ।" },
+        en: { key: "Strong winds", title: "Strong winds", translation: "O Allah, I ask You for its good and seek refuge in You from its evil." },
+        ur: { key: "آندھی کی دعا", title: "آندھی کی دعا", translation: "اے اللہ! میں تجھ سے اس ہوا کی بھلائی چاہتا ہوں اور اس کے شر سے تیری پناہ مانگتا ہوں۔" },
+        ar: { key: "عند الريح", title: "عند الريح", translation: "اللهم إني أسألك خيرها، وأعوذ بك من شرها." },
+        arabicRaw: "اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّهَا"
+    },
+
+    // 4. बिजली की गरज
+    "बिजली की गरज": {
+        hi: { key: "बिजली की गरज", title: "बिजली की गरज", translation: "पाक है वह जात जिसकी पाकीजगी बयान करती है कड़क उसकी तारीफ के साथ और फरिश्ते भी उसके खौफ से।" },
+        en: { key: "Thunder", title: "Thunder", translation: "Glory be to Him whom the thunder praises with His praise, and the angels from fear of Him." },
+        ur: { key: "بجلی کی گرج", title: "بجلی کی گرج", translation: "پاک ہے وہ ذات جس کی پاکیزگی بیان کرتی ہے کڑک اس کی تعریف کے ساتھ اور فرشتے بھی اس کے خوف سے۔" },
+        ar: { key: "سماع الرعد", title: "سماع الرعد", translation: "سبحان الذي يسبح الرعد بحمده والملائكة من خيفته." },
+        arabicRaw: "سُبْحَانَ الَّذِي يُسَبِّحُ الرَّعْدُ بِحَمْدِهِ وَالْمَلائِكَةُ مِنْ خِيفَتِهِ"
+    },
+
+    // 5. बारिश रुकने पर
+    "बारिश रुकने पर": {
+        hi: { key: "बारिश रुकने पर", title: "बारिश रुकने पर", translation: "हम पर अल्लाह के फजल और उसकी रहमत से बारिश हुई।" },
+        en: { key: "After rain", title: "After rain", translation: "We have been given rain by the grace and mercy of Allah." },
+        ur: { key: "بارش کے بعد", title: "بارش کے بعد", translation: "ہم پر اللہ کے فضل اور اس کی رحمت سے بارش ہوئی۔" },
+        ar: { key: "بعد المطر", title: "بعد المطر", translation: "مطرنا بفضل الله ورحمته." },
+        arabicRaw: "مُطِرْنَا بِفَضْلِ اللَّهِ وَرَحْمَتِهِ"
+    },
+
+    // 6. मुर्ग की बांग
+    "मुर्ग की बांग": {
+        hi: { key: "मुर्ग की बांग", title: "मुर्ग की बांग", translation: "ऐ अल्लाह! मैं तुझसे तेरे फजल का सवाल करता हूँ (क्योंकि मुर्ग फरिश्ते को देखकर बांग देता है)।" },
+        en: { key: "Hearing rooster", title: "Hearing rooster", translation: "O Allah, I ask You of Your bounty." },
+        ur: { key: "مرغ کی آواز", title: "مرغ کی آواز", translation: "اے اللہ! میں تجھ سے تیرے فضل کا سوال کرتا ہوں (کیونکہ مرغ فرشتے کو دیکھ کر آواز نکالتا ہے)۔" },
+        ar: { key: "صياح الديك", title: "صياح الديك", translation: "اللهم إني أسألك من فضلك." },
+        arabicRaw: "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ"
+    },
+
+    // 7. बादल गरजने की दुआ
+    "बादल गरजने की दुआ": {
+        hi: { key: "बादल गरजने की दुआ", title: "बादल गरजने की दुआ", translation: "ऐ अल्लाह! हमें अपने गुस्से से हलाक न कर, और अपने अजाब से बर्बाद न कर, और इससे पहले हमें आफियत दे दे।" },
+        en: { key: "Cloudy weather", title: "Cloudy weather", translation: "O Allah, do not kill us with Your anger, do not destroy us with Your punishment, and grant us well-being before that." },
+        ur: { key: "بادل گرجنے پر", title: "بادل گرجنے پر", translation: "اے اللہ! ہمیں اپنے غصے سے ہلاک نہ کر، اور اپنے عذاب سے برباد نہ کر، اور اس سے پہلے ہمیں عافیت دے دے۔" },
+        ar: { key: "عند الغيوم", title: "عند الغيوم", translation: "اللهم لا تقتلنا بغضبك، ولا تهلكنا بعذابك، وعافنا قبل ذلك." },
+        arabicRaw: "اللَّهُمَّ لا تَقْتُلْنَا بِغَضَبِكَ ، وَلا تُهْلِكْنَا بِعَذَابِكَ ، وَعَافِنَا قَبْلَ ذَلِكَ"
+    },
+        // 1. तौबा की दुआ
+    "तौबा की दुआ": {
+        hi: { key: "तौबा की दुआ", title: "तौबा की दुआ", translation: "मैं अल्लाह से अपने गुनाहों की माफ़ी माँगता हूँ, जिसके सिवा कोई इबादत के लायक़ नहीं, जो ज़िन्दा और हमेशा रहने वाला है, और मैं उसी की तरफ़ रूजू करता हूँ।" },
+        en: { key: "For forgiveness", title: "For forgiveness", translation: "I seek the forgiveness of Allah, besides whom there is no deity, the Ever-Living, the Sustainer of all existence, and I turn to Him in repentance." },
+        ur: { key: "توبہ کی دعا", title: "توبہ کی دعا", translation: "میں اللہ سے اپنے گناہوں کی معافی مانگتا ہوں، جس کے سوا کوئی معبود نہیں، جو زندہ اور ہمیشہ رہنے والا ہے، اور میں اسی کی طرف رجوع کرتا ہوں۔" },
+        ar: { key: "دعاء التوبة", title: "دعاء التوبة", translation: "أستغفر الله الذي لا إله إلا هو الحي القيوم وأتوب إليه." },
+        arabicRaw: "أَسْتَغْفِرُ اللَّهَ الَّذِي لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ"
+    },
+
+    // 2. ईमान पर खात्मा
+    "ईमान पर खात्मा": {
+        hi: { key: "ईमान पर खात्मा", title: "ईमान पर खात्मा", translation: "ऐ हमारे रब! हमारे दिलों को टेढ़ा न कर इसके बाद कि तूने हमें हिदायत दी है, और हमें अपने पास से रहमत अता फरमा। यकीनन तू ही सब कुछ देने वाला है।" },
+        en: { key: "Ending on Iman", title: "Ending on Iman", translation: "Our Lord, let not our hearts deviate after You have guided us and grant us from Yourself mercy. Indeed, You are the Bestower." },
+        ur: { key: "ایمان پر خاتمہ", title: "ایمان پر خاتمہ", translation: "اے ہمارے رب! ہمارے دلوں کو ٹیڑھا نہ کر اس کے بعد کہ تو نے ہمیں ہدایت دی ہے، اور ہمیں اپنے پاس سے رحمت عطا فرما۔ یقیناً تو ہی سب کچھ دینے والا ہے۔" },
+        ar: { key: "حسن الخاتمة", title: "حسن الخاتمة", translation: "ربنا لا تزغ قلوبنا بعد إذ هديتنا وهب لنا من لدنك رحمة إنك أنت الوهاب." },
+        arabicRaw: "رَبَّنَا لاَ تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ"
+    },
+
+    // 3. क़ब्रिस्तान की दुआ
+    "क़ब्रिस्तान की दुआ": {
+        hi: { key: "क़ब्रिस्तान की दुआ", title: "क़ब्रिस्तान की दुआ", translation: "ऐ मोमिनों और मुसलमानों की बस्ती के रहने वालो! तुम पर सलामती हो। और यकीनन, अगर अल्लाह ने चाहा, तो हम भी तुम्हारे साथ मिलने वाले हैं। हम अपने लिए और तुम्हारे लिए आफियत की दुआ करते हैं।" },
+        en: { key: "Entering graveyard", title: "Entering graveyard", translation: "Peace be upon you, O inhabitants of the dwellings of the believers and Muslims. Inshallah, we will certainly join you. We ask Allah for well-being for ourselves and for you." },
+        ur: { key: "قبرستان کی دعا", title: "قبرستان کی دعا", translation: "اے مومنوں اور مسلمانوں کی بستی کے رہنے والو! تم پر سلامتی ہو۔ اور یقیناً، اگر اللہ نے چاہا، تو ہم بھی تمہارے ساتھ ملنے والے ہیں۔ ہم اپنے لیے اور تمہارے لیے عافیت کی دعا کرتے ہیں۔" },
+        ar: { key: "دخول المقابر", title: "دخول المقابر", translation: "السلام عليكم أهل الديار من المؤمنين والمسلمين، وإنا إن شاء الله بكم للاحقون، أسأل الله لنا ولكم العافية." },
+        arabicRaw: "السَّلامُ عَلَيْكُمْ أَهْلَ الدِّيَارِ مِنَ الْمُؤْمِنِينَ وَالْمُسْلِمِينَ، وَإِنَّا إِنْ شَاءَ اللَّهُ بِكُمْ لَلاحِقُونَ، أَسْأَلُ اللَّهَ لَنَا وَلَكُمُ الْعَافِيَةَ"
+    },
+
+    // 4. वालदैन के लिए दुआ
+    "वालदैन के लिए दुआ": {
+        hi: { key: "वालदैन के लिए दुआ", title: "वालदैन के लिए दुआ", translation: "ऐ मेरे रब! उन दोनों (माता-पिता) पर रहम फरमा जैसा कि उन्होंने बचपन में मुझे (पाल-पोसकर) बड़ा किया है।" },
+        en: { key: "For parents", title: "For parents", translation: "My Lord, have mercy upon them as they brought me up when I was small." },
+        ur: { key: "والدین کے لیے دعا", title: "والدین کے لیے دعا", translation: "اے میرے رب! ان دونوں (والدین) پر رحم فرما جیسا کہ انہوں نے بچپن میں مجھے (پال پوس کر) بڑا کیا ہے۔" },
+        ar: { key: "دعاء للوالدين", title: "دعاء للوالدين", translation: "رب ارحمهما كما ربياني صغيراً." },
+        arabicRaw: "رَّبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا"
+    },
+
+    // 5. नेक औलाद की दुआ
+    "नेक औलाद की दुआ": {
+        hi: { key: "नेक औलाद की दुआ", title: "नेक औलाद की दुआ", translation: "ऐ मेरे रब! मुझे अपने पास से पाकीज़ा औलाद अता फरमा। बेशक तू दुआ सुनने वाला है।" },
+        en: { key: "For pious children", title: "For pious children", translation: "My Lord, grant me from Yourself a good offspring. Indeed, You are the Hearer of supplication." },
+        ur: { key: "نیک اولاد کی دعا", title: "نیک اولاد کی دعا", translation: "اے میرے رب! مجھے اپنے پاس سے پاکیزہ اولاد عطا فرما۔ بیشک تو دعا سننے والا ہے۔" },
+        ar: { key: "الذرية الصالحة", title: "الذرية الصالحة", translation: "رب هب لي من لدنك ذرية طيبة إنك سميع الدعاء." },
+        arabicRaw: "رَبِّ هَبْ لِي مِنْ لَدُنْكَ ذُرِّيَّةً طَيِّبَةً إِنَّكَ سَمِيعُ الدُّعَاءِ"
+    },
+
+    // 6. सैय्यदुल इस्तिग़फ़ार
+    "सैय्यदुल इस्तिग़फ़ार": {
+        hi: { key: "सैय्यदुल इस्तिग़फ़ार", title: "सैय्यदुल इस्तिग़फ़ार", translation: "ऐ अल्लाह! तू ही मेरा रब है, तेरे सिवा कोई माबूद नहीं। तूने ही मुझे पैदा किया और मैं तेरा बन्दा हूँ, और मैं अपनी ताकत के मुताबिक़ तेरे अहद और वादे पर कायम हूँ। जो गुनाह मैंने किए, मैं उनके शर से तेरी पनाह माँगता हूँ। मैं तेरे सामने तेरी उन नेमतों का इकरार करता हूँ जो तूने मुझे अता फरमाईं, और अपने गुनाहों का एतराफ करता हूँ। पस मुझे माफ़ कर दे, क्योंकि तेरे सिवा कोई गुनाहों को माफ़ नहीं कर सकता।" },
+        en: { key: "Sayyidul Istigfar", title: "Sayyidul Istigfar", translation: "O Allah, You are my Lord, there is no deity except You. You created me and I am Your servant, and I am faithful to my covenant and my promise as much as I can. I seek refuge in You from the evil of what I have done. I acknowledge before You Your blessings upon me, and I acknowledge my sin. So forgive me, for indeed, no one forgives sins except You." },
+        ur: { key: "سید الاستغفار", title: "سید الاستغفار", translation: "اے اللہ! تو ہی میرا رب ہے، تیرے سوا کوئی معبود نہیں۔ تو نے ہی مجھے پیدا کیا اور میں تیرا بندہ ہوں، اور میں اپنی طاقت کے مطابق تیرے عہد اور وعدے پر قائم ہوں۔ جو گناہ میں نے کیے، میں ان کے شر سے تیری پناہ مانگتا ہوں۔ میں تیرے سامنے تیری ان نعمتوں کا اقرار کرتا ہوں جو تو نے مجھے عطا فرمائیں، اور اپنے گناہوں کا اعتراف کرتا ہوں۔ پس مجھے معاف کر دے، کیونکہ تیرے سوا کوئی گناہوں کو معاف نہیں کر سکتا۔" },
+        ar: { key: "سيد الاستغفار", title: "سيد الاستغفار", translation: "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي، وأبوء بذنبي فاغفر لي فإنه لا يغفر الذنوب إلا أنت." },
+        arabicRaw: "اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ"
+    },
+
+    // 7. गुनाहों की माफ़ी
+    "गुनाहों की माफ़ी": {
+        hi: { key: "गुनाहों की माफ़ी", title: "गुनाहों की माफ़ी", translation: "ऐ हमारे रब! हमारे गुनाह माफ़ फरमा, और हमारी बुराइयों को हमसे दूर कर दे, और हमारा खात्मा नेक लोगों के साथ कर।" },
+        en: { key: "General Repentance", title: "General Repentance", translation: "Our Lord, so forgive us our sins and remove from us our misdeeds and cause us to die with the righteous." },
+        ur: { key: "گناہوں کی معافی", title: "گناہوں کی معافی", translation: "اے ہمارے رب! ہمارے گناہ معاف فرما، اور ہماری برائیوں کو ہم سے دور کر دے، اور ہمارا خاتمہ نیک لوگوں کے ساتھ کر۔" },
+        ar: { key: "طلب المغفرة", title: "طلب المغفرة", translation: "ربنا فاغفر لنا ذنوبنا وكفر عنا سيئاتنا وتوفنا مع الأبرار." },
+        arabicRaw: "رَبَّنَا فَاغْفِرْ لَنَا ذُنُوبَنَا وَكَفِّرْ عَنَّا سَيِّئَاتِنَا وَتَوَفَّنَا مَعَ الأَبْرَارِ"
+    },
+        // 1. शाम के अज़कार
+    "शाम के अज़कार": {
+        hi: { key: "शाम के अज़कार", title: "शाम के अज़कार", translation: "हम और सारा मुल्क अल्लाह के मुकम्मल कलिमों की पनाह में शाम करते हैं, जो तमाम मखलूकात के शर से है।" },
+        en: { key: "Evening Azkar", title: "Evening Azkar", translation: "We have reached the evening and the whole kingdom belongs to Allah. I seek refuge in the perfect words of Allah from the evil of what He has created." },
+        ur: { key: "شام کے اذکار", title: "شام کے اذکار", translation: "ہم نے اور تمام ملک نے اللہ کی رضا سے شام کی، میں اللہ کے مکمل کلموں کی پناہ مانگتا ہوں ہر اس چیز کے شر سے جو اس نے پیدا کی۔" },
+        ar: { key: "أذكار المساء", title: "أذكار المساء", translation: "أمسينَا وأمسَى الملكُ للهِ، أعوذ بكلمات الله التامات من شر ما خلق." },
+        arabicRaw: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ"
+    },
+
+    // 2. सोने से पहले की दुआ
+    "सोने से पहले की दुआ": {
+        hi: { key: "सोने से पहले की दुआ", title: "सोने से पहले की दुआ", translation: "ऐ अल्लाह! मैं तेरे ही नाम के साथ मरता (सोता) हूँ और जीता (जागता) हूँ।" },
+        en: { key: "Before sleeping", title: "Before sleeping", translation: "In Your name, O Allah, I die and I live." },
+        ur: { key: "سونے سے پہلے", title: "سونے سے پہلے", translation: "اے اللہ! میں تیرے ہی نام کے ساتھ مرتا ہوں اور جیتا ہوں۔" },
+        ar: { key: "قبل النوم", title: "قبل النوم", translation: "باسمك اللهم أموت وأحيا." },
+        arabicRaw: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا"
+    },
+
+    // 3. सूरह मुल्क
+    "सूरह मुल्क": {
+        hi: { key: "सूरह मुल्क", title: "सूरह मुल्क", translation: "बड़ी बरकत वाला है वह जिसके हाथ में सारी बादशाही है, और वह हर चीज़ पर पूरी क़ुदरत रखता है।" },
+        en: { key: "Surah Mulk", title: "Surah Mulk", translation: "Blessed is He in whose hand is dominion, and He is over all things competent." },
+        ur: { key: "سورہ ملک", title: "سورہ ملک", translation: "بڑی برکت والا ہے وہ جس کے ہاتھ میں بادشاہی ہے، اور وہ ہر چیز پر قادر ہے۔" },
+        ar: { key: "سورة الملك", title: "سورة الملك", translation: "تبارك الذي بيده الملك وهو على كل شيء قدير." },
+        arabicRaw: "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ"
+    },
+
+      // 4. आयतुल कुर्सी (Complete & Correct)
+    "आयतुल कुर्सी": {
+        hi: { 
+            key: "आयतुल कुर्सी", 
+            title: "आयतुल कुर्सी", 
+            translation: "अल्लाह, जिसके सिवा कोई सच्चा माबूद नहीं, वह हमेशा ज़िन्दा रहने वाला और सबको संभालने वाला है। उसे न ऊंघ आती है और न नींद। जो कुछ आसमानों में है और जो कुछ ज़मीन में है, सब उसी का है। कौन है जो उसकी इजाज़त के बिना उसके सामने (किसी की) सिफ़ारिश कर सके? वह जानता है जो कुछ उनके सामने है और जो कुछ उनके पीछे है। और वे उसके इल्म (ज्ञान) में से किसी चीज़ का अहाता (थांह) नहीं पा सकते, सिवाय इसके जितना वह चाहे। उसकी कुर्सी की वूसात (घेरे) ने आसमानों और ज़मीन को अपने अंदर ले रखा है, और उनकी हिफ़ाज़त करना उस पर भारी नहीं पड़ता। और वह बहुत बुलन्द और बहुत अज़मत वाला है।" 
+        },
+        en: { 
+            key: "Ayatul Gursee", 
+            title: "Ayatul Kursi", 
+            translation: "Allah - there is no deity except Him, the Ever-Living, the Sustainer of all existence. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is before them and what will be after them, and they encompass not a thing of His knowledge except for what He wills. His Kursi extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great." 
+        },
+        ur: { 
+            key: "آیت الکرسی", 
+            title: "آیت الکرسی", 
+            translation: "اللہ، جس کے سوا کوئی معبود نہیں، وہ ہمیشہ زندہ رہنے والا اور سب کو سنبھالنے والا ہے۔ اسے نہ اونگھ آتی ہے نہ نیند۔ جو کچھ آسمانوں میں ہے اور جو کچھ زمین میں ہے سب اسی کا ہے۔ کون ہے جو اس کی اجازت کے بغیر اس کے پاس سفارش کر سکے؟ وہ جانتا ہے جو کچھ ان کے سامنے ہے اور جو کچھ ان کے پیچھے ہے، اور وہ اس کے علم میں سے کسی چیز کا احاطہ نہیں کر سکتے مگر جتنا وہ چاہے۔ اس کی کرسی آسمانوں اور زمین کو گھیرے ہوئے ہے، اور ان کی حفاظت اسے تھکاتی نہیں، اور وہ بہت بلند اور بڑی عظمت والا ہے۔" 
+        },
+        ar: { 
+            key: "آية الكرسي", 
+            title: "آية الكرسي", 
+            translation: "الله لا إله إلا هو الحي القيوم لا تأخذه سنة ولا نوم له ما في السماوات وما في الأرض من ذا الذي يشفع عنده إلا بإذنه يعلم ما بين أيديهم وما خلفهم ولا يحيطون بشيء من علمه إلا بما شاء وسع كرسيه السماوات والأرض ولا يئوده حفظهما وهو العلي العظيم." 
+        },
+        arabicRaw: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ"
+    },
+
+
+    // 5. नींद में डरना
+    "नींद में डरना": {
+        hi: { key: "नींद में डरना", title: "नींद में डरना", translation: "मैं अल्लाह के मुकम्मल कलिमों की पनाह माँगता हूँ उसके ग़ज़ब से, उसके बन्दों के शर से, और शैतानों के वसवसों से और इस बात से कि वह मेरे पास आएं।" },
+        en: { key: "Fear in sleep", title: "Fear in sleep", translation: "I seek refuge in the perfect words of Allah from His anger, from the evil of His servants, and from the evil suggestions of the devils and from their presence." },
+        ur: { key: "نیند میں ڈرنا", title: "نیند میں ڈرنا", translation: "میں اللہ کے مکمل کلموں کی پناہ مانگتا ہوں اس کے غضب سے، اس کے بندوں کے شر سے، اور شیطانوں کے وسوسوں سے اور اس بات سے کہ وہ میرے پاس آئیں۔" },
+        ar: { key: "الفزع في النوم", title: "الفزع في النوم", translation: "أعوذ بكلمات الله التامات من غضبه وعقابه، وشر عباده، ومن همزات الشياطين وأن يحضرون." },
+        arabicRaw: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ غَضَبِهِ وَعِقَابِهِ، وَشَرِّ عِبَادِهِ، وَمِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَنْ يَحْضُرُونِ"
+    },
+
+    // 6. तहज्जुद के लिए उठना
+    "तहज्जुद के लिए उठना": {
+        hi: { key: "तहज्जुद के लिए उठना", title: "तहज्जुद के लिए उठना", translation: "ऐ अल्लाह! तेरे ही लिए सब तारीफें हैं, तू आसमानों और ज़मीन और जो कुछ उनमें है, सबका थामने वाला है।" },
+        en: { key: "Waking for Tahajjud", title: "Waking for Tahajjud", translation: "O Allah, to You belongs all praise, You are the Sustainer of the heavens and the earth and whatever is in them." },
+        ur: { key: "تہجد کے لیے اٹھنا", title: "تہجد کے لیے اٹھنا", translation: "اے اللہ! تیرے ہی لیے تمام تعریفیں ہیں، تو آسمانوں اور زمین اور جو کچھ ان میں ہے، سب کا قائم رکھنے والا ہے۔" },
+        ar: { key: "القيام للتهجد", title: "القيام للتهجد", translation: "اللهم لك الحمد أنت قيم السماوات والأرض ومن فيهن." },
+        arabicRaw: "اللَّهُمَّ لَكَ الْحَمْدُ أَنْتَ قَيِّمُ السَّمَاوَاتِ وَالأَرْضِ وَمَنْ فِيهِنَّ"
+    },
+
+    // 7. दुनिया-आख़िरत की भलाई
+    "दुनिया-आख़िरत की भलाई": {
+        hi: { key: "दुनिया-आख़िरत की भलाई", title: "दुनिया-आख़िरत की भलाई", translation: "ऐ हमारे रब! हमें दुनिया में भी भलाई अता फरमा और आख़िरत में भी भलाई अता फरमा, और हमें आग (जहन्नम) के अज़ाब से बचा।" },
+        en: { key: "Good in both worlds", title: "Good in both worlds", translation: "Our Lord, grant us in this world that which is good and in the Hereafter that which is good and protect us from the punishment of the Fire." },
+        ur: { key: "دنیا و آخرت کی بھلائی", title: "دنیا و آخرت کی بھلائی", translation: "اے ہمارے رب! ہمیں دنیا میں بھی بھلائی عطا فرما اور آخرت میں بھی بھلائی عطا فرما، اور ہمیں آگ کے عذاب سے بچا۔" },
+        ar: { key: "خير الدنيا والآخرة", title: "خير الدنيا والآخرة", translation: "ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار." },
+        arabicRaw: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عذاب النَّارِ"
+    },
+
+    // 8. सोते वक़्त करवट बदलना
+    "सोते वक़्त करवट बदलना": {
+        hi: { key: "सोते वक़्त करवट बदलना", title: "सोते वक़्त करवट बदलना", translation: "कोई माबूद नहीं सिवाय अल्लाह के, जो एक है और सब पर ग़ालिब है, जो आसमानों और ज़मीन का रब है और जो कुछ इन दोनों के दरमियान है, वह बड़ा ज़बरदस्त और बख़्शने वाला है।" },
+        en: { key: "Turning in sleep", title: "Turning in sleep", translation: "There is no deity except Allah, the One, the Prevailing, Lord of the heavens and the earth and whatever is between them, the Exalted in Might, the Perpetual Forgiver." },
+        ur: { key: "کرٹ بدلنے کی دعا", title: "کرٹ بدلنے کی دعا", translation: "کوئی معبود نہیں سوائے اللہ کے، جو ایک ہے اور سب پر غالب ہے، جو آسمانوں اور زمین کا رب ہے اور جو کچھ ان دونوں کے درمیان ہے، وہ بڑا زبردست اور بخشنے والا ہے۔" },
+        ar: { key: "عند التقلب", title: "عند التقلب", translation: "لا إله إلا الله الواحد القهار، رب السماوات والأرض وما بينهما العزيز الغفار." },
+        arabicRaw: "لاَ إِلَهَ إِلاَّ اللَّهُ الْوَاحِدُ الْقَهَّارُ، رَبُّ السَّمَاوَاتِ وَالأَرْضِ وَمَا بَيْنَهُمَا الْعَزِيزُ الْغَفَّارُ"
+    }
+
+};
+
+
+const pageLabels = {
+    hi: { back: "वापस", notFound: "दुआ की जानकारी नहीं मिली।", translation: "अनुवाद / तर्जुमा:" },
+    en: { back: "Back", notFound: "Dua details not found.", translation: "Translation:" },
+    ur: { back: "پیچھے", notFound: "دعا کی معلومات نہیں مل سکیں۔", translation: "ترجمہ:" },
+    ar: { back: "رجوع", notFound: "لم يتم العثور على تفاصيل الدعاء.", translation: "الترجمة:" }
+};
+
+
+
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+function displayDuaDetails() {
+    const lang = localStorage.getItem('pref_lang') || 'hi';
+    const labels = pageLabels[lang] || pageLabels['hi'];
+    const incomingDuaName = getQueryParam('dua');
+    
+    // Page Header text update
+    document.getElementById('pageTitle').innerText = labels.back;
+
+    // RTL handling
+    if(lang === 'ur' || lang === 'ar') {
+        document.body.classList.add('rtl');
+        
+
+    } else {
+        document.body.classList.remove('rtl');
+    }
+
+    const container = document.getElementById('duaContainer');
+
+    // Master Object mein se incoming 'key' ya 'name' ko match karna
+    let matchedDua = null;
+    for (let id in duasMasterData) {
+        let obj = duasMasterData[id];
+        // Kisi bhi language ki key index page ke string se match ho jaye
+        if ((obj.hi && obj.hi.key === incomingDuaName) || 
+            (obj.en && obj.en.key === incomingDuaName) || 
+            (obj.ur && obj.ur.key === incomingDuaName) || 
+            (obj.ar && obj.ar.key === incomingDuaName) ||
+            (obj.hi && obj.hi.title === incomingDuaName)) { // Safe fallback
+            matchedDua = obj;
+            break;
+        }
+    }
+
+    if (!matchedDua) {
+        container.innerHTML = `<div class="dua-card">${labels.notFound}</div>`;
+        return;
+    }
+
+    // Specific language data nikalna jo user ne set ki hai
+    const currentDuaLang = matchedDua[lang] || matchedDua['hi'];
+
+        let html = `
+        <div class="dua-card">
+            <div class="dua-title">${currentDuaLang.title}</div>
+            <div class="arabic-text">${matchedDua.arabicRaw}</div>
+            <div class="translation-block">
+                <span class="label">${labels.translation}</span>
+                <p>${currentDuaLang.translation}</p>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+function goBack() {
+    window.location.href = 'duas.html'; 
+}
+
+window.onload = displayDuaDetails;
+</script>
+
+</body>
+</html>

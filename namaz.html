@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namaz Guide Index - Deeni Rehbar</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32; 
+            --gold: #c6a700;
+            --white: #ffffff;
+            --bg-cream: #f9f7f2; 
+            --text-dark: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-cream);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .header {
+            width: 100%; background-color: var(--primary-green); color: white;
+            padding: 40px 0; text-align: center;
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; z-index: 5;
+        }
+
+        .header h1 { margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; }
+        .header p { margin: 8px 0 0; font-size: 15px; opacity: 0.9; }
+
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 18px; padding: 25px; max-width: 500px; width: 90%;
+            margin-top: -30px; position: relative; z-index: 10;
+        }
+
+        .menu-card {
+            background-color: var(--white); border-radius: 22px;
+            padding: 25px 20px; text-align: center; text-decoration: none;
+            color: var(--text-dark); box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            border: 1px solid #f0f0f0; transition: transform 0.3s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(46, 125, 50, 0.2);
+            border-color: var(--primary-green);
+        }
+
+        .icon-box { font-size: 32px; margin-bottom: 15px; }
+        .menu-card span { font-weight: bold; font-size: 17px; color: var(--primary-green); }
+        .menu-card small { font-size: 12px; color: #666; margin-top: 6px; display: block; }
+        .full-card { grid-column: span 2; }
+        .footer-info { text-align: center; padding: 25px; color: #aaa; font-size: 14px; margin-top: auto; }
+            /* Bottom Nav Styling */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: var(--white); 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            border-top: 1px solid #eee; 
+            z-index: 1000; 
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05); 
+        }
+        .nav-link { 
+            text-decoration: none; 
+            color: #888; 
+            text-align: center; 
+            flex: 1; 
+        }
+        .nav-link small { 
+            display: block; 
+            font-size: 10px; 
+            margin-top: 4px; 
+            font-weight: bold;
+        }
+        /* Body mein thoda extra padding taaki content bar ke niche na aaye */
+        body { padding-bottom: 80px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 id="idxTitle">नमाज़ गाइड (Namaz Guide)</h1>
+        <p id="idxSub">मुकम्मल जानकारी का index</p>
+    </div>
+
+    <div class="menu-grid">
+        <a href="gusal.html" class="menu-card">
+            <div class="icon-box">🧼</div>
+            <span data-key="ghusl">गुस्ल (Ghusl)</span>
+            <small data-key="ghusl_sub">पाक होने का तरीका</small>
+        </a>
+
+        <a href="vuju.html" class="menu-card">
+            <div class="icon-box">💧</div>
+            <span data-key="wudu">वुज़ू (Wudu)</span>
+            <small data-key="wudu_sub">नमाज़ की चाबी</small>
+        </a>
+
+        <a href="namaz-details.html" class="menu-card full-card">
+            <div class="icon-box">🕌</div>
+            <span data-key="full_namaz">मुकम्मल नमाज़ (Full Namaz)</span>
+            <small data-key="full_namaz_sub">Step-by-Step तरीका और दुआएं</small>
+        </a>
+
+        <a href="eid-fitr.html" class="menu-card">
+            <div class="icon-box">🌙</div>
+            <span data-key="eid_fitr">ईदुल फ़ित्र</span>
+            <small>Eid-ul-Fitr</small>
+        </a>
+
+        <a href="eid-azha.html" class="menu-card">
+            <div class="icon-box">🐏</div>
+            <span data-key="eid_adha">ईदुल अज़हा</span>
+            <small>Eid-ul-Adha</small>
+        </a>
+
+        <a href="janaza.html" class="menu-card full-card">
+            <div class="icon-box">⚰️</div>
+            <span data-key="janaza">जनाज़ा नमाज़ (Janaza)</span>
+            <small data-key="janaza_sub">तरीका और मय्यित की दुआ</small>
+        </a>
+    </div>
+
+    <div class="footer-info" id="footerText">
+        दीन की सही मालूमात के लिए - <b>Deeni Rehbar App</b>
+    </div>
+        <div class="bottom-nav">
+        <a href="index.html" class="nav-link">🏠<small data-key="nav_home">Home</small></a>
+        <a href="tasbih.html" class="nav-link">📿<small data-key="nav_tasbih">Tasbih</small></a>
+        <a href="qibla.html" class="nav-link">🧭<small data-key="nav_qibla">Qibla</small></a>
+       
+    </div>
+
+
+<script>
+    const contentData  = {
+        ur: {
+            title: "نماز گائیڈ", sub: "مکمل معلومات کا انڈیکس",
+            ghusl: "غسل", ghusl_sub: "پاک ہونے کا طریقہ",
+            wudu: "وضو", wudu_sub: "نماز کی چابی",
+            full_namaz: "مکمل نماز", full_namaz_sub: "طریقہ اور دعائیں",
+            eid_fitr: "عید الفطر", eid_adha: "عید الاضحیٰ",
+            janaza: "نماز جنازہ", janaza_sub: "طریقہ اور میت کی دعا",
+            footer: "دین کی صحیح معلومات کے لیے - دینی رہبر ایپ",
+            nav_home: "ہوم", 
+    nav_tasbih: "تسبیح", 
+    nav_qibla: "قبلہ", 
+    nav_profile: "پروفائل",
+   
+            dir: "rtl"
+        },
+        hi: {
+            title: "नमाज़ गाइड", sub: "मुकम्मल जानकारी का इंडेक्स",
+            ghusl: "गुस्ल", ghusl_sub: "पाक होने का तरीका",
+            wudu: "वुज़ू", wudu_sub: "नमाज़ की चाबी",
+            full_namaz: "मुकम्मल नमाज़", full_namaz_sub: "तरीका और दुआएं",
+            eid_fitr: "ईदुल फ़ित्र", eid_adha: "ईदुल अज़हा",
+            janaza: "जनाज़ा नमाज़", janaza_sub: "तरीका और मय्यित की दुआ",
+            footer: "दीन की सही मालूमात के लिए - Deeni Rehbar App",
+            nav_home: "होम", nav_tasbih: "तस्बीह", nav_qibla: "क़िबला", nav_profile: "प्रोफ़ाइल",
+
+            dir: "ltr"
+        },
+        en: {
+            title: "Namaz Guide", sub: "Complete Index",
+            ghusl: "Ghusl", ghusl_sub: "Method of Purification",
+            wudu: "Wudu", wudu_sub: "Key to Namaz",
+            full_namaz: "Full Namaz", full_namaz_sub: "Step-by-Step & Duas",
+            eid_fitr: "Eid-ul-Fitr", eid_adha: "Eid-ul-Adha",
+            janaza: "Janaza Namaz", janaza_sub: "Method and Duas",
+            footer: "For authentic knowledge - Deeni Rehbar App", dir: "ltr"},
+            ar: {
+            title: "دليل الصلاة", sub: "فهرس كامل",
+            ghusl: "الغسل", ghusl_sub: "طريقة الطهارة",
+            wudu: "الوضوء", wudu_sub: "مفتاح الصلاة",
+            full_namaz: "الصلاة الكاملة", full_namaz_sub: "خطوة بخطوة",
+            eid_fitr: "عيد الفطر", eid_adha: "عيد الأضحى",
+            janaza: "صلاة الجنازة", janaza_sub: "الطريقة والأدعية",
+            footer: "ديني رہبر - معلومات دينية",
+            nav_home: "الرئيسية", nav_tasbih: "تسبيح", nav_qibla: "قبلة", nav_profile: "ملف",
+            dir: "rtl"
+             
+
+
+        }
+    };
+
+    function applySettings() {
+        // Home page se 'pref_lang' uthao
+        const savedLang = localStorage.getItem('pref_lang');
+        console.log("Selected Language from Home: ", savedLang); // Check karne ke liye
+
+        const lang = savedLang || 'ur'; // Agar kuch na mile to Urdu
+        const data = contentData[lang] || contentData['ur'];
+
+        // HTML badalna shuru karo
+        document.body.dir = data.dir;
+        
+        // IDs check karein (idxTitle aur idxSub aapke HTML mein hain)
+        const titleEl = document.getElementById('idxTitle');
+        const subEl = document.getElementById('idxSub');
+        const footerEl = document.getElementById('footerText');
+
+        if(titleEl) titleEl.innerText = data.title;
+        if(subEl) subEl.innerText = data.sub;
+        if(footerEl) footerEl.innerText = data.footer;
+
+        // Saare labels badlo
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const key = el.getAttribute('data-key');
+            if (data[key]) {
+                el.innerText = data[key];
+            }
+        });
+
+        // Alignment set karo
+        document.body.style.textAlign = (data.dir === 'rtl') ? 'right' : 'left';
+    }
+
+    // Isse page load hone par pakka chalega
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applySettings);
+    } else {
+        applySettings();
+    }
+</script>
+</body>
+</html>

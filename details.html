@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surah Details - Deeni Rehbar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #004d40; --accent: #c09b3d; --bg: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 20px; }
+
+        .header { background: var(--primary); color: white; padding: 30px 20px; text-align: center; position: relative; }
+        .back-btn { position: absolute; left: 20px; top: 45%; font-size: 24px; color: white; text-decoration: none; }
+        .header h1 { margin: 0; font-size: 26px; font-weight: bold; letter-spacing: 1px; }
+        .header p { margin: 10px 0 0; font-size: 22px; font-family: 'Amiri', serif; opacity: 0.9; }
+
+        .tilawat-card { text-align: center; padding: 20px 10px; background: #fff; border-bottom: 1px solid #eee; }
+        .qari-name { font-size: 15px; color: var(--primary); font-weight: bold; margin-bottom: 12px; display: block; }
+        .qari-name::before { content: '🎙️'; margin-right: 8px; }
+        audio { width: 90%; height: 45px; border-radius: 30px; }
+
+        .content-area { padding: 20px; }
+        .ayah-unit { margin-bottom: 50px; text-align: center; }
+        
+        .arabic-text { 
+            font-family: 'Amiri', serif; font-size: 36px; direction: rtl; line-height: 2.3; 
+            color: #000; display: block; cursor: pointer; transition: 0.3s;
+        }
+        .arabic-text:active { color: var(--accent); }
+
+        .ayah-divider { display: flex; justify-content: center; align-items: center; margin: 20px 0; }
+        .ayah-no { font-size: 24px; font-weight: bold; color: #222; display: flex; align-items: center; }
+        .ayah-no::before { content: '﴿'; color: var(--accent); font-size: 30px; margin-right: 5px; }
+        .ayah-no::after { content: '﴾'; color: var(--accent); font-size: 30px; margin-left: 5px; }
+
+        .trans-box { 
+            background: #f8f9fa; padding: 18px; border-radius: 12px; 
+            border-left: 5px solid var(--accent); text-align: left; 
+            font-size: 17px; color: #333; line-height: 1.6; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        #loader { text-align: center; padding: 100px 20px; font-size: 18px; color: var(--primary); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="javascript:history.back()" class="back-btn">←</a>
+        <h1 id="topNameEn">Al-Faatiha</h1>
+        <p id="topNameAr">(اَلْفَاتِحَةِ)</p>
+    </div>
+
+    <div class="tilawat-card" id="mainPlayer">
+        <span class="qari-name">Tilawat: Qari Abdul Basit</span>
+        <audio id="fullSurahAudio" controls></audio>
+    </div>
+
+    <div id="loader">Quran-e-Paak ka data load ho raha hai...</div>
+    <div class="content-area" id="mainList"></div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const docId = urlParams.get('id') || 1;
+    const isPara = window.location.search.includes('type=para');
+
+    // --- Dynamic Translation Logic ---
+    const savedLang = localStorage.getItem('pref_lang') || 'ur';
+    let edition = 'ur.jalandhry'; // Default Urdu
+    if(savedLang === 'hi') edition = 'hi.farooq';
+    if(savedLang === 'en') edition = 'en.ahmedali';
+
+    async function fetchData() {
+        try {
+            // Ab edition dynamic use hogi
+            let endpoint = isPara ? `juz/${docId}/editions/quran-uthmani,${edition}` : `surah/${docId}/editions/quran-uthmani,${edition}`;
+            
+            const response = await fetch(`https://api.alquran.cloud/v1/${endpoint}`);
+            const result = await response.json();
+            
+            const audioUrl = isPara ? `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/1.mp3` : `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${docId}.mp3`;
+            document.getElementById('fullSurahAudio').src = audioUrl;
+
+            renderUI(result.data);
+        } catch (e) {
+            document.getElementById('loader').innerText = "Network Error! Dobara koshish karein.";
+        }
+    }
+
+    function renderUI(data) {
+        document.getElementById('loader').style.display = "none";
+        
+        const arabicSource = data[0].ayahs;
+        const transSource = data[1].ayahs;
+
+        document.getElementById('topNameEn').innerText = isPara ? `Parah ${docId}` : data[0].englishName;
+        document.getElementById('topNameAr').innerText = isPara ? `(الجزء ${docId})` : `(${data[0].name})`;
+
+        let listHtml = "";
+        arabicSource.forEach((ayah, i) => {
+            const singleAudio = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayah.number}.mp3`;
+
+            listHtml += `
+                <div class="ayah-unit">
+                    <span class="arabic-text" onclick="playSingle('${singleAudio}')">${ayah.text}</span>
+                    <div class="ayah-divider">
+                        <span class="ayah-no">${ayah.numberInSurah}</span>
+                    </div>
+                    <div class="trans-box">
+                        ${transSource[i].text}
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('mainList').innerHTML = listHtml;
+    }
+
+    function playSingle(url) {
+        const audio = new Audio(url);
+        audio.play();
+    }
+
+    fetchData();
+</script>
+</body>
+</html>

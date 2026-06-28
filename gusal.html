@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghusl Guide - Deeni Rehbar</title>
+    <style>
+        :root {
+            --p-green: #2e7d32;
+            --light-green: #e8f5e9;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --accent-gold: #c6a700;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f4f0;
+            color: var(--text-dark);
+            margin: 0; padding: 0;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--p-green);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header h1 { margin: 0; font-size: 26px; }
+        .back-btn { 
+            position: absolute; left: 20px; top: 40px; 
+            color: white; text-decoration: none; font-size: 20px; 
+        }
+
+        .container {
+            max-width: 600px;
+            margin: -20px auto 40px;
+            padding: 0 15px;
+        }
+
+        .info-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--p-green);
+            position: relative;
+        }
+
+        h3 { color: var(--p-green); margin-top: 0; font-size: 19px; border-bottom: 1px solid #eee; padding-bottom: 10px; padding-right: 30px; }
+        p { font-size: 15px; color: #555; white-space: pre-line; }
+
+        .footer { text-align: center; padding: 20px; color: #888; font-size: 13px; }
+
+        .voice-btn {
+            position: absolute; right: 15px; top: 20px;
+            background: var(--light-green); border: none; border-radius: 50%;
+            width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+
+        .floating-audio {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--accent-gold); color: white;
+            padding: 12px 20px; border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 10px; font-weight: bold; z-index: 1000; border: none; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+  
+
+    <div class="header">
+        <a href="namaz.html" class="back-btn">←</a>
+        <h1 id="pageTitle">गुस्ल की मुकम्मल जानकारी</h1>
+        <p id="pageSub">Ghusl: A to Z Guide</p>
+    </div>
+
+    <div class="container" id="content-to-read">
+        <div id="dynamic-content"></div>
+    </div>
+
+    <div class="footer" id="footerInfo">
+        Deeni Rehbar - दीन की सही मालूमात
+    </div>
+        
+
+<script>
+    const contentData = {
+hi: {
+    title: "गुस्ल की मुकम्मल जानकारी",
+    sub: "गुस्ल A to Z जानकारी",
+    listen: "सुनिए (Listen All)",
+    footer: "Deeni Rehbar - दीन की सही मालूमात",
+    voice: "hi-IN",
+    dir: "ltr",
+    html: `
+        <div class="info-card">
+            <h3>1. गुस्ल का बयान</h3>
+            <p>पाँच चीज़ों से गुस्ल फ़र्ज़ हो जाता है: औरत से सोहबत करना, सोते में एहतिलाम (नाइटफ़ॉल) का होना, मनी का शहवत (जोश) के साथ अपनी जगह से अलग होकर निकलना, हैज़ (मासिक धर्म) खत्म होना, और निफ़ास (बच्चे की पैदाइश के बाद का ख़ून) बंद होना।</p>
+        </div>
+        <div class="info-card">
+            <h3>गुस्ल के फ़राइज़</h3>
+            <p>गुस्ल में तीन चीज़ें फ़र्ज़ हैं: 1. मुँह भरकर कुल्ली करना (रोज़े की हालत हो तो ग़रग़रा न करें)। 2. नरम हड्डी तक नाक में पानी पहुँचाना (रोज़े में पानी ऊपर की तरफ न खींचें)। 3. तमाम बदन पर इस तरह पानी बहाना कि एक बाल बराबर जगह भी सूखी न रहे। (आइन-ए-नमाज़, जिल्द: 1, सफ़ा: 33)</p>
+        </div>
+        <div class="info-card">
+            <h3>गुस्ल की सुन्नतें</h3>
+            <p>गुस्ल में पाँच चीज़ें सुन्नत हैं: 1. दोनों हाथों को गट्टों (कलाई) तक धोना। 2. इस्तेंजा करना और जिस जगह बदन पर नजासत (नापाकी) लगी हो उसको धोना। 3. नापाकी दूर करने की नियत करना। 4. पहले वज़ू कर लेना। 5. तमाम बदन पर तीन बार पानी बहाना। (नूरुल ईज़ाह, सफ़ा: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>गुस्ल के मकरूहात</h3>
+            <p>गुस्ल में छह चीज़ें मकरूह हैं: 1. गुस्ल करते वक़्त नंगे होने की हालत में दुआ पढ़ना (ज़ुबान से अल्लाह का नाम लेना मना है)। 2. क़िबला की तरफ रुख करना। 3. ज़रूरत से ज़्यादा पानी बहाना। 4. इतना कम पानी लेना कि गुस्ल अच्छी तरह न हो सके। 5. नंगे होने की हालत में बातें करना। 6. सुन्नत के ख़िलाफ़ गुस्ल करना। (नूरुल ईज़ाह, सफ़ा: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>गुस्ल करने का तरीका</h3>
+            <p>पहले दोनों हाथ तीन मर्तबा धोएँ, फिर बदन पर किसी जगह नापाकी लगी हो तो उसको तीन मर्तबा धोकर पाक करें, फिर इस्तेंजा की जगह को धोएँ (चाहे वहाँ नापाकी लगी हो या न हो, ताकि तसल्ली हो जाए)। इसके बाद मसनून तरीक़े पर वज़ू करें। अगर नहाने का पानी क़दमों के नीचे जमा हो रहा हो तो पैरों को आख़िर में धोएँ, वरना इसी वक़्त धो डालना भी जाइज़ है। अब पानी पहले सर पर डालें, फिर दाएँ कंधे पर, फिर बाएँ कंधे पर। फिर इसी तरह दोबारा पानी डालें—पहले सर पर, फिर दाएँ कंधे पर, फिर बाएँ कंधे पर (और जहाँ सूखा रहने का अंदेशा हो, वहाँ हाथ से मलकर पानी पहुँचाएँ)। फिर इसी तरह तीसरी मर्तबा भी सर से पैर तक पानी बहाएँ।</p>
+        </div>`
+}
+,
+        ur: {
+    title: "غسل کی مکمل معلومات",
+    sub: "غسل A to Z معلومات",
+    listen: "سنیے (Listen All)",
+    footer: "Deeni Rehbar - دین کی صحیح معلومات",
+    voice: "ur-PK", // اردو آواز کے لیے بہترین لوکیل
+    dir: "rtl",     // رائٹ ٹو لیفٹ (उर्दू के लिए जरूरी)
+    html: `
+        <div class="info-card">
+            <h3>1. غسل کا بیان</h3>
+            <p>پانچ چیزوں سے غسل فرض ہو جاتا ہے: عورت سے صحبت کرنا، سوتے میں احتلام (نائٹ فال) کا ہونا، منی کا شہوت (جوش) کے ساتھ اپنی جگہ سے الگ ہو کر نکلنا، حیض (ماہواری) ختم ہونا، اور نفاس (بچے کی پیدائش کے بعد کا خون) بند ہونا۔</p>
+        </div>
+        <div class="info-card">
+            <h3>غسل کے فرائض</h3>
+            <p>غسل میں تین چیزیں فرض ہیں: 1۔ منہ بھر کر کلی کرنا (روزے کی حالت ہو تو غرغرہ نہ کریں)۔ 2۔ نرم ہڈی تک ناک میں پانی پہنچانا (روزے میں پانی اوپر کی طرف نہ کھینچیں)۔ 3۔ تمام بدن پر اس طرح پانی بہانا کہ ایک بال برابر جگہ بھی سوکھی نہ رہے۔ (آئینِ نماز، جلد: 1، صفحہ: 33)</p>
+        </div>
+        <div class="info-card">
+            <h3>غسل کی سنتیں</h3>
+            <p>غسل میں پانچ چیزیں سنت ہیں: 1۔ دونوں ہاتھوں کو گٹوں (کلائی) تک دھونا۔ 2۔ استنجا کرنا اور جس جگہ بدن پر نجاست (ناپاکی) لگی ہو اس کو دھونا ۔ 3۔ ناپاکی دور کرنے کی نیت کرنا۔ 4۔ پہلے وضو کر لینا۔ 5۔ تمام بدن پر تین بار پانی بہانا۔ (نور الایضاح، صفحہ: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>غسل کے مکروہات</h3>
+            <p>غسل میں چھ چیزیں مکروہ ہیں: 1۔ غسل کرتے وقت ننگے ہونے کی حالت میں دعا پڑھنا (زبان سے اللہ کا نام لینا منع ہے)۔ 2۔ قبلہ کی طرف رخ کرنا۔ 3۔ ضرورت سے زیادہ پانی بہانا۔ 4۔ اتنا کم پانی لینا کہ غسل اچھی طرح نہ ہو سکے۔ 5۔ ننگے ہونے کی حالت میں باتیں کرنا۔ 6۔ سنت کے خلاف غسل کرنا۔ (نور الایضاح، صفحہ: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>غسل کرنے کا طریقہ</h3>
+            <p>پہلے دونوں ہاتھ تین مرتبہ دھوئیں، پھر بدن پر کسی جگہ ناپاکی لگی ہو تو اس کو تین مرتبہ دھو کر پاک کریں، پھر استنجا کی جگہ کو دھوئیں (چاہے وہاں ناپاکی لگی ہو یا نہ ہو، تاکہ تسلی ہو جائے)۔ اس کے بعد مسنون طریقے پر وضو کریں۔ اگر نہانے کا پانی قدموں کے نیچے جمع ہو رہا ہو تو پیروں کو آخر میں دھوئیں، ورنہ اسی وقت دھو ڈالنا بھی جائز ہے۔ اب پانی پہلے سر پر ڈالیں، پھر دائیں کندھے پر، پھر بائیں کندھے پر۔ پھر اسی طرح دوبارہ پانی ڈالیں—پہلے سر پر، پھر دائیں کندھے پر، پھر بائیں کندھے پر (اور جہاں سوکھا رہنے کا اندیشہ ہو، وہاں ہاتھ سے مل کر پانی پہنچائیں)۔ پھر اسی طرح تیسری مرتبہ بھی سر سے پیر تک پانی بہائیں۔</p>
+        </div>`
+}
+,
+        ar: {
+    title: "معلومات كاملة عن الغسل",
+    sub: "معلومات الغسل من الألف إلى الياء",
+    listen: "استمع (استمع للكل)",
+    footer: "Deeni Rehbar - معلومات الدين الصحيحة",
+    voice: "ar-SA",
+    dir: "rtl",
+    html: `
+        <div class="info-card">
+            <h3>1. بيان الغسل</h3>
+            <p>يجب الغسل بخمسة أشياء: الجماع مع الزوجة، الاحتلام أثناء النوم، خروج المني بشهوة (دفق) متزحزحاً عن مقره، انتهاء الحيض (الدورة الشهرية)، وانقطاع النفاس (الدم بعد الولادة).</p>
+        </div>
+        <div class="info-card">
+            <h3>فرائض الغسل</h3>
+            <p>فرائض الغسل ثلاثة هي: 1. المضمضة بملء الفم (وفي حالة الصيام لا تغرغر). 2. الاستنشاق بإيصال الماء إلى العظم اللين في الأنف (وفي الصيام لا تجذب الماء لأعلى). 3. غسل جميع البدن بصب الماء بحيث لا تبقى بقعة بحجم شعرة جافة. (عين النماز، المجلد: 1، الصفحة: 33)</p>
+        </div>
+        <div class="info-card">
+            <h3>سنن الغسل</h3>
+            <p>سنن الغسل خمسة هي: 1. غسل اليدين إلى الرسغين (المعصمين). 2. الاستنجاء وغسل الموضع الذي أصابته النجاسة (الناباكي) من البدن. 3. نية رفع الجنابة (الطهارة). 4. الوضوء أولاً. 5. صب الماء على جميع البدن ثلاث مرات. (نور الإيضاح، الصفحة: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>مكروهات الغسل</h3>
+            <p>مكروهات الغسل ستة هي: 1. قراءة الدعاء حال التعري أثناء الغسل (يُمنع ذكر اسم الله باللسان). 2. استقبال القبلة. 3. الإسراف في صب الماء فوق الحاجة. 4. تقليل الماء جداً بحيث لا يتم الغسل بشكل جيد. 5. التكلم حال التعري. 6. الغسل على خلاف السنة. (نور الإيضاح، الصفحة: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>طريقة الغسل</h3>
+            <p>اغسل يديك أولاً ثلاث مرات، ثم إن كان هناك نجاسة على أي موضع من البدن فاغسلها ثلاث مرات لتطهيرها، ثم اغسل موضع الاستنجاء (سواء كانت هناك نجاسة أم لا، للاطمئنان). بعد ذلك توضأ على الطريقة المسنونة. وإذا كان ماء الاستحمام يتجمع تحت قدميك فأخر غسل القدمين إلى النهاية، وإلا فيجوز غسلهما في هذا الوقت أيضاً. والآن صب الماء على رأسك أولاً، ثم على كتفك الأيمن، ثم على كتفك الأيسر. ثم صب الماء مرة ثانية بالترتيب نفسه—على الرأس أولاً، ثم الكتف الأيمن، ثم الكتف الأيسر (وحيثما تخشى أن يبقى جافاً، حاول إيصال الماء إليه بدلكه بيدك). ثم صب الماء من الرأس إلى القدمين للمرة الثالثة بالأسلوب نفسه.</p>
+        </div>`
+}
+,
+        en: {
+    title: "Complete Information of Ghusl",
+    sub: "Ghusl A to Z Information",
+    listen: "Listen All",
+    footer: "Deeni Rehbar - Right Knowledge of Deen",
+    voice: "en-IN",
+    dir: "ltr",
+    html: `
+        <div class="info-card">
+            <h3>1. Description of Ghusl</h3>
+            <p>Ghusl becomes obligatory (Farz) due to five things: having intercourse with wife, having nocturnal emission (nightfall) while sleeping, discharge of Mani (semen) with passion (lust) after separating from its place, ending of Haiz (menstruation), and stopping of Nifas (bleeding after childbirth).</p>
+        </div>
+        <div class="info-card">
+            <h3>Obligations (Faraiz) of Ghusl</h3>
+            <p>There are three things obligatory (Farz) in Ghusl: 1. Rinsing the mouth thoroughly with water (if in the state of fasting, do not gargle). 2. Rinsing the nose with water up to the soft bone (if fasting, do not pull the water upward). 3. Pouring water over the entire body in such a way that not even a single hair's breadth of space remains dry. (Aeen-e-Namaz, Volume: 1, Page: 33)</p>
+        </div>
+        <div class="info-card">
+            <h3>Sunnahs of Ghusl</h3>
+            <p>There are five things Sunnah in Ghusl: 1. Washing both hands up to the wrists. 2. Performing Istinja (washing private parts) and washing the place where Najasat (impurity) is attached to the body. 3. Making the intention (Niyyah) to remove impurity. 4. Performing Wudu beforehand. 5. Pouring water over the entire body three times. (Nurul Idah, Page: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>Disliked Acts (Makroohat) of Ghusl</h3>
+            <p>There are six things Makrooh in Ghusl: 1. Reciting a supplication (Dua) while being naked during Ghusl (it is forbidden to take the name of Allah with the tongue). 2. Facing towards the Qiblah. 3. Wasting or using water more than necessary. 4. Using so little water that Ghusl cannot be done properly. 5. Talking while being naked. 6. Performing Ghusl against the Sunnah. (Nurul Idah, Page: 41)</p>
+        </div>
+        <div class="info-card">
+            <h3>Method of Performing Ghusl</h3>
+            <p>First, wash both hands three times, then if there is any impurity attached to any part of the body, wash and purify it three times, then wash the place of Istinja (whether there is impurity attached there or not, so that you are fully satisfied). After this, perform Wudu according to the Sunnah method. If the water used for bathing is gathering beneath your feet, then wash the feet at the very end, otherwise, it is also permissible to wash them at this same time. Now, pour water first on the head, then on the right shoulder, then on the left shoulder. Then, pour water in the same way for the second time—first on the head, then on the right shoulder, then on the left shoulder (and where there is a fear of remaining dry, try to reach the water by rubbing with the hand). Then, pour water from head to toe for the third time in the same way.</p>
+        </div>`
+}
+
+    };
+
+    function applySettings() {
+        const lang = localStorage.getItem('pref_lang') || 'hi';
+        const data = contentData[lang] || contentData['hi'];
+        
+        document.getElementById('pageTitle').innerText = data.title;
+        document.getElementById('pageSub').innerText = data.sub;
+        
+        document.getElementById('footerInfo').innerText = data.footer;
+        document.getElementById('dynamic-content').innerHTML = data.html;
+
+        document.body.dir = data.dir;
+        document.body.style.textAlign = (data.dir === 'rtl') ? 'right' : 'left';
+        
+        const backBtn = document.querySelector('.back-btn');
+        if (data.dir === 'rtl') {
+            backBtn.style.left = 'auto';
+            backBtn.style.right = '20px';
+        } else {
+            backBtn.style.right = 'auto';
+            backBtn.style.left = '20px';
+        }
+    }
+
+    
+    window.onload = applySettings;
+   
+    
+</script>
+
+</body>
+</html>

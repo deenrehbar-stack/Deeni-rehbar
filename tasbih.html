@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Digital Tasbih</title>
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; display: flex; flex-direction: column; height: 100vh; transition: 0.3s; }
+        .header { background: #004d40; color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
+        .container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .counter-display { font-size: 80px; font-weight: bold; color: #004d40; background: white; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 8px solid #d4af37; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 40px; }
+        .tap-area { width: 100%; max-width: 300px; height: 150px; background: #004d40; color: white; border: none; border-radius: 20px; font-size: 24px; font-weight: bold; box-shadow: 0 8px 0 #002e27; cursor: pointer; transition: 0.1s; }
+        .tap-area:active { transform: translateY(4px); box-shadow: 0 4px 0 #002e27; }
+        .reset-btn { background: #e74c3c; color: white; border: none; padding: 10px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 30px;}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <!-- Back word ke liye data-key -->
+        <span onclick="location.href='index.html'" style="cursor:pointer; font-size: 18px;" id="back-btn">← Back</span>
+        <span style="font-weight: bold;" data-key="nav_tasbih">Digital Tasbih</span>
+        <span id="target">Target: 33</span>
+    </div>
+
+    <div class="container">
+        <div class="counter-display" id="count">0</div>
+        <button class="tap-area" onclick="countUp()" id="tap-btn">TAP</button>
+        <!-- Reset word ke liye data-key -->
+        <button class="reset-btn" onclick="reset()" id="reset-word">Reset</button>
+    </div>
+
+    <script src="translations.js"></script>
+    <script>
+        let count = 0;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function applyLanguage() {
+            const lang = localStorage.getItem('pref_lang') || 'ur';
+            const t = translations[lang];
+            if(!t) return;
+
+            document.body.dir = t.dir;
+
+            // 1. General keys update (translations.js se)
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[key]) el.innerText = t[key];
+            });
+
+            // 2. Specfic words ke liye chaaro languages ka logic
+            const labels = {
+                en: { back: "← Back", reset: "Reset", target: "Target: 33", tap: "TAP", alert: "SubhanAllah! 33 completed." },
+                hi: { back: "← पीछे", reset: "रिसेट", target: "लक्ष्य: 33", tap: "टैप करें", alert: "सुभानअल्लाह! 33 पूरे हुए।" },
+                ur: { back: "پیچھے →", reset: "ری سیٹ", target: "ہدف: 33", tap: "ٹچ کریں", alert: "سبحان اللہ! 33 مکمل ہو گئے۔" },
+                ar: { back: "رجوع →", reset: "إعادة تعيين", target: "الهدف: 33", tap: "اضغط", alert: "سبحان الله! اكتمل 33" }
+            };
+
+            const selected = labels[lang] || labels.en;
+
+            document.getElementById('back-btn').innerText = selected.back;
+            document.getElementById('reset-word').innerText = selected.reset;
+            document.getElementById('target').innerText = selected.target;
+            document.getElementById('tap-btn').innerText = selected.tap;
+            
+            // Language ke hisaab se alert message save karna
+            window.currentAlertMsg = selected.alert;
+        }
+
+        function playLoudClick() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function countUp() {
+            count++;
+            document.getElementById('count').innerText = count;
+            playLoudClick();
+            if (navigator.vibrate) navigator.vibrate(60);
+            
+            if(count % 33 === 0) {
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                setTimeout(() => { alert(window.currentAlertMsg); }, 100);
+            }
+        }
+
+        function reset() {
+            count = 0;
+            document.getElementById('count').innerText = count;
+        }
+
+        window.onload = applyLanguage;
+    </script>
+</body>
+</html>

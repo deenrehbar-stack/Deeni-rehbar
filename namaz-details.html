@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नमाज़ का मुकम्मल बयान</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --p-green: #2e7d32;
+        --light-green: #e8f5e9;
+        --white: #ffffff;
+        --text-dark: #333333;
+        --accent-gold: #c6a700;
+    }
+
+    body {
+        font-family: 'Noto Sans Devanagari', 'Segoe UI', Arial, sans-serif;
+        background-color: #f0f4f0;
+        color: var(--text-dark);
+        margin: 0; padding: 0;
+        line-height: 1.6;
+    }
+
+    /* Naya Header Design (Wudu Guide Jaisa) */
+    .header {
+        background-color: var(--p-green);
+        color: var(--white);
+        text-align: center;
+        padding: 40px 20px;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .header h1 { 
+        margin: 0; 
+        font-size: 26px; 
+        font-weight: bold;
+    }
+
+    .header p {
+        margin: 5px 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+    }
+
+    .back-btn { 
+        position: absolute; 
+        left: 20px; 
+        top: 40px; 
+        color: white; 
+        text-decoration: none; 
+        font-size: 20px; 
+    }
+
+    .container {
+        max-width: 600px;
+        margin: -20px auto 40px; /* Card ko thoda upar lane ke liye */
+        padding: 0 15px;
+    }
+
+    /* Cards ka design */
+    .card, .info-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-left: 5px solid var(--p-green);
+        position: relative;
+    }
+
+    h2 { 
+        color: var(--p-green); 
+        margin-top: 0; 
+        font-size: 20px; 
+        border-bottom: 1px solid #eee; 
+        padding-bottom: 10px; 
+    }
+
+    .arabic-text {
+        font-family: 'Amiri', serif;
+        font-size: 26px;
+        direction: rtl;
+        display: block;
+        text-align: right;
+        margin: 15px 0;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 12px;
+        line-height: 1.8;
+        color: #000;
+    }
+
+    .translation {
+        color: #b71c1c;
+        font-style: italic;
+        display: block;
+        margin-bottom: 10px;
+        padding-left: 10px;
+        border-left: 3px solid #ffcdd2;
+        font-size: 15px;
+    }
+
+    .reference { 
+        font-size: 0.85em; 
+        color: #616161; 
+        text-align: right; 
+        display: block; 
+        margin-top: 10px; 
+    }
+
+    b { color: #000; }
+</style>
+
+</head>
+<body>
+
+<div class="header">
+       <a href="namaz.html" class="back-btn">←</a>
+    <h1 id="main-title" style="margin:0; font-size: 22px;">नमाज़ का मुकम्मल बयान</h1>
+</div>
+
+<div id="content-area"></div>
+
+<script>
+const translationsData = {
+    hi: {
+    title: "नमाज़ का बयान",
+    section1:"नमाज़ की बुनियादी जानकारी",
+    p1: "दिन और रात में पाँच नमाज़ें फ़र्ज़ हैं:<br>1. फ़ज्र, 2. ज़ुहर, 3. अस्र, 4. मग़रिब, 5. इशा।",
+    fajr: "<b>नमाज़-ए-फ़ज्र:</b> सुबह हल्की सफेदी होने से लेकर सूरज निकलने से पहले तक इसका वक्त है।",
+    zuhr: "<b>नमाज़-ए-ज़ुहर:</b> दोपहर में सूरज ढलने से लेकर साया दुगुना होने तक इसका वक्त रहता है।",
+    asr: "<b>नमाज़-ए-अस्र:</b> दोपहर ढलने के बाद से सूरज डूबने से पहले तक है। सूरज डूबने से 20 मिनट पहले पढ़ना मकरूह है।",
+    maghrib: "<b>नमाज़-ए-मग़रिब:</b> सूरज डूबने के फ़ौरन बाद शुरू होता है और आसमान की लाली रहने तक रहता है।",
+    isha: "<b>नमाज़-ए-इशा:</b> आसमान से लाली खत्म होने के बाद से सुबह की रोशनी होने तक है, मगर आधी रात से पहले पढ़ना बेहतर है।",
+        ref: "(नूरुल ईज़ाह स: 57)",
+        
+        section2: "नमाज़ पढ़ने का तरीका",
+        h1:"<b>नियत करना</b> ",
+        p_niyat: "सबसे पहले नमाज़ की नियत करें और अपने दोनों हाथों को कानों तक उठाएँ <b>(अगर औरत हो तो कंधों तक उठाएँ)</b> और <b>'اللّٰهُ أَكْبَر'</b> कहकर हाथ नाफ़ के नीचे बाँध लें <b>(औरतें सीने पर हाथ रखें)</b>                                   और आपकी नज़रें सजदा करने की जगह पर होनी चाहिए।   दोनों पैरों के बीच लगभग 4 उंगलियों का फासला रखें। ध्यान रहे कि पैरों के पंजे बाहर की तरफ न फैले हों, बल्कि बिल्कुल सीधे क़िबला की दिशा में होने चाहिए।    नाभि के नीचे हाथ बाँधें, जिसमें सीधा हाथ ऊपर हो। अंगूठे और छोटी उंगली से उल्टे हाथ की कलाई पकड़ें और बीच की तीन उंगलियां उल्टे हाथ की पीठ पर सीधी रखें।  और औरतें दोनों हाथ सीने पर रखें। इसमें कलाई पकड़ने की ज़रूरत नहीं है, बस सीधा हाथ उल्टे हाथ के ऊपर सलीके से रख लें।    ",
+
+        h2: "2. फिर सना पढे़",
+        p_sana: "नियत करने के बाद सना पढ़ें।",
+        tr_sana: "हिंदी तर्जुमा: ऐ अल्लाह! मैं तेरी पाकी बयान करता हूँ और तेरी ही तारीफ करता हूँ, तेरा नाम बरकत वाला है, तेरी शान बहुत ऊँची है और तेरे सिवा कोई इबादत के लायक नहीं।",
+        h3: "3. सूरह फ़ातिहा पढ़ना",
+        p_fatiha: "सना पढ़ने के बाद (أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ ، بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ) पढ़ें, फिर पूरी सूरह फ़ातिहा पढ़ें।",
+        tr_fatiha: "हिंदी तर्जुमा: सब तारीफें अल्लाह के लिए हैं जो सब जहानों का पालने वाला है। बहुत मेहरबान और निहायत रहम वाला है। इंसाफ के दिन का मालिक है। हम तेरी ही इबादत करते हैं और तुझ ही से मदद माँगते हैं। हमें सीधा रास्ता दिखा, उन लोगों का रास्ता जिन पर तूने इनाम किया, उनका नहीं जिन पर गज़ब हुआ और न गुमराहों का।",
+        h4: "4. सूरह मिलाना",
+        p_surah:"सूरह फ़ातिहा पढ़ने के बाद क़ुरआन में जितनी भी सूरतें हैं उनमें से कोई सी भी एक सूरह पढ़ें। अगर सूरह बड़ी हो, तो सूरह फ़ातिहा के बाद कम से कम एक बड़ी आयत या तीन छोटी आयतें पढ़ना वाजिब है।",
+        tr_falaq:"हिंदी तर्जुमा: आप कहिये कि मैं सुबह के रब की पनाह में आता हूँ। तमाम मखलूक की बुराई से। और अंधेरी रात की बुराई से जब वह छा जाए। और गांठों में फूंकने वाली जादूगरनियों की बुराई से। और हसद करने वाले की बुराई से जब वह हसद करे।",
+        h5: "5. रुकूअ में जाना",
+        p_ruku: "'अल्लाहु अकबर' कहते हुए रुकूअ में जाएँ। झुककर अपने दोनों हाथों से घुटनों को मजबूती से पकड़ें और उंगलियां फैलाकर रखें। अपनी पीठ को बिल्कुल सीधा रखें, जैसे उस पर पानी का प्याला रखा जाए तो पानी न गिरे। सिर को पीठ की सीध में रखें—न ज़्यादा ऊपर उठा हो और न नीचे झुका हो। अपनी नज़रें पाँव के अंगूठों और पंजों की तरफ रखें और यह तस्बीह  कम से कम 3 बार पढ़ें।",
+        tr_ruku: "हिंदी तर्जुमा: पाक है मेरा परवरदिगार जो बड़ी अज़मत वाला है।",
+        h6: "6. सजदा करना",
+        p_sajda: "रुकूअ के बाद सीधे खड़े हो जाएँ, फिर 'अल्लाहु अकबर' कहते हुए सजदे में जाएँ। पहले घुटने ज़मीन पर रखें, फिर हाथ और फिर नाक और माथा। अपने दोनों हाथों को कान के पास ज़मीन पर इस तरह रखें कि उंगलियां क़िबला की तरफ हों। अपनी नाक और माथे को ज़मीन पर मज़बूती से टिकाएँ और अपनी नज़रें नाक पर रखें। मर्दों के लिए ज़रूरी है कि अपनी कोहनियां ज़मीन से न लगने दें और पेट को पैरों से अलग रखें। पैरों की उंगलियों को मोड़कर उनका रुख़ क़िबला की तरफ रखें। एक रकात में दो सजदे होते हैं।  दोनों सजदों के बीच में थोड़ी देर के लिए सीधा बैठना ज़रूरी है, जिसे 'जलसा' कहा जाता है।    और इस तस्बीह को कम से कम 3 बार पढ़ें सजदे की हालत में।",   
+        tr_sajda: "हिंदी तर्जुमा: पाक है मेरा परवरदिगार जो सबसे बुलंद है।",
+        section3: "दूसरी रकात",
+        h12: "क़िरात ",
+        p_rakat: "पहली रकात मुकम्मल करने के बाद हाथ बांधकर सीधे खड़े हो जाएं, फिर सूरह फातिहा और कुरान की कोई सी एक सूरत पढ़ें जैसे पहली रकात में पढ़ी थी।",
+             h13: "रुकू और सजदा",
+        p_rukusajda:"फिर पहली रकात की तरह रुकू और सजदा करें।",
+        h7: " तशह्हुद (अत्तहिय्यात)",
+        p_tash: "अब बैठ जाएँ और अपने सीधे हाथ को सीधे पैर की जाँघ पर और उल्टे हाथ को उल्टे पैर की जाँघ पर रखें। अपनी उंगलियों को घुटनों के पास सामान्य रूप से रखें और आपकी नज़रें अपनी गोदी (Lap) की तरफ होनी चाहिए। मर्दों के लिए सुन्नत है कि बायाँ पैर बिछाकर उस पर बैठें और दायाँ पैर खड़ा रखें, जिसकी उंगलियाँ क़िबला की तरफ मुड़ी हों। इस हालत में यह पढ़ें:",
+        tr_tash:  "हिंदी तर्जुमा: तमाम ज़बानी, बदनी और माली इबादतें अल्लाह ही के लिए हैं। ऐ नबी! आप पर सलाम हो और अल्लाह की रहमत और उसकी बरकतें नाज़िल हों। हम पर और अल्लाह के तमाम नेक बंदों पर भी सलाम हो। मैं गवाही देता हूँ कि अल्लाह के सिवा कोई माबूद नहीं और मैं गवाही देता हूँ कि मुहम्मद (स.अ.व.) अल्लाह के बंदे और उसके रसूल हैं।",
+        p_note:"note:जब आप  (أَشْهَدُ أَنْ لَا) कहें, तब शहादत की उंगली (तर्जनी) उठाएं।  जब आप(  إِلٰهَ إِلَّا الله )कहें, तब उंगली को नीचे कर लें।",
+        h8: " दरूद इब्राहीम (मुकम्मल)",
+        p_ibrahim:"अत्तहियात के बाद दरूद-ए-इब्राहीम पढ़ें।",
+        tr_durood: "हिंदी तर्जुमा: ऐ अल्लाह! रहमत भेज मोहम्मद (स.अ.व.) पर और मोहम्मद (स.अ.व.) की आल पर, जैसे तूने रहमत भेजी इब्राहिम (अ.स.) पर और इब्राहिम (अ.स.) की आल पर, बेशक तू तारीफ के लायक और बड़ी शान वाला है। ऐ अल्लाह! बरकत भेज मोहम्मद (स.अ.व.) पर और मोहम्मद (स.अ.व.) की आल पर, जैसे तूने बरकत भेजी इब्राहिम (अ.स.) पर और इब्राहिम (अ.स.) की आल पर, बेशक तू तारीफ के लायक और बड़ी शान वाला है।",
+        h9: " दुआ-ए-मासूरा",
+        p_masoora:"फिर दुआ-ए-मासूरा पढ़ें",
+        tr_masura:"हिंदी तर्जुमा: ऐ अल्लाह! बेशक मैंने अपनी जान पर बहुत ज़ुल्म किया है और तेरे सिवा कोई गुनाहों को माफ़ नहीं कर सकता, पस तू अपनी ख़ास मग़फ़िरत (माफ़ी) से मुझे माफ़ कर दे और मुझ पर रहम फ़रमा, बेशक तू ही बहुत माफ़ करने वाला और निहायत रहम करने वाला है।",
+        h10: " रब्बना आतिना",
+        p_rabbana:"और फिर आख़िर में रब्बना आतिना पढ़ें।",
+        tr_rabbana: "हिंदी तर्जुमा: ऐ हमारे रब! हमें दुनिया में भी भलाई दे और आखिरत में भी भलाई दे और हमें आग (दोज़ख) के अज़ाब से बचा।",
+        h11: " सलाम फेरना",
+        p_salam:"अपना चेहरा सीधी तरफ (right shoulder) फेरते हुए कहें: 'السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ'। इस वक्त आपकी निगाह आपके सीधे कंधे (right shoulder) पर होनी चाहिए, फिर अपना चेहरा उल्टी तरफ (left shoulder) फेरते हुए कहें: 'السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ'। इस वक्त आपकी निगाह आपके उल्टे कंधे (left shoulder) पर होनी चाहिए।",
+        tr_salam:"हिंदी तर्जुमा: तुम पर अल्लाह की सलामती हो और उसकी रहमत हो।",
+        
+    },
+    en: {
+    title: "Method of Prayer (Namaz)",
+    section1: "Basic Information of Namaz",
+    p1: "Five prayers are obligatory during the day and night:<br>1. Fajr, 2. Zuhr, 3. Asr, 4. Maghrib, 5. Isha.",
+    fajr: "<b>Fajr Prayer:</b> Its time is from the beginning of dawn (slight whiteness) until just before sunrise.",
+    zuhr: "<b>Zuhr Prayer:</b> Its time remains from the decline of the sun at noon until the shadow of an object becomes double.",
+    asr: "<b>Asr Prayer:</b> From after the decline of the sun until just before sunset. It is Makruh (disliked) to pray 20 minutes before sunset.",
+
+    maghrib: "<b>Maghrib Prayer:</b> Starts immediately after sunset and remains as long as the redness of the sky persists.",
+    isha: "<b>Isha Prayer:</b> From after the redness disappears from the sky until the light of dawn appears, but it is better to pray before midnight.",
+    ref: "(Noorul Idah, Pg: 57)",
+
+    section2: "Method of Offering Namaz",
+    h1: "1. Making the Intention (Niyat)",
+    p_niyat: "First, make the intention for Namaz and raise both hands to the ears <b>(women should raise them to the shoulders)</b> and say <b>'Allahu Akbar'</b>, then tie your hands below the navel <b>(women should place their hands on the chest)</b> and your gaze should be at the place of prostration (Sajda). Keep a distance of about 4 fingers between both feet. Ensure that the toes are not spread outwards but are straight towards the Qibla. Tie hands below the navel with the right hand on top. Grasp the left wrist with the thumb and little finger, and place the middle three fingers straight on the back of the left hand. Women should place both hands on the chest; there is no need to grasp the wrist, just place the right hand neatly over the left.",
+
+    h2: "2. Then Recite Sana",
+    p_sana: "After making the intention, recite Sana.",
+    tr_sana: "English Translation: Glory be to You, O Allah, and all praise is Yours. Blessed is Your name, exalted is Your majesty, and there is no god besides You.",
+
+    h3: "3. Reciting Surah Fatiha",
+    p_fatiha: "After Sana, recite (A'udhu billahi minash-shaytanir-rajim, Bismillahir-Rahmanir-Rahim), then recite the complete Surah Fatiha.",
+    tr_fatiha: "English Translation: All praise is due to Allah, the Lord of all worlds. The Most Gracious, the Most Merciful. Master of the Day of Judgment. You alone we worship, and from You alone we seek help. Guide us to the straight path, the path of those upon whom You have bestowed favor, not of those who have evoked Your anger or of those who are astray.",
+
+    h4: "4. Joining a Surah",
+    p_surah: "After reciting Surah Fatiha, recite any one Surah from the Quran. If the Surah is long, it is mandatory (Wajib) to recite at least one long verse or three short verses after Surah Fatiha.",
+    tr_falaq: "English Translation: Say, I seek refuge in the Lord of daybreak. From the evil of that which He created. And from the evil of darkness when it settles. And from the evil of the blowers in knots. And from the evil of an envier when he envies.",
+
+    h5: "5. Going into Ruku",
+    p_ruku: "Go into Ruku while saying 'Allahu Akbar'. Bend down, hold your knees firmly with both hands, and keep your fingers spread. Keep your back perfectly straight, as if a cup of water placed on it would not spill. Keep your head in line with your back—neither raised too high nor bent too low. Keep your gaze towards your toes and feet and recite this Tasbih at least 3 times.",
+    tr_ruku: "English Translation: Glory be to my Lord, the Almighty.",
+
+    h6: "6. Performing Sajda",
+    p_sajda: "Stand up straight after Ruku, then go into Sajda while saying 'Allahu Akbar'. Place your knees on the ground first, then hands, then nose and forehead. Place both hands on the ground near the ears so that the fingers are facing the Qibla. Fix your nose and forehead firmly on the ground and keep your gaze on your nose. For men, it is necessary not to let their elbows touch the ground and to keep the stomach separate from the legs. Bend the toes and keep them facing the Qibla. There are two prostrations in one Rakat. It is necessary to sit straight for a short while between the two prostrations, which is called 'Jalsa'. And recite this Tasbih at least 3 times while in Sajda.",
+    tr_sajda: "English Translation: Glory be to my Lord, the Most High.",
+
+    section3: "Second Rakat",
+    h12: "Qira'at (Recitation)",
+    p_rakat: "After completing the first Rakat, stand up straight with hands tied, then recite Surah Fatiha and any one Surah from the Quran as recited in the first Rakat.",
+    h13: "Ruku and Sajda",
+    p_rukusajda: "Then perform Ruku and Sajda as in the first Rakat.",
+
+    h7: "Tashahhud (Attahiyat)",
+    p_tash: "Now sit down and place your right hand on your right thigh and your left hand on your left thigh. Keep your fingers near the knees in a normal way and your gaze should be towards your lap. It is Sunnah for men to spread the left foot and sit on it, and keep the right foot upright with the fingers bent towards the Qibla. In this state, recite:",
+    tr_tash: "English Translation: All compliments, prayers, and pure words are due to Allah. Peace be upon you, O Prophet, and the mercy of Allah and His blessings. Peace be upon us and on the righteous servants of Allah. I bear witness that there is no god but Allah, and I bear witness that Muhammad is His servant and Messenger.",
+    p_note: "Note: When you say (Ash-hadu alla), raise the index finger. When you say (ilaha illallah), lower the finger.",
+
+    h8: "Durood-e-Ibrahim (Complete)",
+    p_ibrahim: "Recite Durood-e-Ibrahim after Attahiyat.",
+    tr_durood: "English Translation: O Allah, send grace and honor on Muhammad and on the family of Muhammad, as You sent grace and honor on Ibrahim and on the family of Ibrahim. Surely, You are Praiseworthy, Most Glorious. O Allah, send blessings on Muhammad and on the family of Muhammad, as You sent blessings on Ibrahim and on the family of Ibrahim. Surely, You are Praiseworthy, Most Glorious.",
+
+    h9: "Dua-e-Masura",
+    p_masoora: "Then recite Dua-e-Masura.",
+    tr_masura: "English Translation: O Allah, I have greatly wronged my soul, and no one can forgive sins except You. So grant me forgiveness from Your special presence and have mercy on me. Surely, You are the Most Forgiving, Most Merciful.",
+
+    h10: "Rabbana Atina",
+    p_rabbana: "And finally, recite Rabbana Atina.",
+    tr_rabbana: "English Translation: Our Lord, give us good in this world and good in the Hereafter, and save us from the punishment of the Fire.",
+
+    h11: "Turning for Salam",
+    p_salam: "While turning your face to the right (right shoulder), say: 'Assalamu alaikum wa rahmatullah'. At this time, your gaze should be on your right shoulder, then turn your face to the left (left shoulder) and say: 'Assalamu alaikum wa rahmatullah'. At this time, your gaze should be on your left shoulder.",
+    tr_salam: "English Translation: Peace and mercy of Allah be upon you.",
+},
+
+        ur: {
+    title: "نماز کا بیان",
+    section1: "نماز کی بنیادی معلومات",
+    p1: "دن اور رات میں پانچ نمازیں فرض ہیں:<br>1. فجر، 2. ظہر، 3. عصر، 4. مغرب، 5. عشاء۔",
+    fajr: "<b>نمازِ فجر:</b> صبح ہلکی سفیدی ہونے سے لے کر سورج نکلنے سے پہلے تک اس کا وقت ہے۔",
+    zuhr: "<b>نمازِ ظہر:</b> دوپہر میں سورج ڈھلنے سے لے کر سایہ دوگنا ہونے تک اس کا وقت رہتا ہے۔",
+    asr: "<b>نمازِ عصر:</b> دوپہر ڈھلنے کے بعد سے سورج ڈوبنے سے پہلے تک ہے، سورج ڈوبنے سے 20 منٹ پہلے پڑھنا مکروہ ہے۔",
+    maghrib: "<b>نمازِ مغرب:</b> سورج ڈوبنے کے فوراً بعد شروع ہوتا ہے اور آسمان کی لالی رہنے تک رہتا ہے۔",
+    isha: "<b>نمازِ عشاء:</b> آسمان سے لالی ختم ہونے کے بعد سے صبح کی روشنی ہونے تک ہے، مگر آدھی رات سے پہلے پڑھنا بہتر ہے۔",
+    ref: "(نور الایضاح، صفحہ: 57)",
+
+    section2: "نماز پڑھنے کا طریقہ",
+    h1: "<b>1. نیت کرنا</b>",
+    p_niyat: "سب سے پہلے نماز کی نیت کریں اور اپنے دونوں ہاتھوں کو کانوں تک اٹھائیں <b>(اگر عورت ہو تو کندھوں تک اٹھائیں)</b> اور <b>'اللّٰهُ أَكْبَر'</b> کہہ کر ہاتھ ناف کے نیچے باندھ لیں <b>(عورتیں سینے پر ہاتھ رکھیں)</b> اور آپ کی نظریں سجدہ کرنے کی جگہ پر ہونی چاہئیں۔ دونوں پیروں کے درمیان تقریباً 4 انگلیوں کا فاصلہ رکھیں۔ دھیان رہے کہ پیروں کے پنجے باہر کی طرف نہ پھیلے ہوں، بلکہ بالکل سیدھے قبلہ کی سمت میں ہونے چاہئیں۔ ناف کے نیچے ہاتھ باندھیں، جس میں سیدھا ہاتھ اوپر ہو۔ انگوٹھے اور چھوٹی انگلی سے الٹے ہاتھ کی کلائی پکڑیں اور بیچ کی تین انگلیاں الٹے ہاتھ کی پشت پر سیدھی رکھیں۔ اور عورتیں دونوں ہاتھ سینے پر رکھیں، اس میں کلائی پکڑنے کی ضرورت نہیں ہے، بس سیدھا ہاتھ الٹے ہاتھ کے اوپر سلیقے سے رکھ لیں۔",
+
+    h2: "2. پھر ثناء پڑھیں",
+    p_sana: "نیت کرنے کے بعد ثناء پڑھیں۔",
+    tr_sana: "اردو ترجمہ: اے اللہ! میں تیری پاکی بیان کرتا ہوں اور تیری ہی تعریف کرتا ہوں، تیرا نام برکت والا ہے، تیری شان بہت اونچی ہے اور تیرے سوا کوئی عبادت کے لائق نہیں۔",
+
+    h3: "3. سورہ فاتحہ پڑھنا",
+    p_fatiha: "ثناء پڑھنے کے بعد (أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ ، بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ) پڑھیں، پھر پوری سورہ فاتحہ پڑھیں۔",
+    tr_fatiha: "اردو ترجمہ: سب تعریفیں اللہ کے لیے ہیں جو سب جہانوں کا پالنے والا ہے۔ بہت مہربان اور نہایت رحم والا ہے۔ انصاف کے دن کا مالک ہے۔ ہم تیری ہی عبادت کرتے ہیں اور تجھ ہی سے مدد مانگتے ہیں۔ ہمیں سیدھا راستہ دکھا، ان لوگوں کا راستہ جن پر تو نے انعام کیا، ان کا نہیں جن پر غضب ہوا اور نہ گمراہوں کا۔",
+
+    h4: "4. سورہ ملانا",
+    p_surah: "سورہ فاتحہ پڑھنے کے بعد قرآن میں جتنی بھی سورتیں ہیں ان میں سے کوئی سی بھی ایک سورہ پڑھیں۔ اگر سورہ بڑی ہو، تو سورہ فاتحہ کے بعد کم سے کم ایک بڑی آیت یا تین چھوٹی آیتیں پڑھنا واجب ہے۔",
+    tr_falaq: "اردو ترجمہ: آپ کہئے کہ میں صبح کے رب کی پناہ میں آتا ہوں۔ تمام مخلوق کی برائی سے۔ اور اندھیری رات کی برائی سے جب وہ چھا جائے۔ اور گانٹھوں میں پھونکنے والی جادوگرنیوں کی برائی سے۔ اور حسد کرنے والے کی برائی سے جب وہ حسد کرے۔",
+
+    h5: "5. رکوع میں جانا",
+    p_ruku: "'اللہ اکبر' کہتے ہوئے رکوع میں جائیں۔ جھک کر اپنے دونوں ہاتھوں سے گھٹنوں کو مضبوطی سے پکڑیں اور انگلیاں پھیلا کر رکھیں۔ اپنی پیٹھ کو بالکل سیدھا رکھیں، جیسے اس پر پانی کا پیالہ رکھا جائے تو پانی نہ گرے۔ سر کو پیٹھ کی سیدھ میں رکھیں—نہ زیادہ اوپر اٹھا ہو اور نہ نیچے جھکا ہو۔ اپنی نظریں پاؤں کے انگوٹھوں اور پنجوں کی طرف رکھیں اور یہ تسبیح کم سے کم 3 بار پڑھیں۔",
+    tr_ruku: "اردو ترجمہ: پاک ہے میرا پروردگار جو بڑی عظمت والا ہے۔",
+
+    h6: "6. سجدہ کرنا",
+    p_sajda: "رکوع کے بعد سیدھے کھڑے ہو جائیں، پھر 'اللہ اکبر' کہتے ہوئے سجدے میں جائیں۔ پہلے گھٹنے زمین پر رکھیں، پھر ہاتھ اور پھر ناک اور ماتھا۔ اپنے دونوں ہاتھوں کو کان کے پاس زمین پر اس طرح رکھیں کہ انگلیاں قبلہ کی طرف ہوں۔ اپنی ناک اور ماتھے کو زمین پر مضبوطی سے ٹکائیں اور اپنی نظریں ناک پر رکھیں۔ مردوں کے لیے ضروری ہے کہ اپنی کہنیاں زمین سے نہ لگنے دیں اور پیٹ کو پیروں سے الگ رکھیں۔ پیروں کی انگلیوں کو موڑ کر ان کا رخ قبلہ کی طرف رکھیں۔ ایک رکعت میں دو سجدے ہوتے ہیں۔ دونوں سجدوں کے درمیان میں تھوڑی دیر کے لیے سیدھا بیٹھنا ضروری ہے، جسے 'جلسہ' کہا جاتا ہے۔ اور اس تسبیح کو سجدے کی حالت میں کم سے کم 3 بار پڑھیں۔",
+    tr_sajda: "اردو ترجمہ: پاک ہے میرا پروردگار جو سب سے بلند ہے۔",
+
+    section3: "دوسری رکعت",
+    h12: "قرات",
+    p_rakat: "پہلی رکعت مکمل کرنے کے بعد ہاتھ باندھ کر سیدھے کھڑے ہو جائیں، پھر سورہ فاتحہ اور قرآن کی کوئی سی ایک سورت پڑھیں جیسے پہلی رکعت میں پڑھی تھی۔",
+    h13: "رکوع اور سجدہ",
+    p_rukusajda: "پھر پہلی رکعت کی طرح رکوع اور سجدہ کریں۔",
+
+    h7: "تشہد (اتحیات)",
+    p_tash: "اب بیٹھ جائیں اور اپنے سیدھے ہاتھ کو سیدھے پیر کی ران پر اور الٹے ہاتھ کو الٹے پیر کی ران پر رکھیں۔ اپنی انگلیوں کو گھٹنوں کے پاس نارمل طریقے سے رکھیں اور آپ کی نظریں اپنی گودی (Lap) کی طرف ہونی چاہئیں۔ مردوں کے لیے سنت ہے کہ بایاں پیر بچھا کر اس پر بیٹھیں اور دایاں پیر کھڑا رکھیں، جس کی انگلیاں قبلہ کی طرف مڑی ہوں۔ اس حالت میں یہ پڑھیں:",
+    tr_tash: "اردو ترجمہ: تمام عبادتیں اللہ ہی کے لیے ہیں، اے نبی! آپ پر سلام اور اللہ کی رحمت اور اس کی برکتیں ہوں۔ ہم پر اور اللہ کے نیک بندوں پر سلام ہو۔ میں گواہی دیتا ہوں کہ اللہ کے سوا کوئی معبود نہیں اور محمد (ﷺ) اس کے بندے اور رسول ہیں۔",
+    p_note: "نوٹ: جب آپ (أَشْهَدُ أَنْ لَا) کہیں، تب شہادت کی انگلی اٹھائیں، اور جب آپ (إِلٰهَ إِلَّا الله) کہیں، تب انگلی کو نیچے کر لیں۔",
+
+
+    h8: "درودِ ابراہیم (مکمل)",
+    p_ibrahim: "اتحیات کے بعد درودِ ابراہیم پڑھیں۔",
+    tr_durood: "اردو ترجمہ: اے اللہ! رحمت بھیج محمد (ﷺ) پر اور محمد (ﷺ) کی آل پر، جیسے تو نے رحمت بھیجی ابراہیم (علیہ السلام) پر اور ابراہیم (علیہ السلام) کی آل پر، بیشک تو تعریف کے لائق اور بڑی شان والا ہے۔ اے اللہ! برکت بھیج محمد (ﷺ) پر اور محمد (ﷺ) کی آل پر، جیسے تو نے برکت بھیجی ابراہیم (علیہ السلام) پر اور ابراہیم (علیہ السلام) کی آل پر، بیشک تو تعریف کے لائق اور بڑی شان والا ہے۔",
+
+    h9: "دعاِ ماثورہ",
+    p_masoora: "پھر دعاِ ماثورہ پڑھیں",
+    tr_masura: "اردو ترجمہ: اے اللہ! بیشک میں نے اپنی جان پر بہت ظلم کیا ہے اور تیرے سوا کوئی گناہوں کو معاف نہیں کر سکتا، پس تو اپنی خاص مغفرت سے مجھے معاف کر دے اور مجھ پر رحم فرما، بیشک تو ہی بہت معاف کرنے والا اور نہایت رحم کرنے والا ہے۔",
+
+    h10: "ربنا آتنا",
+    p_rabbana: "اور پھر آخر میں ربنا آتنا پڑھیں۔",
+    tr_rabbana: "اردو ترجمہ: اے ہمارے رب! ہمیں دنیا میں بھی بھلائی دے اور آخرت میں بھی بھلائی دے اور ہمیں آگ (دوزخ) کے عذاب سے بچا۔",
+
+    h11: "سلام پھیرنا",
+    p_salam: "اپنا چہرہ سیدھی طرف (دائیں کندھے) پھیرتے ہوئے کہیں: 'السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ'۔ اس وقت آپ کی نگاہ آپ کے سیدھے کندھے پر ہونی چاہیے، پھر اپنا چہرہ الٹی طرف (بائیں کندھے) پھیرتے ہوئے کہیں: 'السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ'۔ اس وقت آپ کی نگاہ آپ کے الٹے کندھے پر ہونی چاہیے۔",
+    tr_salam: "اردو ترجمہ: تم پر اللہ کی سلامتی ہو اور اس کی رحمت ہو۔",
+},
+
+        ar: {
+    title: "بيان الصلاة",
+    section1: "معلومات أساسية عن الصلاة",
+    p1: "تجب خمس صلوات في اليوم والليلة:<br>١. الفجر، ٢. الظهر، ٣. العصر، ٤. المغرب، ٥. العشاء.",
+    fajr: "<b>صلاة الفجر:</b> يبدأ وقتها من طلوع الفجر الصادق إلى قبيل طلوع الشمس.",
+    zuhr: "<b>صلاة الظهر:</b> يبدأ وقتها من زوال الشمس عن وسط السماء إلى أن يصير ظل كل شيء مثليه.",
+    asr: "<b>صلاة العصر:</b> يبدأ وقتها بعد خروج وقت الظهر إلى قبيل غروب الشمس. ويكره أداؤها قبل الغروب بـ ٢٠ دقيقة.",
+    maghrib: "<b>صلاة المغرب:</b> يبدأ فور غروب الشمس ويبقى حتى غياب الشفق الأحمر من السماء.",
+    isha: "<b>صلاة العشاء:</b> وقتها من غياب الشفق الأحمر إلى طلوع الفجر، ولكن الأفضل أداؤها قبل منتصف الليل.",
+    ref: "(نور الإيضاح، صفحة: ٥٧)",
+
+    section2: "طريقة أداء الصلاة",
+    h1: "<b>1. النية</b>",
+    p_niyat: "أولاً انوِ الصلاة وارفع يديك إلى أذنيك <b>(والمرأة إلى كتفيها)</b> وقل <b>'اللّٰهُ أَكْبَر'</b> ثم اعقد يديك تحت السرة <b>(والنساء يضعن أيديهن على الصدر)</b> واجعل نظرك إلى موضع السجود. اترك مسافة ٤ أصابع تقريباً بين القدمين، واحرص أن تكون أصابع القدمين متجهة نحو القبلة تماماً. ضع اليد اليمنى فوق اليسرى، واقبض رسغ اليد اليسرى بالإبهام والخنصر مع وضع الأصابع الثلاثة الوسطى على ظهر اليد اليسرى. أما النساء فيضعن اليد اليمنى فوق اليسرى على الصدر دون الحاجة لقبض الرسغ.",
+
+    h2: "٢. قراءة الثناء",
+    p_sana: "بعد النية والتحريمة اقرأ الثناء.",
+    tr_sana: "الترجمة العربية: سبحانك اللهم وبحمدك، وتبارك اسمك، وتعالى جدك، ولا إله غيرك.",
+
+    h3: "٣. قراءة سورة الفاتحة",
+    p_fatiha: "بعد الثناء اقرأ (أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ ، بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ) ثم اقرأ سورة الفاتحة كاملة.",
+    tr_fatiha: "الترجمة العربية: الحمد لله رب العالمين. الرحمن الرحيم. مالك يوم الدين. إياك نعبد وإياك نستعين. اهدنا الصراط المستقيم. صراط الذين أنعمت عليهم غير المغضوب عليهم ولا الضالين.",
+
+    h4: "٤. ضم سورة أخرى",
+    p_surah: "بعد الفاتحة اقرأ ما تيسر من القرآن. وإذا كانت السورة طويلة، فيجب قراءة آية طويلة واحدة أو ثلاث آيات قصيرة على الأقل بعد الفاتحة.",
+    tr_falaq: "الترجمة العربية: قل أعوذ برب الفلق. من شر ما خلق. ومن شر غاسق إذا وقب. ومن شر النفاثات في العقد. ومن شر حاسد إذا حسد.",
+
+    h5: "٥. الركوع",
+    p_ruku: "اذهب إلى الركوع مكبراً 'الله أكبر'. انحنِ وأمسك ركبتيك بيديك بقوة مع تفريق الأصابع. اجعل ظهرك مستوياً تماماً بحيث لو وضع عليه قدح ماء لم ينسكب. اجعل الرأس بمستوى الظهر واجعل نظرك إلى أصابع قدميك واقرأ التسبيح ٣ مرات على الأقل.",
+    tr_ruku: "الترجمة العربية: سبحان ربي العظيم.",
+
+    h6: "٦. السجود",
+    p_sajda: "قم من الركوع معتدلاً، ثم اهبط للسجود مكبراً 'الله أكبر'. ضع ركبتيك أولاً ثم يديك ثم أنفك وجبهتك. ضع يديك حذاء أذنيك وأصابعك متجهة للقبلة. ثبت أنفك وجبهتك بقوة على الأرض واجعل نظرك نحو الأنف. وأن يجافي الرجل مرفقيه عن جنبيه وبطنه عن فخذيه. وجه أصابع قدميك نحو القبلة. وفي كل ركعة سجدتان، والجلوس بينهما (الجلسة) واجب. واقرأ هذا التسبيح ثلاث مرات على الأقل.",
+
+    tr_sajda: "الترجمة العربية: سبحان ربي الأعلى.",
+
+    section3: "الركعة الثانية",
+    h12: "القراءة",
+    p_rakat: "بعد إكمال الركعة الأولى، قم واقفاً واعقد يديك، ثم اقرأ الفاتحة وسورة أخرى كما فعلت في الركعة الأولى.",
+    h13: "الركوع والسجود",
+    p_rukusajda: "ثم افعل كما فعلت في الركعة الأولى من الركوع والسجود.",
+
+    h7: "التشهد (التحيات)",
+    p_tash: "اجلس الآن وضع يدك اليمنى على فخذك الأيمن واليسرى على فخذك الأيسر. اجعل أصابعك عند الركبتين بشكل طبيعي واجعل نظرك نحو حِجرك. والسنة للرجل أن يفترش قدمه اليسرى ويجلس عليها وينصب اليمنى ويوجه أصابعها للقبلة. في هذه الحالة اقرأ:",
+    tr_tash: "الترجمة العربية: التحيات لله والصلوات والطيبات، السلام عليك أيها النبي ورحمة الله وبركاته، السلام علينا وعلى عباد الله الصالحين، أشهد أن لا إله إلا الله وأشهد أن محمداً عبده ورسوله.",
+    p_note: "ملاحظة: عندما تقول (أَشْهَدُ أَنْ لَا)، ارفع إصبع السبابة، وعندما تقول (إِلٰهَ إِلَّا الله)، خفض الإصبع.",
+
+    h8: "الصلاة الإبراهيمية (كاملة)",
+    p_ibrahim: "بعد التحيات اقرأ الصلاة الإبراهيمية.",
+    tr_durood: "الترجمة العربية: اللهم صل على محمد وعلى آل محمد كما صليت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد، اللهم بارك على محمد وعلى آل محمد كما باركت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد.",
+
+    h9: "دعاء المأثور",
+    p_masoora: "ثم اقرأ الدعاء المأثور",
+    tr_masura: "الترجمة العربية: اللهم إني ظلمت نفسي ظلماً كثيراً ولا يغفر الذنوب إلا أنت، فاغفر لي مغفرة من عندك وارحمني إنك أنت الغفور الرحيم.",
+
+    h10: "ربنا آتنا",
+    p_rabbana: "وفي الختام اقرأ (ربنا آتنا).",
+    tr_rabbana: "الترجمة العربية: ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار.",
+
+    h11: "السلام",
+    p_salam: "التفت بوجهك جهة اليمين (الكتف الأيمن) قائلاً: 'السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ'، ويكون نظرك على كتفك، ثم التفت جهة اليسار (الكتف الأيسر) قائلاً نفس الكلام.",
+    tr_salam: "الترجمة العربية: السلام عليكم ورحمة الله وبركاته.",
+}
+
+};
+
+function changeLang(lang) {
+    const d = translationsData[lang] || translationsData['hi'];
+    const isRtl = (lang === 'ur' || lang === 'ar');
+    document.getElementById('main-title').innerText = d.title;
+
+    const html = `
+        <div class="container">
+            <div class="card ${isRtl ? 'rtl' : ''}">
+                <h2>${d.section1}</h2>
+                <p>${d.p1}</p>
+                <p>${d.fajr}</p>
+                <p>${d.zuhr}</p>
+                <p>${d.asr}</p>
+                <p>${d.maghrib}</p>
+                <p>${d.isha}</p>
+                <span class="reference">${d.ref}</span>
+            </div>
+
+            <div class="card ${isRtl ? 'rtl' : ''}">
+                <h2>${d.section2}</h2>
+                <h3>${d.h1}</h3>
+                <p>${d.p_niyat}</p>
+
+                <h3>${d.h2}</h3>
+                <p>${d.p_sana}</p>
+             <span class="arabic-text">سُبْحٰنَكَ اللَّٰهُمَّ وَبِحَمْدِكَ وَتَبٰرَكَ اسْمُكَ وَتَعٰلٰى جَدُّكَ وَلَآ اِلٰهَ غَيْرُكَ</span>
+
+                <span class="translation">${d.tr_sana}</span>
+
+                <h3>${d.h3}</h3>
+                <p>${d.p_fatiha}</p>
+              <span class="arabic-text">الْحَمْدُ لِلَّٰهِ رَبِّ الْعٰلَمِينَ ◯ الرَّحْمٰنِ الرَّحِيمِ ◯ مٰلِكِ يَوْمِ الدِّينِ ◯ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ◯ اِهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ◯ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّآلِّينَ</span>
+
+                <span class="translation">${d.tr_fatiha}</span>
+
+                <h3>${d.h4}</h3>
+                <p>${d.p_surah}</p>
+              <span class="arabic-text">قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ◯ مِنْ شَرِّ مَا خَلَقَ ◯ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ◯ وَمِنْ شَرِّ النَّفّٰثٰتِ فِي الْعُقَدِ ◯ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ</span>
+
+                <span class="translation">${d.tr_falaq}</span>
+
+                <h3>${d.h5}</h3>
+                <p>${d.p_ruku}</p>
+              <span class="arabic-text">سُبْحَانَ رَبِّىَ الْعَظِيمِ</span>
+
+                <span class="translation">${d.tr_ruku}</span>
+
+                <h3>${d.h6}</h3>
+                <p>${d.p_sajda}</p>
+              <span class="arabic-text">سُبْحٰنَ رَبِّىَ الْأَعْلٰى</span>
+
+                <span class="translation">${d.tr_sajda}</span>
+            </div>
+
+            <div class="card ${isRtl ? 'rtl' : ''}">
+                <h2>${d.section3}</h2>
+                <h3>${d.h12}</h3>
+                <p>${d.p_rakat}</p>
+
+                <h3>${d.h13}</h3>
+                <p>${d.p_rukusajda}</p>
+
+                <h3>${d.h7}</h3>
+                
+                <p>${d.p_tash}</p>
+                <span class="arabic-text">التَّحِيَّاتُ لِلَّٰهِ وَالصَّلَوٰتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّٰهِ وَبَرَكَاتُهُ، السَّلَامُ عَلَيْنَا وَعَلَىٰ عِبَادِ اللَّٰهِ الصَّالِحِينَ، أَشْهَدُ أَن لَّآ إِلٰهَ إِلَّا اللَّٰهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ</span>
+
+                <span class="translation">${d.tr_tash}
+                   <p>${d.p_note}</p>
+                </span>
+
+                <h3>${d.h8}</h3>
+                <p>${d.p_ibrahim}</p>
+              <span class="arabic-text">اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَىٰ إِبْرَٰهِيمَ وَعَلَىٰ آلِ إِبْرَٰهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَىٰ إِبْرَٰهِيمَ وَعَلَىٰ آلِ إِبْرَٰهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ</span>
+
+                <span class="translation">${d.tr_durood}</span>
+
+                <h3>${d.h9}</h3>
+                <p>${d.p_masoora}</p>
+              <span class="arabic-text">اللَّهُمَّ إِنِّى ظَلَمْتُ نَفْسِى ظُلْمًا كَثِيرًا وَلَا يَغْفِرُ الذُّنُوبَ إِلَّآ أَنْتَ فَاغْفِرْ لِى مَغْفِرَةً مِّنْ عِنْدِكَ وَارْحَمْنِىٓ إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ</span>
+
+                <span class="translation">${d.tr_masura}</span>
+
+                <h3>${d.h10}</h3>
+                <p>${d.p_rabbana}</p>
+             <span class="arabic-text">رَبَّنَآ اٰتِنَا فِى الدُّنْيَا حَسَنَةً وَفِى الْاٰخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</span>
+
+                <span class="translation">${d.tr_rabbana}</span>
+
+                <h3>${d.h11}</h3>
+                <p>${d.p_salam}</p>
+                <span class="arabic-text">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّٰهِ</span>
+
+                <span class="translation">${d.tr_salam}</span>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('content-area').innerHTML = html;
+    document.body.dir = isRtl ? 'rtl' : 'ltr';
+}
+
+// नया लॉजिक: localStorage और URL दोनों को चेक करेगा
+function applySettings() {
+    const params = new URLSearchParams(window.location.search);
+    const urlLang = params.get('lang');
+    const localLang = localStorage.getItem('pref_lang');
+
+    // अगर URL में भाषा है तो उसे प्राथमिकता दें, वरना localStorage, वरना 'hi'
+    const finalLang = urlLang || localLang || 'hi';
+    changeLang(finalLang);
+}
+
+window.onload = applySettings;
+</script>
+</body>
+</html>
+
+

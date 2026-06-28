@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quran - Deeni Rehbar</title>
+    <style>
+        :root { --primary: #1b4332; --accent: #c5a059; --bg: #f4f7f6; }
+        
+        /* Dark Mode Support */
+        .dark-mode { --bg: #121212; --primary: #0f261c; }
+        .dark-mode .surah-card, .dark-mode .tab-btn, .dark-mode .bottom-nav { background: #1e1e1e; border-color: #333; color: white; }
+        .dark-mode .names h3, .dark-mode .nav-link { color: #e0e0e0; }
+
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 100px; transition: 0.3s; }
+        
+        .header { background: var(--primary); color: white; padding: 30px 20px 50px; text-align: center; border-radius: 0 0 35px 35px; }
+        .header h1 { margin: 0; font-size: 26px; }
+
+        .tabs-container { display: flex; justify-content: center; gap: 10px; margin-top: -20px; padding: 0 20px; }
+        .tab-btn { 
+            background: white; border: none; padding: 10px 25px; border-radius: 25px; 
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #666;
+        }
+        .tab-btn.active { background: var(--accent); color: white; }
+
+        .search-container { padding: 20px; margin-top: 5px; }
+        #surahSearch { 
+            width: 100%; padding: 15px; border-radius: 12px; border: none; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); outline: none; box-sizing: border-box; 
+        }
+
+        .list-container { padding: 0 20px; }
+        .surah-card { 
+            background: white; padding: 16px; border-radius: 18px; display: flex; 
+            justify-content: space-between; align-items: center; margin-bottom: 12px; 
+            cursor: pointer; border: 1px solid #f0f0f0; transition: 0.2s;
+        }
+        .surah-card:active { transform: scale(0.98); }
+
+        .info-section { display: flex; align-items: center; gap: 15px; }
+        .surah-no { 
+            background: #e0f2f1; color: var(--primary); width: 38px; height: 38px; 
+            border-radius: 10px; display: flex; justify-content: center; align-items: center; 
+            font-weight: bold; font-size: 14px; 
+        }
+        .names h3 { margin: 0; font-size: 16px; color: #333; }
+        .names p { margin: 2px 0 0; font-size: 11px; color: #888; }
+        
+        .arabic-container { text-align: right; }
+        .arabic-text { font-size: 20px; color: var(--primary); font-weight: bold; display: block; }
+        .hindi-subtext { font-size: 12px; color: #666; display: block; margin-top: 2px; }
+
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; 
+            background: white; display: flex; justify-content: space-around; 
+            padding: 12px 5px; border-top: 1px solid #eee; 
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+        .nav-link { 
+            text-decoration: none; color: #888; text-align: center; 
+            flex: 1; font-size: 22px; transition: 0.3s;
+        }
+        .nav-link.active { color: var(--primary); font-weight: bold; }
+        .nav-link small { display: block; font-size: 10px; margin-top: 4px; font-weight: 600; }
+    </style>
+</head>
+<body> 
+
+
+
+<div class="header">
+    <h1 data-key="nav_quran">Al-Quran</h1>
+    <p data-key="header_sub">Deeni Rehbar - Digital Guide</p> 
+</div>
+
+
+    <div class="tabs-container">
+        <button id="btnSurah" class="tab-btn active" onclick="switchTab('surah')" data-key="tab_surah">Surah</button>
+        <button id="btnPara" class="tab-btn" onclick="switchTab('para')" data-key="tab_para">Parah</button>
+    </div>
+
+    <div class="search-container" id="searchBox">
+        <input type="text" id="surahSearch" placeholder="Surah search karein...">
+    </div>
+
+    <div class="list-container" id="mainContainer"></div>
+
+     </div>
+        <div class="bottom-nav">
+        <a href="index.html" class="nav-link">🏠<small data-key="nav_home">Home</small></a>
+        <a href="tasbih.html" class="nav-link">📿<small data-key="nav_tasbih">Tasbih</small></a>
+        <a href="qibla.html" class="nav-link">🧭<small data-key="nav_qibla">Qibla</small></a>
+              
+      
+    </div>
+
+<script src="translations.js"></script>
+<script>
+    // DATA SECTION (Keeping it exactly as provided)
+    const surahData = [
+            
+        { id: 1, en: "Al-Fatiha", ar: "الفاتحة", hn: "अल-फ़ातिहा", v: "7", t: "Makki" },
+        { id: 2, en: "Al-Baqarah", ar: "البقرة", hn: "अल-बक़रह", v: "286", t: "Madni" },
+        { id: 3, en: "Al-Imran", ar: "آل عمران", hn: "आल-इमरान", v: "200", t: "Madni" },
+        { id: 4, en: "An-Nisa", ar: "النساء", hn: "अन-निसा", v: "176", t: "Madni" },
+        { id: 5, en: "Al-Ma'idah", ar: "المائدة", hn: "अल-माइदह", v: "120", t: "Madni" },
+        { id: 6, en: "Al-An'am", ar: "الأنعام", hn: "अल-अनआम", v: "165", t: "Makki" },
+        { id: 7, en: "Al-A'raf", ar: "الأعراف", hn: "अल-आराफ़", v: "206", t: "Makki" },
+        { id: 8, en: "Al-Anfal", ar: "الأنفال", hn: "अल-अन्फ़ाल", v: "75", t: "Madni" },
+        { id: 9, en: "At-Tawbah", ar: "التوبة", hn: "अत-तौबह", v: "129", t: "Madni" },
+        { id: 10, en: "Yunus", ar: "يونس", hn: "यूनुस", v: "109", t: "Makki" },
+        { id: 11, en: "Hud", ar: "هود", hn: "हूद", v: "123", t: "Makki" },
+        { id: 12, en: "Yusuf", ar: "يوسف", hn: "यूसुफ़", v: "111", t: "Makki" },
+        { id: 13, en: "Ar-Ra'd", ar: "الرعد", hn: "अर-रअद", v: "43", t: "Madni" },
+        { id: 14, en: "Ibrahim", ar: "إبراهيم", hn: "इब्राहिम", v: "52", t: "Makki" },
+        { id: 15, en: "Al-Hijr", ar: "الحجر", hn: "अल-हिज्र", v: "99", t: "Makki" },
+        { id: 16, en: "An-Nahl", ar: "النحل", hn: "अन-नह्ल", v: "128", t: "Makki" },
+        { id: 17, en: "Al-Isra", ar: "الإسراء", hn: "अल-इस्रा", v: "111", t: "Makki" },
+        { id: 18, en: "Al-Kahf", ar: "الكهف", hn: "अल-कहफ़", v: "110", t: "Makki" },
+        { id: 19, en: "Maryam", ar: "مريم", hn: "मरयम", v: "98", t: "Makki" },
+        { id: 20, en: "Ta-Ha", ar: "طه", hn: "ता-हा", v: "135", t: "Makki" },
+        { id: 21, en: "Al-Anbiya", ar: "الأنبياء", hn: "अल-अम्बिया", v: "112", t: "Makki" },
+        { id: 22, en: "Al-Hajj", ar: "الحج", hn: "अल-हज्ज", v: "78", t: "Madni" },
+        { id: 23, en: "Al-Mu'minun", ar: "المؤمنون", hn: "अल-मुमिनून", v: "118", t: "Makki" },
+        { id: 24, en: "An-Nur", ar: "النور", hn: "अन-नूर", v: "64", t: "Madni" },
+        { id: 25, en: "Al-Furqan", ar: "الفرقان", hn: "अल-फ़ुरक़ान", v: "77", t: "Makki" },
+        { id: 26, en: "Ash-Shu'ara", ar: "الشعراء", hn: "अश-शुआरा", v: "227", t: "Makki" },
+        { id: 27, en: "An-Naml", ar: "النمل", hn: "अन-नम्ल", v: "93", t: "Makki" },
+        { id: 28, en: "Al-Qasas", ar: "القصص", hn: "अल-क़सस", v: "88", t: "Makki" },
+        { id: 29, en: "Al-Ankabut", ar: "العنكبوت", hn: "अल-अन्कबूत", v: "69", t: "Makki" },
+        { id: 30, en: "Ar-Rum", ar: "الروم", hn: "अर-रूम", v: "60", t: "Makki" },
+        { id: 31, en: "Luqman", ar: "لقمان", hn: "लुक़मान", v: "34", t: "Makki" },
+        { id: 32, en: "As-Sajdah", ar: "السجدة", hn: "अस-सजdह", v: "30", t: "Makki" },
+        { id: 33, en: "Al-Ahzab", ar: "الأحزاب", hn: "अल-अहज़ाब", v: "73", t: "Madni" },
+        { id: 34, en: "Saba", ar: "سبإ", hn: "सबा", v: "54", t: "Makki" },
+        { id: 35, en: "Fatir", ar: "فاطر", hn: "फ़ातिर", v: "45", t: "Makki" },
+        { id: 36, en: "Ya-Sin", ar: "يس", hn: "या-सीन", v: "83", t: "Makki" },
+        { id: 37, en: "As-Saffat", ar: "الصافات", hn: "अस-साफ़्फ़ात", v: "182", t: "Makki" },
+        { id: 38, en: "Sad", ar: "ص", hn: "साद", v: "88", t: "Makki" },
+        { id: 39, en: "Az-Zumar", ar: "الزمر", hn: "अज़-ज़ुमर", v: "75", t: "Makki" },
+        { id: 40, en: "Ghafir", ar: "غافر", hn: "ग़ाफ़िर", v: "85", t: "Makki" },
+        { id: 41, en: "Fussilat", ar: "فصلت", hn: "फ़ुस्सीलत", v: "54", t: "Makki" },
+        { id: 42, en: "Ash-Shura", ar: "الشورا", hn: "अश-शूरा", v: "53", t: "Makki" },
+        { id: 43, en: "Az-Zukhruf", ar: "الزخرف", hn: "अज़-ज़ुख़रुफ़", v: "89", t: "Makki" },
+        { id: 44, en: "Ad-Dukhan", ar: "الدخان", hn: "अद-दुख़ान", v: "59", t: "Makki" },
+        { id: 45, en: "Al-Jathiyah", ar: "الجاثية", hn: "अल-जासिया", v: "37", t: "Makki" },
+        { id: 46, en: "Al-Ahqaf", ar: "الأحقاف", hn: "अल-अहक़ाफ़", v: "35", t: "Makki" },
+        { id: 47, en: "Muhammad", ar: "محمد", hn: "मुहम्मद", v: "38", t: "Madni" },
+        { id: 48, en: "Al-Fath", ar: "الفتح", hn: "अल-फ़तह", v: "29", t: "Madni" },
+        { id: 49, en: "Al-Hujurat", ar: "الحجرات", hn: "अल-हुजुरात", v: "18", t: "Madni" },
+        { id: 50, en: "Qaf", ar: "ق", hn: "काफ़", v: "45", t: "Makki" },
+        { id: 51, en: "Adh-Dhariyat", ar: "الذاريات", hn: "अज़-ज़ारियात", v: "60", t: "Makki" },
+        { id: 52, en: "At-Tur", ar: "الطور", hn: "अत-तूर", v: "49", t: "Makki" },
+        { id: 53, en: "An-Najm", ar: "النجم", hn: "अन-नज्म", v: "62", t: "Makki" },
+        { id: 54, en: "Al-Qamar", ar: "القمر", hn: "अल-क़मर", v: "55", t: "Makki" },
+        { id: 55, en: "Ar-Rahman", ar: "الرحمن", hn: "अर-रहमान", v: "78", t: "Madni" },
+        { id: 56, en: "Al-Waqi'ah", ar: "الواقعة", hn: "अल-वाक़िआ", v: "96", t: "Makki" },
+        { id: 57, en: "Al-Hadid", ar: "الحديد", hn: "अल-हदीid", v: "29", t: "Madni" },
+        { id: 58, en: "Al-Mujadila", ar: "المجادلة", hn: "अल-मुजादिला", v: "22", t: "Madni" },
+        { id: 59, en: "Al-Hashr", ar: "الحشر", hn: "अल-हश्र", v: "24", t: "Madni" },
+        { id: 60, en: "Al-Mumtahanah", ar: "الممتحنة", hn: "अल-मुम्तहिना", v: "13", t: "Madni" },
+        { id: 61, en: "As-Saff", ar: "الصف", hn: "अस-साफ़", v: "14", t: "Madni" },
+        { id: 62, en: "Al-Jumu'ah", ar: "الجمعة", hn: "अल-जुमुआ", v: "11", t: "Madni" },
+        { id: 63, en: "Al-Munafiqun", ar: "المنافقون", hn: "अल-मुनाफ़िक़ून", v: "11", t: "Madni" },
+        { id: 64, en: "At-Taghabun", ar: "التغابن", hn: "अत-तग़ाबुन", v: "18", t: "Madni" },
+        { id: 65, en: "At-Talaq", ar: "الطلاق", hn: "अत-तलाक़", v: "12", t: "Madni" },
+        { id: 66, en: "At-Tahrim", ar: "التحريم", hn: "अत-तहरीम", v: "12", t: "Madni" },
+        { id: 67, en: "Al-Mulk", ar: "الملك", hn: "अल-मुल्क", v: "30", t: "Makki" },
+        { id: 68, en: "Al-Qalam", ar: "القلم", hn: "अल-क़लम", v: "52", t: "Makki" },
+        { id: 69, en: "Al-Haqqah", ar: "الحاقة", hn: "अल-हाक़्क़ा", v: "52", t: "Makki" },
+        { id: 70, en: "Al-Ma'arij", ar: "المعارج", hn: "अल-मआरिज", v: "44", t: "Makki" },
+        { id: 71, en: "Nuh", ar: "نوح", hn: "नूह", v: "28", t: "Makki" },
+        { id: 72, en: "Al-Jinn", ar: "الجن", hn: "अल-जिन्न", v: "28", t: "Makki" },
+        { id: 73, en: "Al-Muzzammil", ar: "المزمل", hn: "अल-मुज़्ज़म्मिल", v: "20", t: "Makki" },
+        { id: 74, en: "Al-Muddaththir", ar: "المدثر", hn: "अल-मुद्दस्सिर", v: "56", t: "Makki" },
+        { id: 75, en: "Al-Qiyamah", ar: "القيامة", hn: "अल-क़ियामह", v: "40", t: "Makki" },
+        { id: 76, en: "Al-Insan", ar: "الإنسان", hn: "अल-इंसान", v: "31", t: "Madni" },
+        { id: 77, en: "Al-Mursalat", ar: "المرسلات", hn: "अल-मurसलात", v: "50", t: "Makki" },
+        { id: 78, en: "An-Naba", ar: "النبأ", hn: "अन-नबा", v: "40", t: "Makki" },
+        { id: 79, en: "An-Nazi'at", ar: "النازعات", hn: "अन-नाज़ियात", v: "46", t: "Makki" },
+        { id: 80, en: "Abasa", ar: "عبس", hn: "अबस", v: "42", t: "Makki" },
+        { id: 81, en: "At-Takwir", ar: "التكوير", hn: "अत-तकवीर", v: "29", t: "Makki" },
+        { id: 82, en: "Al-Infitar", ar: "الانفطار", hn: "अल-इन्फ़ितार", v: "19", t: "Makki" },
+        { id: 83, en: "Al-Mutaffifin", ar: "المطففين", hn: "अल-मुतफ़्फ़िफ़ीन", v: "36", t: "Makki" },
+        { id: 84, en: "Al-Inshiqaq", ar: "الانشقاق", hn: "अल-इन्शिक़ाक़", v: "25", t: "Makki" },
+        { id: 85, en: "Al-Buruj", ar: "البروج", hn: "अल-बुरुज", v: "22", t: "Makki" },
+        { id: 86, en: "At-Tariq", ar: "الطارق", hn: "अत-तारिक़", v: "17", t: "Makki" },
+        { id: 87, en: "Al-A'la", ar: "الأعلى", hn: "अल-अअला", v: "19", t: "Makki" },
+        { id: 88, en: "Al-Ghashiyah", ar: "الغاشية", hn: "अल-ग़ाशिया", v: "26", t: "Makki" },
+        { id: 89, en: "Al-Fajr", ar: "الفجر", hn: "अल-फ़ज्र", v: "30", t: "Makki" },
+        { id: 90, en: "Al-Balad", ar: "البلد", hn: "अल-बलद", v: "20", t: "Makki" },
+        { id: 91, en: "Ash-Shams", ar: "الشمس", hn: "अश-शम्स", v: "15", t: "Makki" },
+        { id: 92, en: "Al-Layl", ar: "الليل", hn: "अल-लैल", v: "21", t: "Makki" },
+        { id: 93, en: "Ad-Duha", ar: "الضحى", hn: "अद-ज़ुहा", v: "11", t: "Makki" },
+        { id: 94, en: "Ash-Sharh", ar: "الشرح", hn: "अश-शरह", v: "8", t: "Makki" },
+        { id: 95, en: "At-Tin", ar: "التين", hn: "अत-तीन", v: "8", t: "Makki" },
+        { id: 96, en: "Al-Alaq", ar: "العلق", hn: "अल-अलक़", v: "19", t: "Makki" },
+        { id: 97, en: "Al-Qadr", ar: "القدر", hn: "अल-क़द्र", v: "5", t: "Makki" },
+        { id: 98, en: "Al-Bayyinah", ar: "البينة", hn: "अल-बय्यिना", v: "8", t: "Madni" },
+        { id: 99, en: "Az-Zalzalah", ar: "الزلزلة", hn: "अज़-ज़लज़ला", v: "8", t: "Madni" },
+        { id: 100, en: "Al-Adiyat", ar: "العاديات", hn: "अल-आदियात", v: "11", t: "Makki" },
+        { id: 101, en: "Al-Qari'ah", ar: "القارعة", hn: "अल-क़ारिआ", v: "11", t: "Makki" },
+        { id: 102, en: "At-Takathur", ar: "التكاثر", hn: "अत-तकास़ुर", v: "8", t: "Makki" },
+        { id: 103, en: "Al-Asr", ar: "العصر", hn: "अल-अस्र", v: "3", t: "Makki" },
+        { id: 104, en: "Al-Humazah", ar: "الهمزة", hn: "अल-हुमज़ह", v: "9", t: "Makki" },
+        { id: 105, en: "Al-Fil", ar: "الفيل", hn: "अल-फ़ील", v: "5", t: "Makki" },
+        { id: 106, en: "Quraysh", ar: "قريش", hn: "क़ुरैश", v: "4", t: "Makki" },
+        { id: 107, en: "Al-Ma'un", ar: "الماعون", hn: "अल-माऊन", v: "7", t: "Makki" },
+        { id: 108, en: "Al-Kawthar", ar: "الكوثر", hn: "अल-कौसर", v: "3", t: "Makki" },
+        { id: 109, en: "Al-Kafirun", ar: "الكافرون", hn: "अल-काफिरून", v: "6", t: "Makki" },
+        { id: 110, en: "An-Nasr", ar: "النصر", hn: "अन-नस्र", v: "3", t: "Madni" },
+        { id: 111, en: "Al-Masad", ar: "المسد", hn: "अल-मसद", v: "5", t: "Makki" },
+        { id: 112, en: "Al-Ikhlas", ar: "الإخلاص", hn: "अल-इखलास", v: "4", t: "Makki" },
+        { id: 113, en: "Al-Falaq", ar: "الفلق", hn: "अल-फलक़", v: "5", t: "Makki" },
+        { id: 114, en: "An-Nas", ar: "الناس", hn: "अन-नास", v: "6", t: "Makki" }
+    ];
+
+    const parahData = [
+        { id: 1, en: "Parah 1", ar: "آلم", info: "Alif-Lam-Mim" },
+        { id: 2, en: "Parah 2", ar: "سيقول", info: "Sayaqool" },
+        { id: 3, en: "Parah 3", ar: "تلك الرسل", info: "Tilkal Rusul" },
+        { id: 4, en: "Parah 4", ar: "لن تنالوا", info: "Lan Tanaalu" },
+        { id: 5, en: "Parah 5", ar: "والمحصنات", info: "Wal Muhsanat" },
+        { id: 6, en: "Parah 6", ar: "لا يحب الله", info: "La Yuhibbullah" },
+        { id: 7, en: "Parah 7", ar: "وإذا سمعوا", info: "Wa Izha Samiu" },
+        { id: 8, en: "Parah 8", ar: "ولو أننا", info: "Wa Lau Annana" },
+        { id: 9, en: "Parah 9", ar: "قال الملأ", info: "Qalal Malau" },
+        { id: 10, en: "Parah 10", ar: "واعلموا", info: "Walamoo" },
+        { id: 11, en: "Parah 11", ar: "يعتذرون", info: "Yatazirun" },
+        { id: 12, en: "Parah 12", ar: "وما من دابة", info: "Wa Ma Min Daabbatin" },
+        { id: 13, en: "Parah 13", ar: "وما أبرئ", info: "Wa Ma Ubarrioo" },
+        { id: 14, en: "Parah 14", ar: "ربما", info: "Rubama" },
+        { id: 15, en: "Parah 15", ar: "سبحان الذي", info: "Subhanalladhi" },
+        { id: 16, en: "Parah 16", ar: "قال ألم", info: "Qala Alam" },
+        { id: 17, en: "Parah 17", ar: "اقترب للناس", info: "Iqtaraba Lin-naasi" },
+        { id: 18, en: "Parah 18", ar: "قد أفلح", info: "Qad Aflaha" },
+        { id: 19, en: "Parah 19", ar: "وقال الذين", info: "Wa Qalalladhina" },
+        { id: 20, en: "Parah 20", ar: "أمن خلق", info: "Amman Khalaqa" },
+        { id: 21, en: "Parah 21", ar: "اتل ما أوحي", info: "Utlu Ma Uhiya" },
+        { id: 22, en: "Parah 22", ar: "ومن يقنت", info: "Wa Man Yaqnut" },
+        { id: 23, en: "Parah 23", ar: "وما لي", info: "Wa Ma Liya" },
+        { id: 24, en: "Parah 24", ar: "فمن أظلم", info: "Faman Azlamu" },
+        { id: 25, en: "Parah 25", ar: "إليه يرد", info: "Ilaihi Yuraddu" },
+        { id: 26, en: "Parah 26", ar: "حم", info: "Ha-Meem" },
+        { id: 27, en: "Parah 27", ar: "قال فما خطبكم", info: "Qala Fama Khatbukum" },
+        { id: 28, en: "Parah 28", ar: "قد سمع الله", info: "Qad Samiallah" },
+        { id: 29, en: "Parah 29", ar: "تبارك الذي", info: "Tabarakalladhi" },
+        { id: 30, en: "Parah 30", ar: "عم يتساءلون", info: "Amma Yatasa-alun" }
+    ];
+
+    const container = document.getElementById('mainContainer');
+    const searchBox = document.getElementById('searchBox');
+
+    // --- NEW: LANGUAGE HANDLER ---
+    window.onload = function() {
+        if(localStorage.getItem('dark_mode') === 'true') document.body.classList.add('dark-mode');
+        const savedLang = localStorage.getItem('pref_lang') || 'ur';
+        applyGlobalLanguage(savedLang);
+        renderList(surahData, 'surah');
+    };
+
+    function applyGlobalLanguage(lang) {
+        const t = translations[lang];
+        if(!t) return;
+        document.body.dir = t.dir;
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const key = el.getAttribute('data-key');
+            if (t[key]) el.innerText = t[key];
+        });
+        // Update search placeholder based on language
+        const sBox = document.getElementById('surahSearch');
+        if(lang === 'ur') sBox.placeholder = "سورت تلاش کریں...";
+        else if(lang === 'hi') sBox.placeholder = "सूरह खोजें...";
+        else sBox.placeholder = "Search Surah...";
+    }
+
+    function renderList(list, type) {
+        container.innerHTML = "";
+        list.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'surah-card';
+            
+            if(type === 'surah') {
+                card.innerHTML = `
+                    <div class="info-section">
+                        <div class="surah-no">${item.id}</div>
+                        <div class="names">
+                            <h3>${item.en}</h3>
+                            <p>${item.v} Verses • ${item.t}</p>
+                        </div>
+                    </div>
+                    <div class="arabic-container">
+                        <div class="arabic-text">${item.ar}</div>
+                        <div class="hindi-subtext">${item.hn}</div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="info-section">
+                        <div class="surah-no">${item.id}</div>
+                        <div class="names">
+                            <h3>${item.en}</h3>
+                            <p>${item.info}</p>
+                        </div>
+                    </div>
+                    <div class="arabic-container">
+                        <div class="arabic-text">${item.ar}</div>
+                    </div>
+                `;
+            }
+
+            card.onclick = () => {
+                const currentLang = localStorage.getItem('pref_lang') || 'ur';
+                const url = type === 'surah' 
+                    ? `details.html?id=${item.id}&lang=${currentLang}` 
+                    : `para_details.html?id=${item.id}&lang=${currentLang}`;
+                window.location.href = url;
+            };
+            container.appendChild(card);
+        });
+    }
+
+    function switchTab(tab) {
+        document.getElementById('btnSurah').classList.remove('active');
+        document.getElementById('btnPara').classList.remove('active');
+        
+                if(tab === 'surah') {
+            document.getElementById('btnSurah').classList.add('active');
+            searchBox.style.display = "block";
+            renderList(surahData, 'surah');
+        } else {
+            document.getElementById('btnPara').classList.add('active');
+            searchBox.style.display = "none";
+            renderList(parahData, 'para');
+        }
+    }
+
+    // --- Search Functionality ---
+    document.getElementById('surahSearch').oninput = function(e) {
+        const term = e.target.value.toLowerCase();
+        const filtered = surahData.filter(item => 
+            item.en.toLowerCase().includes(term) || 
+            item.ar.includes(term) || 
+            item.hn.includes(term)
+        );
+        renderList(filtered, 'surah');
+    };
+
+    // --- Initialize Page ---
+    window.onload = function() {
+        // Dark Mode Check
+        if(localStorage.getItem('dark_mode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // Language Check and UI Update
+        const savedLang = localStorage.getItem('pref_lang') || 'ur';
+        applyGlobalLanguage(savedLang);
+
+        // Initial List Load (Surah tab by default)
+        renderList(surahData, 'surah');
+    };
+
+    function applyGlobalLanguage(lang) {
+        // translations.js file honi chahiye
+        if (typeof translations !== 'undefined' && translations[lang]) {
+            const t = translations[lang];
+            document.body.dir = t.dir;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[key]) el.innerText = t[key];
+            });
+
+            // Placeholder update
+            const sBox = document.getElementById('surahSearch');
+            if(lang === 'ur') sBox.placeholder = "سورت تلاش کریں...";
+            else if(lang === 'hi') sBox.placeholder = "सूरह खोजें...";
+            else sBox.placeholder = "Search Surah...";
+        }
+    }
+</script>
