@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Section - Deeni Rehbar</title>
+    <style>
+        :root { --p-green: #004d40; --kids-yellow: #ffcc00; --kids-red: #ff4757; }
+        body { font-family: 'Comic Sans MS', cursive, sans-serif; background: #f0f9ff; margin: 0; padding-bottom: 50px; text-align: center; }
+        
+        .header { background: var(--p-green); color: white; padding: 20px; border-radius: 0 0 30px 30px; position: relative; }
+        .back-btn { position: absolute; left: 15px; top: 22px; color: white; text-decoration: none; font-size: 20px; }
+
+        /* Welcome Card */
+        #welcomeScreen { padding: 30px 15px; display: block; }
+        .salam-card { 
+            background: white; border-radius: 25px; padding: 25px; 
+            border: 4px dashed var(--kids-yellow); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+        }
+        .salam-card h2 { color: var(--p-green); margin-bottom: 10px; }
+        .salam-card p { color: #444; font-size: 18px; font-weight: bold; line-height: 1.6; margin-bottom: 20px; }
+
+        /* The Button */
+        .cartoon-btn {
+            background: var(--kids-red); color: white; border: none; 
+            padding: 18px 35px; font-size: 22px; font-weight: bold; 
+            border-radius: 50px; cursor: pointer; margin-top: 20px;
+            box-shadow: 0 6px 0 #cc3a46; transition: 0.1s;
+            display: inline-block; width: 80%; text-decoration: none;
+        }
+        .cartoon-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #cc3a46; }
+
+        .rtl-text { direction: rtl; text-align: right; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html" class="back-btn" onclick="window.speechSynthesis.cancel();">◀</a>
+        <h1 id="mainTitle">Kids Corner 👶✨</h1>
+    </div>
+
+    <div id="welcomeScreen">
+        <div class="salam-card" id="salamCard">
+            <h2 id="salamTitle">Assalamu Alaikum! 😍</h2>
+            <p id="salamText">अस्सलाम वालेकुम बच्चों कैसे है आप आज हम देखेंगे कार्टून इन कार्टून्स में इस्लामिक बाते बताई गई है इन कार्टून्स को देखे और कार्टून को देखकर अच्छी आदत लाये।</p>
+            
+            <a href="#" target="_blank" class="cartoon-btn" id="startBtn">
+                🎬 Cartoon Dekhna Hai
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const kidsData = {
+            hi: {
+                title: "किड्स कॉर्नर 👶✨",
+                salam: "अस्सलाम वालेकुम! 😍",
+                text: "अस्सलाम वालेकुम बच्चों कैसे है आप आज हम देखेंगे कार्टून इन कार्टून्स में इस्लामिक बाते बताई गई है इन कार्टून्स को देखे और कार्टून को देखकर अच्छी आदत लाये।",
+                btn: "🎬 कार्टून देखना है",
+                ytQuery: "islamic+cartoon+hindi",
+                voice: "hi-IN"
+            },
+            en: {
+                title: "Kids Corner 👶✨",
+                salam: "Assalamu Alaikum! 😍",
+                text: "Assalamu Alaikum children, how are you? Today we will watch cartoons. Islamic teachings are given in these cartoons. Watch these cartoons and bring good habits by watching them.",
+                btn: "🎬 Want to watch Cartoons",
+                ytQuery: "islamic+cartoon+english",
+                voice: "en-US"
+            },
+            ur: {
+                title: "بچوں کا کونہ 👶✨",
+                salam: "اسلام علیکم! 😍",
+                text: "اسلام علیکم بچو کیسے ہیں آپ، آج ہم دیکھیں گے کارٹون، ان کارٹونز میں اسلامی باتیں بتائی گئی ہیں، ان کارٹونز کو دیکھیں اور کارٹون کو دیکھ کر اچھی عادتیں اپنائیں۔",
+                btn: "🎬 کارٹون دیکھنا ہے",
+                ytQuery: "islamic+cartoon+urdu",
+                voice: "ur-PK"
+            },
+            ar: {
+                title: "ركن الأطفال 👶✨",
+                salam: "السلام عليكم! 😍",
+                text: "السلام عليكم أطفالنا الأعزاء، كيف حالكم؟ اليوم سنشاهد الرسوم المتحركة. تحتوي هذه الرسوم على تعليمات إسلامية جميلة. شاهدوها وتعلموا منها الأخلاق الحسنة.",
+                btn: "🎬 أريد مشاهدة الكرتون",
+                ytQuery: "islamic+cartoon+arabic",
+                voice: "ar-SA"
+            }
+        };
+
+        function applyKidsSettings() {
+            const lang = localStorage.getItem('pref_lang') || 'hi';
+            const data = kidsData[lang] || kidsData['hi'];
+
+            document.getElementById('mainTitle').innerText = data.title;
+            document.getElementById('salamTitle').innerText = data.salam;
+            document.getElementById('salamText').innerText = data.text;
+            
+            const btn = document.getElementById('startBtn');
+            btn.innerText = data.btn;
+            
+            // یوٹیوب کا لنک زبان کے حساب سے سیٹ کیا تاکہ صرف اسلامی کارٹون ملیں
+            btn.href = `https://www.youtube.com/results?search_query=${data.ytQuery}`;
+
+            if(lang === 'ur' || lang === 'ar') {
+                document.getElementById('salamCard').classList.add('rtl-text');
+            } else {
+                document.getElementById('salamCard').classList.remove('rtl-text');
+            }
+
+            // آواز والا لاجک: بٹن کلک پر پہلے آواز آئے گی پھر یوٹیوب کھلے گا
+            btn.onclick = function() {
+                try {
+                    window.speechSynthesis.cancel();
+                    const msg = new SpeechSynthesisUtterance(data.text);
+                    msg.lang = data.voice;
+                    msg.rate = 0.9;
+                    window.speechSynthesis.speak(msg);
+                } catch (e) { console.log("Speech Error: ", e); }
+            };
+        }
+
+        window.onload = applyKidsSettings;
+    </script>
+
+</body>
+  </html>
+  
